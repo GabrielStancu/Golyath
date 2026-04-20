@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Golyath.Views.ExerciseDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Golyath.ViewModels"
+    x:DataType="vm:ExerciseDetailViewModel">
+
+    <Shell.NavBarIsVisible>False</Shell.NavBarIsVisible>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="0,0,0,32" Spacing="0">
+
+            <!-- Hero image -->
+            <Border BackgroundColor="{StaticResource Surface2}"
+                    StrokeThickness="0"
+                    HeightRequest="220"
+                    HorizontalOptions="Fill">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="0,0,28,28" />
+                </Border.StrokeShape>
+                <Grid>
+                    <!-- Muscle group illustration -->
+                    <Image Source="{Binding PrimaryMuscleName, Converter={StaticResource MuscleGroupToImageConverter}}"
+                           Aspect="AspectFill"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill" />
+                    <!-- Top safe area back button -->
+                    <Border BackgroundColor="{StaticResource Surface1}"
+                            StrokeThickness="0"
+                            HeightRequest="40" WidthRequest="40"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Start"
+                            Margin="20,52,0,0">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="‹"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <VerticalStackLayout Padding="24,20" Spacing="16">
+
+            <!-- Name + badges -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{Binding Exercise.Name}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}" />
+
+                <HorizontalStackLayout Spacing="8">
+                    <Border Style="{StaticResource AccentChip}" IsVisible="{Binding Exercise.IsCompound}">
+                        <Label Text="Compound" Style="{StaticResource CaptionLabel}" TextColor="#0A0A0A" />
+                    </Border>
+                    <Border Style="{StaticResource Chip}">
+                        <Label Text="{Binding EquipmentName}" Style="{StaticResource CaptionLabel}" />
+                    </Border>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Primary muscle -->
+            <Label Text="PRIMARY MUSCLE" Style="{StaticResource SectionHeaderLabel}" />
+            <Border Style="{StaticResource AccentChip}" HorizontalOptions="Start">
+                <Label Text="{Binding PrimaryMuscleName}"
+                       Style="{StaticResource CaptionLabel}"
+                       TextColor="#0A0A0A" />
+            </Border>
+
+            <!-- Secondary muscles -->
+            <Label Text="SECONDARY MUSCLES"
+                   Style="{StaticResource SectionHeaderLabel}"
+                   IsVisible="{Binding HasSecondaryMuscles}" />
+            <FlexLayout
+                Wrap="Wrap"
+                Direction="Row"
+                JustifyContent="Start"
+                AlignItems="Start"
+                IsVisible="{Binding HasSecondaryMuscles}"
+                BindableLayout.ItemsSource="{Binding SecondaryMuscleNames}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Border Style="{StaticResource Chip}" Margin="0,0,8,8">
+                            <Label Text="{Binding .}" Style="{StaticResource CaptionLabel}" />
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <!-- Description -->
+            <Label Text="ABOUT" Style="{StaticResource SectionHeaderLabel}" IsVisible="{Binding HasDescription}" />
+            <Label Text="{Binding Exercise.Description}"
+                   Style="{StaticResource SubheadingLabel}"
+                   TextColor="{StaticResource TextSecondary}"
+                   IsVisible="{Binding HasDescription}" />
+
+            <!-- Busy indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

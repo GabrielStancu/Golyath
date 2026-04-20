@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Golyath.Views.SessionDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Golyath.ViewModels"
+    x:DataType="vm:SessionDetailViewModel">
+
+    <Shell.NavBarIsVisible>False</Shell.NavBarIsVisible>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,52,20,16" Spacing="16">
+
+            <!-- Back + title header -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Margin="0,0,0,4">
+                <Border Grid.Column="0"
+                        BackgroundColor="{StaticResource Surface2}"
+                        StrokeThickness="0"
+                        HeightRequest="44" WidthRequest="44">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                    </Border.GestureRecognizers>
+                    <Label Text="‹" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"
+                           TextColor="{StaticResource TextPrimary}" Padding="0,0,0,6" />
+                </Border>
+                <Label Grid.Column="1" Text="Session" Style="{StaticResource HeadingLabel}" FontSize="24" VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Session header card -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="{Binding DateLabel}"
+                           Style="{StaticResource HeadingLabel}"
+                           FontSize="20" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding Duration}"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   Style="{StaticResource AccentLabel}" />
+                            <Label Text="Duration" Style="{StaticResource CaptionLabel}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding TotalVolume}"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}" />
+                            <Label Text="Total Volume" Style="{StaticResource CaptionLabel}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Exercise groups -->
+            <Label Text="EXERCISES" Style="{StaticResource SectionHeaderLabel}" />
+
+            <CollectionView ItemsSource="{Binding ExerciseGroups}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ExerciseSetGroup">
+                        <Border Style="{StaticResource Card}" Margin="0,4">
+                            <VerticalStackLayout Spacing="8">
+
+                                <!-- Exercise name + set count -->
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding ExerciseName}"
+                                           Style="{StaticResource SubheadingLabel}"
+                                           FontAttributes="Bold" />
+                                    <Label Grid.Column="1" Style="{StaticResource CaptionLabel}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding TotalSets}" />
+                                                <Span Text=" sets" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+
+                                <BoxView Style="{StaticResource Divider}" />
+
+                                <!-- Sets header -->
+                                <Grid ColumnDefinitions="32,*,*,*" ColumnSpacing="8">
+                                    <Label Grid.Column="0" Text="#" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                    <Label Grid.Column="1" Text="Weight" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                    <Label Grid.Column="2" Text="Reps" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                    <Label Grid.Column="3" Text="Volume" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                </Grid>
+
+                                <!-- Sets rows via BindableLayout -->
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding .}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="x:Object">
+                                            <Grid ColumnDefinitions="32,*,*,*" ColumnSpacing="8">
+                                                <Label Grid.Column="0"
+                                                       Text="{Binding SetNumber}"
+                                                       HorizontalOptions="Center"
+                                                       Style="{StaticResource CaptionLabel}"
+                                                       TextColor="{StaticResource Accent}" />
+                                                <Label Grid.Column="1"
+                                                       HorizontalOptions="Center"
+                                                       Style="{StaticResource CaptionLabel}"
+                                                       TextColor="{StaticResource TextPrimary}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding Weight}" />
+                                                            <Span Text=" kg" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label Grid.Column="2"
+                                                       Text="{Binding Reps}"
+                                                       HorizontalOptions="Center"
+                                                       Style="{StaticResource CaptionLabel}"
+                                                       TextColor="{StaticResource TextPrimary}" />
+                                                <Label Grid.Column="3"
+                                                       HorizontalOptions="Center"
+                                                       Style="{StaticResource CaptionLabel}"
+                                                       TextColor="{StaticResource TextSecondary}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding Volume, StringFormat='{0:N0}'}" />
+                                                            <Span Text=" kg" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+
+                                <!-- Group volume -->
+                                <HorizontalStackLayout HorizontalOptions="End" Spacing="4">
+                                    <Label Text="Group volume:"
+                                           Style="{StaticResource CaptionLabel}"
+                                           TextColor="{StaticResource TextTertiary}" />
+                                    <Label Style="{StaticResource CaptionLabel}"
+                                           TextColor="{StaticResource Accent}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding TotalVolume, StringFormat='{0:N0}'}" />
+                                                <Span Text=" kg" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </HorizontalStackLayout>
+
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

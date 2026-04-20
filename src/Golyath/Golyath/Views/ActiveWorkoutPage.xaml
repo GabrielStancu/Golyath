@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Golyath.Views.ActiveWorkoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Golyath.ViewModels"
+    xmlns:models="clr-namespace:Golyath.Models"
+    x:DataType="vm:ActiveWorkoutViewModel">
+
+    <Shell.NavBarIsVisible>False</Shell.NavBarIsVisible>
+
+    <Grid>
+
+        <!-- ===== IDLE STATE  shown when no session is active ===== -->
+        <ScrollView IsVisible="{Binding IsSessionIdle}">
+            <VerticalStackLayout Padding="24,64,24,40" Spacing="0">
+
+                <!-- Page title -->
+                <Label Text="Workout"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       Margin="0,0,0,8" />
+                <Label Text="Start a session to log your lifts"
+                       FontSize="14"
+                       TextColor="{StaticResource TextTertiary}"
+                       Margin="0,0,0,40" />
+
+                <!-- Big Start CTA card -->
+                <Border BackgroundColor="{StaticResource Accent}"
+                        StrokeThickness="0"
+                        Padding="0"
+                        Margin="0,0,0,28">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="24" /></Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding StartWorkoutCommand}" />
+                    </Border.GestureRecognizers>
+                    <Grid RowDefinitions="Auto,Auto,Auto" Padding="28,32" RowSpacing="12">
+                        <!-- Play icon indicator -->
+                        <Border Grid.Row="0"
+                                BackgroundColor="#33000000"
+                                StrokeThickness="0"
+                                HeightRequest="56" WidthRequest="56">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="18" /></Border.StrokeShape>
+                            <Label Text=""
+                                   FontSize="22"
+                                   TextColor="#0A0A0A"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                        <Label Grid.Row="1"
+                               Text="Start Workout"
+                               FontSize="26"
+                               FontAttributes="Bold"
+                               TextColor="#0A0A0A" />
+                        <Label Grid.Row="2"
+                               Text="Tap to begin a new training session"
+                               FontSize="14"
+                               TextColor="#44000000" />
+                    </Grid>
+                </Border>
+
+                <!-- Quick-start info cards -->
+                <Label Text="WHAT TO EXPECT"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.5"
+                       TextColor="{StaticResource TextTertiary}"
+                       Margin="0,0,0,12" />
+
+                <VerticalStackLayout Spacing="10">
+                    <!-- Card: Timer -->
+                    <Border BackgroundColor="{StaticResource Surface1}"
+                            StrokeThickness="0" Padding="16,14">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                        <Grid ColumnDefinitions="44,*" ColumnSpacing="14">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource Surface3}"
+                                    StrokeThickness="0"
+                                    HeightRequest="44" WidthRequest="44">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="13" /></Border.StrokeShape>
+                                <Label Text="" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="Session timer" FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}" />
+                                <Label Text="Tracks time from when you start"
+                                       FontSize="12" TextColor="{StaticResource TextTertiary}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Card: Exercises -->
+                    <Border BackgroundColor="{StaticResource Surface1}"
+                            StrokeThickness="0" Padding="16,14">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                        <Grid ColumnDefinitions="44,*" ColumnSpacing="14">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource Surface3}"
+                                    StrokeThickness="0"
+                                    HeightRequest="44" WidthRequest="44">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="13" /></Border.StrokeShape>
+                                <Label Text="+" FontSize="22" FontAttributes="Bold"
+                                       TextColor="{StaticResource Accent}"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="Add exercises" FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}" />
+                                <Label Text="Pick from 50+ exercises with sets &amp; reps"
+                                       FontSize="12" TextColor="{StaticResource TextTertiary}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Card: Volume tracking -->
+                    <Border BackgroundColor="{StaticResource Surface1}"
+                            StrokeThickness="0" Padding="16,14">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                        <Grid ColumnDefinitions="44,*" ColumnSpacing="14">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource Surface3}"
+                                    StrokeThickness="0"
+                                    HeightRequest="44" WidthRequest="44">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="13" /></Border.StrokeShape>
+                                <Label Text="" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="Volume logged" FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}" />
+                                <Label Text="Total weight moved saved automatically"
+                                       FontSize="12" TextColor="{StaticResource TextTertiary}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ===== ACTIVE STATE  shown during a session ===== -->
+        <Grid RowDefinitions="Auto,*" IsVisible="{Binding IsSessionActive}">
+
+            <!-- Active header: timer + Finish -->
+            <Border Grid.Row="0"
+                    BackgroundColor="{StaticResource Surface1}"
+                    StrokeThickness="0"
+                    Padding="24,52,24,16">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="IN SESSION"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.5"
+                               TextColor="{StaticResource Accent}" />
+                        <Label Text="{Binding ElapsedTime}"
+                               FontSize="40"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Column="1"
+                            Text="Finish"
+                            Command="{Binding FinishWorkoutCommand}"
+                            BackgroundColor="{StaticResource Danger}"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            CornerRadius="14"
+                            HeightRequest="50"
+                            Padding="20,0"
+                            VerticalOptions="End" />
+                </Grid>
+            </Border>
+
+            <!-- Exercise list -->
+            <CollectionView
+                Grid.Row="1"
+                ItemsSource="{Binding ExerciseItems}"
+                Margin="0,0">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
+                                         Spacing="12" Padding="40">
+                        <Label Text="No exercises yet"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextSecondary}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Tap the + button below to add your first exercise"
+                               FontSize="14"
+                               TextColor="{StaticResource TextTertiary}"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ActiveExerciseItem">
+                        <VerticalStackLayout Padding="20,8" Spacing="4">
+
+                            <!-- Exercise name + Add Set -->
+                            <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+                                <Label Grid.Column="0"
+                                       Text="{Binding Exercise.Name}"
+                                       Style="{StaticResource SubheadingLabel}"
+                                       FontAttributes="Bold" />
+                                <Button Grid.Column="1"
+                                        Text="+ Set"
+                                        Style="{StaticResource GhostButton}"
+                                        FontSize="13"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=AddSetCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+
+                            <!-- Column headers -->
+                            <Grid ColumnDefinitions="32,*,*,*,48" ColumnSpacing="8" Padding="12,0">
+                                <Label Grid.Column="0" Text="#" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                <Label Grid.Column="1" Text="KG" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                <Label Grid.Column="2" Text="REPS" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                <Label Grid.Column="3" Text="WARM" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                                <Label Grid.Column="4" Text="OK" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                            </Grid>
+
+                            <!-- Sets -->
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:WorkoutSet">
+                                        <Border Style="{StaticResource Card}" Margin="0,4" Padding="12,8">
+                                            <Grid ColumnDefinitions="32,*,*,*,48" ColumnSpacing="8">
+                                                <Border Grid.Column="0"
+                                                        BackgroundColor="{StaticResource Surface3}"
+                                                        StrokeThickness="0"
+                                                        HeightRequest="32" WidthRequest="32">
+                                                    <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                    <Label Text="{Binding SetNumber}"
+                                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                                           Style="{StaticResource CaptionLabel}"
+                                                           TextColor="{StaticResource Accent}" />
+                                                </Border>
+                                                <Border Grid.Column="1" BackgroundColor="{StaticResource Surface3}"
+                                                        StrokeThickness="0" HeightRequest="36">
+                                                    <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                    <Entry Text="{Binding Weight}" Keyboard="Numeric"
+                                                           Placeholder="0" HorizontalTextAlignment="Center"
+                                                           BackgroundColor="Transparent" />
+                                                </Border>
+                                                <Border Grid.Column="2" BackgroundColor="{StaticResource Surface3}"
+                                                        StrokeThickness="0" HeightRequest="36">
+                                                    <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                    <Entry Text="{Binding Reps}" Keyboard="Numeric"
+                                                           Placeholder="0" HorizontalTextAlignment="Center"
+                                                           BackgroundColor="Transparent" />
+                                                </Border>
+                                                <CheckBox Grid.Column="3" IsChecked="{Binding IsWarmup}"
+                                                          Color="{StaticResource Accent}"
+                                                          HorizontalOptions="Center" VerticalOptions="Center" />
+                                                <Border Grid.Column="4" BackgroundColor="{StaticResource Surface3}"
+                                                        StrokeThickness="0" HeightRequest="36" WidthRequest="36"
+                                                        HorizontalOptions="Center" VerticalOptions="Center">
+                                                    <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                    <Label Text="" HorizontalOptions="Center" VerticalOptions="Center"
+                                                           FontSize="14" TextColor="{StaticResource Success}" />
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                            <BoxView Style="{StaticResource Divider}" Margin="0,8,0,0" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+
+        <!-- ===== FAB: + Exercise  shown during active session ===== -->
+        <Button Text="+"
+                FontSize="30"
+                FontAttributes="Bold"
+                TextColor="#0A0A0A"
+                BackgroundColor="{StaticResource Accent}"
+                CornerRadius="20"
+                HeightRequest="60"
+                WidthRequest="60"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,24,32"
+                IsVisible="{Binding IsSessionActive}"
+                Command="{Binding ShowExercisePickerCommand}" />
+
+        <!-- ===== Exercise Picker Overlay ===== -->
+        <Grid BackgroundColor="#CC000000"
+              IsVisible="{Binding IsPickerVisible}">
+            <Border BackgroundColor="{StaticResource Surface2}"
+                    StrokeThickness="0"
+                    VerticalOptions="End">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,0,0" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="20,Auto,*" HeightRequest="520">
+                    <!-- Drag handle -->
+                    <BoxView Grid.Row="0" HeightRequest="4" WidthRequest="40"
+                             BackgroundColor="{StaticResource Border}"
+                             HorizontalOptions="Center" VerticalOptions="Center" />
+                    <!-- Search -->
+                    <SearchBar Grid.Row="1" Placeholder="Search exercises..."
+                               Text="{Binding ExercisePickerSearch}" Margin="16,4" />
+                    <!-- Exercise list -->
+                    <CollectionView Grid.Row="2" ItemsSource="{Binding FilteredPickerExercises}" Margin="16,4">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Exercise">
+                                <Border Style="{StaticResource Card}" Margin="0,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveWorkoutViewModel}}, Path=AddExerciseCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding Name}" Style="{StaticResource SubheadingLabel}" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding HideExercisePickerCommand}" />
+            </Grid.GestureRecognizers>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

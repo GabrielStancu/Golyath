@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Golyath.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Golyath.ViewModels"
+    xmlns:models="clr-namespace:Golyath.Models"
+    x:DataType="vm:HistoryViewModel">
+
+    <Shell.NavBarIsVisible>False</Shell.NavBarIsVisible>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,52,24,8">
+            <Label Text="History"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}" />
+        </VerticalStackLayout>
+
+        <!-- Sessions list -->
+        <RefreshView Grid.Row="1"
+                     Command="{Binding LoadCommand}"
+                     IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding SessionSummaries}" Margin="20,0">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16" Padding="40">
+                        <Label Text="No workouts yet" Style="{StaticResource SubheadingLabel}" HorizontalOptions="Center" />
+                        <Label Text="Complete a workout to see your history here"
+                               Style="{StaticResource CaptionLabel}"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SessionSummaryItem">
+                        <Border Style="{StaticResource Card}" Margin="0,6">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=SelectSessionCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                    <Label Text="{Binding DateLabel}"
+                                           Style="{StaticResource SubheadingLabel}"
+                                           FontAttributes="Bold" />
+                                    <Label Style="{StaticResource CaptionLabel}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding TimeLabel}" />
+                                                <Span Text="  ·  " TextColor="{StaticResource TextTertiary}" />
+                                                <Span Text="{Binding DurationLabel}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Text="{Binding ExerciseSummary}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource TextTertiary}"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+                                <Label Grid.Column="1"
+                                       Text="›"
+                                       FontSize="22"
+                                       TextColor="{StaticResource TextTertiary}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+    </Grid>
+
+</ContentPage>
