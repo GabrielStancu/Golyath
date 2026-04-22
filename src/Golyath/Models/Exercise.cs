@@ -17,8 +17,16 @@ public class Exercise
 
     public int EquipmentId { get; set; }
 
-    /// <summary>Relative path under Resources/Raw/exercises/</summary>
+    /// <summary>Exercise folder name under Resources/Raw/exercises/ (e.g. "Barbell_Bench_Press_-_Medium_Grip")</summary>
     public string ImagePath { get; set; } = string.Empty;
+
+    /// <summary>Derived path to frame 0 image. Not stored in DB.</summary>
+    [Ignore]
+    public string ImageFrame0 => string.IsNullOrEmpty(ImagePath) ? string.Empty : $"exercises/{ImagePath}/0.jpg";
+
+    /// <summary>Derived path to frame 1 image. Not stored in DB.</summary>
+    [Ignore]
+    public string ImageFrame1 => string.IsNullOrEmpty(ImagePath) ? string.Empty : $"exercises/{ImagePath}/1.jpg";
 
     public bool IsCustom { get; set; }
 

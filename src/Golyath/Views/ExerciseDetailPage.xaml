@@ -20,9 +20,9 @@
                     <RoundRectangle CornerRadius="0,0,28,28" />
                 </Border.StrokeShape>
                 <Grid>
-                    <!-- Muscle group illustration -->
-                    <Image Source="{Binding PrimaryMuscleName, Converter={StaticResource MuscleGroupToImageConverter}}"
-                           Aspect="AspectFill"
+                    <!-- Animated exercise image -->
+                    <Image Source="{Binding CurrentExerciseImage}"
+                           Aspect="AspectFit"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
                     <!-- Top safe area back button -->
@@ -99,6 +99,54 @@
                    Style="{StaticResource SubheadingLabel}"
                    TextColor="{StaticResource TextSecondary}"
                    IsVisible="{Binding HasDescription}" />
+
+            <!-- Exercise metadata (level / force / mechanic) -->
+            <Label Text="DETAILS" Style="{StaticResource SectionHeaderLabel}" IsVisible="{Binding HasExtraInfo}" />
+            <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start" AlignItems="Start"
+                        IsVisible="{Binding HasExtraInfo}">
+                <Border Style="{StaticResource Chip}" Margin="0,0,8,8"
+                        IsVisible="{Binding ExerciseLevel, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                    <HorizontalStackLayout Spacing="4">
+                        <Label Text="Level:" Style="{StaticResource CaptionLabel}" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding ExerciseLevel}" Style="{StaticResource CaptionLabel}" />
+                    </HorizontalStackLayout>
+                </Border>
+                <Border Style="{StaticResource Chip}" Margin="0,0,8,8"
+                        IsVisible="{Binding ExerciseForce, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                    <HorizontalStackLayout Spacing="4">
+                        <Label Text="Force:" Style="{StaticResource CaptionLabel}" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding ExerciseForce}" Style="{StaticResource CaptionLabel}" />
+                    </HorizontalStackLayout>
+                </Border>
+                <Border Style="{StaticResource Chip}" Margin="0,0,8,8"
+                        IsVisible="{Binding ExerciseMechanic, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                    <HorizontalStackLayout Spacing="4">
+                        <Label Text="Mechanic:" Style="{StaticResource CaptionLabel}" TextColor="{StaticResource TextSecondary}" />
+                        <Label Text="{Binding ExerciseMechanic}" Style="{StaticResource CaptionLabel}" />
+                    </HorizontalStackLayout>
+                </Border>
+            </FlexLayout>
+
+            <!-- Step-by-step instructions -->
+            <Label Text="HOW TO PERFORM" Style="{StaticResource SectionHeaderLabel}" IsVisible="{Binding HasInstructions}" />
+            <VerticalStackLayout Spacing="10" IsVisible="{Binding HasInstructions}"
+                                 BindableLayout.ItemsSource="{Binding ExerciseInstructions}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <HorizontalStackLayout Spacing="10" Margin="0,0,0,4">
+                            <Label Text="•"
+                                   TextColor="{StaticResource Accent}"
+                                   VerticalOptions="Start"
+                                   FontSize="18"
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding .}"
+                                   Style="{StaticResource SubheadingLabel}"
+                                   TextColor="{StaticResource TextSecondary}"
+                                   HorizontalOptions="FillAndExpand" />
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
 
             <!-- Busy indicator -->
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
