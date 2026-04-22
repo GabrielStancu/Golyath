@@ -23,4 +23,6 @@ public interface IWorkoutService
     Task<double> GetTotalVolumeThisWeekAsync();
     Task<WorkoutSession?> GetLastSessionAsync();
     Task<List<string>> GetExerciseNamesForSessionAsync(int sessionId);
+    Task<List<WorkoutSession>> GetRecentSessionsAsync(int count);
+    Task<double> GetAvgDurationMinutesAsync(int days);
 }

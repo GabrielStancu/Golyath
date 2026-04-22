@@ -2,15 +2,15 @@ using Golyath.ViewModels;
 
 namespace Golyath.Views;
 
-public partial class AnalyticsPage : ContentPage
+public partial class TemplateListPage : ContentPage
 {
-    private readonly AnalyticsViewModel _vm;
+    private readonly TemplateListViewModel _vm;
 
-    public AnalyticsPage(AnalyticsViewModel vm)
+    public TemplateListPage(TemplateListViewModel vm)
     {
         InitializeComponent();
-        _vm = vm;
         BindingContext = vm;
+        _vm = vm;
     }
 
     protected override void OnAppearing()
@@ -19,4 +19,3 @@ public partial class AnalyticsPage : ContentPage
         _ = _vm.LoadAsync();
     }
 }
-

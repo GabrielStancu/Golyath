@@ -27,6 +27,8 @@ namespace Golyath
             // Services
             builder.Services.AddSingleton<IExerciseService, ExerciseService>();
             builder.Services.AddSingleton<IWorkoutService, WorkoutService>();
+            builder.Services.AddSingleton<ITemplateService, TemplateService>();
+            builder.Services.AddSingleton<IAnalyticsService, AnalyticsService>();
 
             // ViewModels
             builder.Services.AddTransient<DashboardViewModel>();
@@ -37,6 +39,8 @@ namespace Golyath
             builder.Services.AddTransient<SessionDetailViewModel>();
             builder.Services.AddTransient<AnalyticsViewModel>();
             builder.Services.AddTransient<SettingsViewModel>();
+            builder.Services.AddTransient<TemplateListViewModel>();
+            builder.Services.AddTransient<TemplateEditViewModel>();
 
             // Pages
             builder.Services.AddTransient<DashboardPage>();
@@ -47,6 +51,8 @@ namespace Golyath
             builder.Services.AddTransient<SessionDetailPage>();
             builder.Services.AddTransient<AnalyticsPage>();
             builder.Services.AddTransient<SettingsPage>();
+            builder.Services.AddTransient<TemplateListPage>();
+            builder.Services.AddTransient<TemplateEditPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();

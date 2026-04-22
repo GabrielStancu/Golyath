@@ -11,13 +11,14 @@ public record RecentWorkoutItem(string DayLabel, string DateLabel, string Durati
 public partial class DashboardViewModel : BaseViewModel
 {
     private readonly IWorkoutService _workoutService;
+    private readonly IAnalyticsService _analyticsService;
 
     private static readonly string[] WeekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
     // -- Stats --
     [ObservableProperty] private int _workoutsThisWeek;
     [ObservableProperty] private string _totalVolumeThisWeek = "0 kg";
-    [ObservableProperty] private string _avgDuration = "0 min";
+    [ObservableProperty] private string _avgDuration = "— min";
     [ObservableProperty] private string _greeting = "Good morning";
     [ObservableProperty] private string _dateLabel = string.Empty;
 
@@ -32,12 +33,13 @@ public partial class DashboardViewModel : BaseViewModel
     // -- Chart --
     [ObservableProperty] private WeeklyVolumeChartDrawable _volumeChart = new();
 
-    // -- Recent workouts (fake for Phase 1) --
+    // -- Recent workouts --
     [ObservableProperty] private ObservableCollection<RecentWorkoutItem> _recentWorkouts = [];
 
-    public DashboardViewModel(IWorkoutService workoutService)
+    public DashboardViewModel(IWorkoutService workoutService, IAnalyticsService analyticsService)
     {
         _workoutService = workoutService;
+        _analyticsService = analyticsService;
         Title = "Golyath";
         SetGreeting();
     }
@@ -58,14 +60,28 @@ public partial class DashboardViewModel : BaseViewModel
         {
             WorkoutsThisWeek = await _workoutService.GetWorkoutsThisWeekAsync();
             double vol = await _workoutService.GetTotalVolumeThisWeekAsync();
+            TotalVolumeThisWeek = vol > 0 ? $"{vol:N0} kg" : "0 kg";
+
+            double avgMin = await _workoutService.GetAvgDurationMinutesAsync(30);
+            AvgDuration = avgMin > 0 ? $"{(int)avgMin} min" : "— min";
 
             var last = await _workoutService.GetLastSessionAsync();
             HasLastWorkout = last is not null;
             if (last is not null)
                 LastWorkoutSummary = last.StartedAt.ToLocalTime().ToString("ddd, MMM d");
 
-            // -- Fake data until real analytics is built (Phase 3) --
-            BuildFakeData(vol);
+            // Real weekly volume chart
+            float[] weeklyVolumes = await _analyticsService.GetCurrentWeekVolumeAsync();
+            int todayIdx = ((int)DateTime.Today.DayOfWeek + 6) % 7;
+            VolumeChart = new WeeklyVolumeChartDrawable
+            {
+                Values = weeklyVolumes,
+                Labels = WeekDays,
+                HighlightIndex = todayIdx
+            };
+
+            // Real recent workouts (last 5)
+            await BuildRecentWorkoutsAsync();
         }
         finally
         {
@@ -73,42 +89,40 @@ public partial class DashboardViewModel : BaseViewModel
         }
     }
 
-    private void BuildFakeData(double realVol)
+    private async Task BuildRecentWorkoutsAsync()
     {
-        // Fake weekly volume per day (kg), Sunday = index 6
-        float[] fakeVolumes = [4200f, 0f, 5800f, 3400f, 6100f, 0f, 2100f];
-
-        // Today index: Monday=0 .. Sunday=6
-        int todayIdx = ((int)DateTime.Today.DayOfWeek + 6) % 7;
-
-        // Override today's bar with a real-ish value if we have real data
-        if (realVol > 0)
-            fakeVolumes[todayIdx] = (float)realVol;
-
-        VolumeChart = new WeeklyVolumeChartDrawable
-        {
-            Values = fakeVolumes,
-            Labels = WeekDays,
-            HighlightIndex = todayIdx
-        };
-
-        // Fake weekly stats
-        int fakeSessions = WorkoutsThisWeek > 0 ? WorkoutsThisWeek : 4;
-        double fakeVolKg = realVol > 0 ? realVol : fakeVolumes.Sum();
-        TotalVolumeThisWeek = $"{fakeVolKg:N0} kg";
-        AvgDuration = "52 min";
-
-        // Fake recent workouts
+        var sessions = await _workoutService.GetRecentSessionsAsync(5);
+        var items = new List<RecentWorkoutItem>();
         var today = DateTime.Today;
-        RecentWorkouts =
-        [
-            new("Today", today.ToString("MMM d"), "58 min", "6 200 kg", "6 exercises"),
-            new("Thu", today.AddDays(-2).ToString("MMM d"), "44 min", "3 400 kg", "5 exercises"),
-            new("Tue", today.AddDays(-4).ToString("MMM d"), "61 min", "5 800 kg", "7 exercises"),
-        ];
+
+        foreach (var session in sessions)
+        {
+            var sets = await _workoutService.GetSetsForSessionAsync(session.Id);
+            var exerciseNames = await _workoutService.GetExerciseNamesForSessionAsync(session.Id);
+
+            double sessionVol = sets.Sum(s => s.Volume);
+            int durationMin = (int)session.Duration.TotalMinutes;
+            int exerciseCount = exerciseNames.Count;
+
+            var localDate = session.StartedAt.ToLocalTime().Date;
+            string dayLabel = localDate == today ? "Today"
+                : localDate == today.AddDays(-1) ? "Yest."
+                : localDate.ToString("ddd");
+            string dateLabel = localDate.ToString("MMM d");
+
+            items.Add(new RecentWorkoutItem(
+                dayLabel,
+                dateLabel,
+                durationMin > 0 ? $"{durationMin} min" : "—",
+                sessionVol > 0 ? $"{sessionVol:N0} kg" : "0 kg",
+                exerciseCount == 1 ? "1 exercise" : $"{exerciseCount} exercises"));
+        }
+
+        RecentWorkouts = new ObservableCollection<RecentWorkoutItem>(items);
     }
 
     [RelayCommand]
     private async Task GoToSettingsAsync() =>
         await Shell.Current.GoToAsync("settings");
 }
+

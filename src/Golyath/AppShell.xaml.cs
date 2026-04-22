@@ -11,6 +11,8 @@ namespace Golyath
             Routing.RegisterRoute("exercise-detail", typeof(ExerciseDetailPage));
             Routing.RegisterRoute("session-detail", typeof(SessionDetailPage));
             Routing.RegisterRoute("settings", typeof(SettingsPage));
+            Routing.RegisterRoute("templates", typeof(TemplateListPage));
+            Routing.RegisterRoute("template-edit", typeof(TemplateEditPage));
         }
     }
 }

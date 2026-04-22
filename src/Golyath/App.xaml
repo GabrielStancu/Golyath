@@ -15,6 +15,7 @@
             <converters:BoolToStringConverter x:Key="BoolToStringConverter" />
             <converters:MuscleGroupToImageConverter x:Key="MuscleGroupToImageConverter" />
             <converters:MuscleGroupToAbbreviationConverter x:Key="MuscleGroupToAbbreviationConverter" />
+            <converters:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

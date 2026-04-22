@@ -16,5 +16,7 @@ public partial class ActiveWorkoutPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _ = _vm.LoadTemplatesAsync();
     }
 }
+

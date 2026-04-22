@@ -140,6 +140,25 @@ public class WorkoutService : IWorkoutService
         return exercises.Select(e => e.Name).ToList();
     }
 
+    public async Task<List<WorkoutSession>> GetRecentSessionsAsync(int count)
+    {
+        var conn = await _db.GetRawConnectionAsync();
+        return await conn.QueryAsync<WorkoutSession>(
+            "SELECT * FROM WorkoutSession WHERE FinishedAt IS NOT NULL ORDER BY StartedAt DESC LIMIT ?",
+            count);
+    }
+
+    public async Task<double> GetAvgDurationMinutesAsync(int days)
+    {
+        var cutoff = DateTime.UtcNow.AddDays(-days);
+        var conn = await _db.GetRawConnectionAsync();
+        var sessions = await conn.QueryAsync<WorkoutSession>(
+            "SELECT * FROM WorkoutSession WHERE FinishedAt IS NOT NULL AND StartedAt >= ?",
+            cutoff.ToString("yyyy-MM-dd HH:mm:ss"));
+        if (sessions.Count == 0) return 0;
+        return sessions.Average(s => s.Duration.TotalMinutes);
+    }
+
     private static DateTime GetMondayOfCurrentWeek()
     {
         var today = DateTime.UtcNow.Date;

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Golyath.Views.TemplateEditPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Golyath.ViewModels"
+    xmlns:models="clr-namespace:Golyath.Models"
+    x:DataType="vm:TemplateEditViewModel">
+
+    <Shell.NavBarIsVisible>False</Shell.NavBarIsVisible>
+
+    <Grid>
+
+        <!-- ===== Main content ===== -->
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="44,*,Auto" Padding="20,52,20,16" ColumnSpacing="12">
+                <Border Grid.Column="0"
+                        BackgroundColor="{StaticResource Surface2}"
+                        StrokeThickness="0"
+                        HeightRequest="44" WidthRequest="44"
+                        VerticalOptions="Start">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="‹" FontSize="22" FontAttributes="Bold"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           TextColor="{StaticResource TextPrimary}" />
+                </Border>
+                <Label Grid.Column="1" Text="{Binding Title}"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}"
+                       VerticalOptions="Center" />
+                <!-- Delete button shown only when editing -->
+                <Border Grid.Column="2"
+                        BackgroundColor="#2A0A0A"
+                        StrokeThickness="0"
+                        Padding="12,8"
+                        VerticalOptions="Center"
+                        IsVisible="{Binding IsEditing}">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="10" /></Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteTemplateCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="Delete" FontSize="13"
+                           TextColor="{StaticResource Danger}" FontAttributes="Bold" />
+                </Border>
+            </Grid>
+
+            <!-- Scrollable form body -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="20,0" Spacing="0">
+
+                    <!-- Name field -->
+                    <Label Text="TEMPLATE NAME" Style="{StaticResource CaptionLabel}"
+                           TextColor="{StaticResource TextTertiary}" Margin="0,0,0,6" />
+                    <Border BackgroundColor="{StaticResource Surface1}"
+                            StrokeThickness="0" Padding="16,12" Margin="0,0,0,16">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                        <Entry Placeholder="e.g. Push Day"
+                               Text="{Binding TemplateName, Mode=TwoWay}"
+                               FontSize="16" FontAttributes="Bold"
+                               BackgroundColor="Transparent"
+                               TextColor="{StaticResource TextPrimary}"
+                               PlaceholderColor="{StaticResource TextTertiary}" />
+                    </Border>
+
+                    <!-- Description field -->
+                    <Label Text="DESCRIPTION (OPTIONAL)" Style="{StaticResource CaptionLabel}"
+                           TextColor="{StaticResource TextTertiary}" Margin="0,0,0,6" />
+                    <Border BackgroundColor="{StaticResource Surface1}"
+                            StrokeThickness="0" Padding="16,12" Margin="0,0,0,24">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                        <Entry Placeholder="Optional notes about this template"
+                               Text="{Binding TemplateDescription, Mode=TwoWay}"
+                               FontSize="14"
+                               BackgroundColor="Transparent"
+                               TextColor="{StaticResource TextPrimary}"
+                               PlaceholderColor="{StaticResource TextTertiary}" />
+                    </Border>
+
+                    <!-- Exercises section header -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+                        <Label Grid.Column="0"
+                               Text="EXERCISES"
+                               Style="{StaticResource CaptionLabel}"
+                               TextColor="{StaticResource TextTertiary}" />
+                        <Label Grid.Column="1"
+                               FontSize="11" TextColor="{StaticResource TextTertiary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding Entries.Count}" TextColor="{StaticResource Accent}" FontAttributes="Bold" />
+                                    <Span Text=" added" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+
+                    <!-- Column headers -->
+                    <Grid ColumnDefinitions="*,48,48,64,64" ColumnSpacing="6" Padding="4,0,0,4">
+                        <Label Grid.Column="0" Text="Exercise" Style="{StaticResource CaptionLabel}" />
+                        <Label Grid.Column="1" Text="Sets" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                        <Label Grid.Column="2" Text="Reps" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                        <Label Grid.Column="3" Text="Kg" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                        <Label Grid.Column="4" Text="Tempo" Style="{StaticResource CaptionLabel}" HorizontalOptions="Center" />
+                    </Grid>
+
+                    <!-- Entry rows -->
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}" Spacing="4">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:TemplateEntryItem">
+                                <Border BackgroundColor="{StaticResource Surface1}"
+                                        StrokeThickness="0" Padding="12,10" Margin="0,2">
+                                    <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+
+                                        <!-- Row 1: name + delete -->
+                                        <Grid Grid.Row="0" ColumnDefinitions="*,32" ColumnSpacing="8">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding ExerciseName}"
+                                                   FontSize="14" FontAttributes="Bold"
+                                                   TextColor="{StaticResource TextPrimary}"
+                                                   VerticalOptions="Center" />
+                                            <Border Grid.Column="1"
+                                                    BackgroundColor="{StaticResource Surface3}"
+                                                    StrokeThickness="0"
+                                                    HeightRequest="28" WidthRequest="28">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=DeleteEntryCommand}"
+                                                        CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                                <Label Text="✕" FontSize="12"
+                                                       TextColor="{StaticResource Danger}"
+                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+                                        </Grid>
+
+                                        <!-- Row 2: sets / reps / weight / tempo -->
+                                        <Grid Grid.Row="1"
+                                              ColumnDefinitions="48,48,64,64"
+                                              ColumnSpacing="6">
+                                            <Border Grid.Column="0" BackgroundColor="{StaticResource Surface3}"
+                                                    StrokeThickness="0" HeightRequest="36">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                <Entry Text="{Binding TargetSets, Mode=TwoWay}"
+                                                       Keyboard="Numeric" Placeholder="3"
+                                                       HorizontalTextAlignment="Center"
+                                                       BackgroundColor="Transparent" FontSize="13" />
+                                            </Border>
+                                            <Border Grid.Column="1" BackgroundColor="{StaticResource Surface3}"
+                                                    StrokeThickness="0" HeightRequest="36">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                <Entry Text="{Binding TargetReps, Mode=TwoWay}"
+                                                       Keyboard="Numeric" Placeholder="10"
+                                                       HorizontalTextAlignment="Center"
+                                                       BackgroundColor="Transparent" FontSize="13" />
+                                            </Border>
+                                            <Border Grid.Column="2" BackgroundColor="{StaticResource Surface3}"
+                                                    StrokeThickness="0" HeightRequest="36">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                <Entry Text="{Binding TargetWeight, Mode=TwoWay}"
+                                                       Keyboard="Numeric" Placeholder="0"
+                                                       HorizontalTextAlignment="Center"
+                                                       BackgroundColor="Transparent" FontSize="13" />
+                                            </Border>
+                                            <Border Grid.Column="3" BackgroundColor="{StaticResource Surface3}"
+                                                    StrokeThickness="0" HeightRequest="36">
+                                                <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                                                <Entry Text="{Binding TargetTempo, Mode=TwoWay}"
+                                                       Placeholder="3-1-2-0"
+                                                       HorizontalTextAlignment="Center"
+                                                       BackgroundColor="Transparent" FontSize="12"
+                                                       TextColor="{StaticResource TextSecondary}" />
+                                            </Border>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <!-- Add exercise button -->
+                    <Border BackgroundColor="{StaticResource Surface1}"
+                            StrokeThickness="1" Stroke="{StaticResource Border}"
+                            Padding="16,14" Margin="0,8,0,40">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowPickerCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="28,*" ColumnSpacing="12">
+                            <Label Grid.Column="0"
+                                   Text="+" FontSize="20" FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="Add exercise"
+                                   FontSize="14" FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Save button -->
+            <Button Grid.Row="2"
+                    Text="Save Template"
+                    Command="{Binding SaveCommand}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="#0A0A0A"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    CornerRadius="16"
+                    HeightRequest="54"
+                    Margin="20,12,20,34" />
+        </Grid>
+
+        <!-- ===== Exercise Picker Overlay ===== -->
+        <Grid BackgroundColor="#CC000000"
+              IsVisible="{Binding IsPickerVisible}">
+            <Border BackgroundColor="{StaticResource Surface2}"
+                    StrokeThickness="0"
+                    VerticalOptions="End">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,0,0" />
+                </Border.StrokeShape>
+                <Grid RowDefinitions="20,Auto,*" HeightRequest="520">
+                    <BoxView Grid.Row="0" HeightRequest="4" WidthRequest="40"
+                             BackgroundColor="{StaticResource Border}"
+                             HorizontalOptions="Center" VerticalOptions="Center" />
+                    <SearchBar Grid.Row="1" Placeholder="Search exercises…"
+                               Text="{Binding PickerSearch}" Margin="16,4" />
+                    <CollectionView Grid.Row="2"
+                                    ItemsSource="{Binding FilteredExercises}"
+                                    Margin="16,4">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Exercise">
+                                <Border Style="{StaticResource Card}" Margin="0,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TemplateEditViewModel}}, Path=AddExerciseCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding Name}" Style="{StaticResource SubheadingLabel}" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding HidePickerCommand}" />
+            </Grid.GestureRecognizers>
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
