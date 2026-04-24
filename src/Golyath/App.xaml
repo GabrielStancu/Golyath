@@ -2,7 +2,6 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Golyath"
-             xmlns:converters="clr-namespace:Golyath.Converters"
              x:Class="Golyath.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -10,12 +9,6 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
-            <converters:BoolToStringConverter x:Key="BoolToStringConverter" />
-            <converters:MuscleGroupToImageConverter x:Key="MuscleGroupToImageConverter" />
-            <converters:MuscleGroupToAbbreviationConverter x:Key="MuscleGroupToAbbreviationConverter" />
-            <converters:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

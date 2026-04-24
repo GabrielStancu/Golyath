@@ -1,0 +1,53 @@
+{
+  "casting_registry_version": "1.0",
+  "entries": [
+    {
+      "persistent_name": "Rocky",
+      "role": "Lead / Architect",
+      "universe": "Rocky",
+      "created_at": "2026-04-26",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Apollo",
+      "role": "MAUI / UI Dev",
+      "universe": "Rocky",
+      "created_at": "2026-04-26",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Mickey",
+      "role": "Backend / Data Dev",
+      "universe": "Rocky",
+      "created_at": "2026-04-26",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Duke",
+      "role": "Tester / QA",
+      "universe": "Rocky",
+      "created_at": "2026-04-26",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Scribe",
+      "role": "Session Logger",
+      "universe": "exempt",
+      "created_at": "2026-04-26",
+      "legacy_named": false,
+      "status": "active"
+    },
+    {
+      "persistent_name": "Ralph",
+      "role": "Work Monitor",
+      "universe": "exempt",
+      "created_at": "2026-04-26",
+      "legacy_named": false,
+      "status": "active"
+    }
+  ]
+}

@@ -1,53 +1,14 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="Golyath.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:Golyath.Views"
-    Shell.NavBarIsVisible="False">
+    xmlns:local="clr-namespace:Golyath"
+    Title="Golyath">
 
-    <Shell.Resources>
-        <ResourceDictionary>
-            <Style TargetType="TabBar">
-                <Setter Property="Shell.BackgroundColor" Value="#141414" />
-                <Setter Property="Shell.TabBarBackgroundColor" Value="#141414" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="#F5C518" />
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#5A5A5A" />
-                <Setter Property="Shell.TabBarTitleColor" Value="#F5C518" />
-            </Style>
-        </ResourceDictionary>
-    </Shell.Resources>
-
-    <TabBar>
-        <ShellContent
-            Title="Home"
-            Icon="ic_tab_home.png"
-            ContentTemplate="{DataTemplate views:DashboardPage}"
-            Route="dashboard" />
-
-        <ShellContent
-            Title="Exercises"
-            Icon="ic_tab_exercises.png"
-            ContentTemplate="{DataTemplate views:ExerciseListPage}"
-            Route="exercises" />
-
-        <ShellContent
-            Title="Workout"
-            Icon="ic_tab_workout.png"
-            ContentTemplate="{DataTemplate views:ActiveWorkoutPage}"
-            Route="workout" />
-
-        <ShellContent
-            Title="History"
-            Icon="ic_tab_history.png"
-            ContentTemplate="{DataTemplate views:HistoryPage}"
-            Route="history" />
-
-        <ShellContent
-            Title="Analytics"
-            Icon="ic_tab_analytics.png"
-            ContentTemplate="{DataTemplate views:AnalyticsPage}"
-            Route="analytics" />
-    </TabBar>
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="MainPage" />
 
 </Shell>

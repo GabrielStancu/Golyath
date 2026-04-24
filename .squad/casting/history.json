@@ -1,0 +1,19 @@
+{
+  "casting_history_version": "1.0",
+  "assignments": [
+    {
+      "assignment_id": "golyath-2026-04-26",
+      "project": "Golyath",
+      "universe": "Rocky",
+      "date": "2026-04-26",
+      "agents": [
+        { "name": "Rocky",  "role": "Lead / Architect"  },
+        { "name": "Apollo", "role": "MAUI / UI Dev"      },
+        { "name": "Mickey", "role": "Backend / Data Dev" },
+        { "name": "Duke",   "role": "Tester / QA"        },
+        { "name": "Scribe", "role": "Session Logger"     },
+        { "name": "Ralph",  "role": "Work Monitor"       }
+      ]
+    }
+  ]
+}
