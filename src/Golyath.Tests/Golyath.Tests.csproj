@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
+  </ItemGroup>
+
+  <!--
+    TESTABILITY GAP (flagged for Mickey):
+    Golyath.csproj targets MAUI-only TFMs (net9.0-android, net9.0-ios, etc.) with no plain net9.0 target.
+    A net9.0 test project cannot directly reference it without one of two fixes:
+      Option A (Preferred): Add net9.0 as an additional TargetFramework in Golyath.csproj, with MAUI items
+                            (MauiIcon, MauiSplashScreen, UseMaui, etc.) conditionally excluded for net9.0:
+                            <TargetFrameworks>net9.0;net9.0-android;net9.0-ios;net9.0-maccatalyst;net9.0-windows10.0.19041.0</TargetFrameworks>
+                            <UseMaui Condition="'$(TargetFramework)' != 'net9.0'">true</UseMaui>
+      Option B: Use SetTargetFramework metadata on this ProjectReference to pin to a specific MAUI TFM
+                (platform-specific, not portable across CI agents).
+    Until Golyath.csproj supports net9.0, this reference will fail at build time.
+    See: decisions/inbox/duke-testability-gap.md
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Golyath\Golyath.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-﻿namespace Golyath
+namespace Golyath.UI.Views
 {
     public partial class MainPage : ContentPage
     {
