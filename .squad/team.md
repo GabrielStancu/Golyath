@@ -12,17 +12,17 @@
 
 | Name | Role | Charter | Status |
 |------|------|---------|--------|
-| Rocky | Lead / Architect | .squad/agents/rocky/charter.md | ✅ Active |
-| Apollo | MAUI / UI Dev | .squad/agents/apollo/charter.md | ✅ Active |
-| Mickey | Backend / Data Dev | .squad/agents/mickey/charter.md | ✅ Active |
-| Duke | Tester / QA | .squad/agents/duke/charter.md | ✅ Active |
-| Scribe | Session Logger | .squad/agents/scribe/charter.md | ✅ Active |
-| Ralph | Work Monitor | .squad/agents/ralph/charter.md | ✅ Active |
+| Ripley | Lead / Architect | [charter](.squad/agents/ripley/charter.md) | 🟢 Active |
+| Hicks | Mobile UI Dev | [charter](.squad/agents/hicks/charter.md) | 🟢 Active |
+| Vasquez | Data & Backend Dev | [charter](.squad/agents/vasquez/charter.md) | 🟢 Active |
+| Hudson | Tester | [charter](.squad/agents/hudson/charter.md) | 🟢 Active |
+| Scribe | Session Logger | [charter](.squad/agents/scribe/charter.md) | 📋 Silent |
+| Ralph | Work Monitor | — | 🔄 Monitor |
 
 ## Project Context
 
+- **Project:** Golyath — offline-first .NET MAUI gym tracking app
 - **Owner:** Stancu Gabriel
-- **Project:** Golyath — .NET MAUI offline-first gym tracking app
-- **Stack:** .NET MAUI, C#, SQLite, MVVM, Clean Architecture (Core / Application / Infrastructure / UI)
-- **Accent:** `#FFD700` (gold)
-- **Created:** 2026-04-26
+- **Stack:** .NET MAUI, C#, SQLite, CommunityToolkit.Mvvm, Clean Architecture
+- **Universe:** Alien (1986)
+- **Created:** 2026-05-02

@@ -15,8 +15,7 @@
     "Lost",
     "Marvel Cinematic Universe",
     "DC Universe",
-    "Futurama",
-    "Rocky"
+    "Futurama"
   ],
   "universe_capacity": {
     "The Usual Suspects": 6,
@@ -33,7 +32,6 @@
     "Lost": 18,
     "Marvel Cinematic Universe": 25,
     "DC Universe": 18,
-    "Futurama": 12,
-    "Rocky": 12
+    "Futurama": 12
   }
 }
