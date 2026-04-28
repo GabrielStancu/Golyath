@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Golyath.Infrastructure;
+using Golyath.Infrastructure.Data.Migrations;
+using Golyath.Infrastructure.Data.Seeding;
+using Microsoft.Extensions.Logging;
 
 namespace Golyath;
 
@@ -15,10 +18,34 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "golyath.db");
+        builder.Services.AddInfrastructure(dbPath);
+
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
-        return builder.Build();
+        var app = builder.Build();
+
+        InitializeDatabaseAsync(app.Services).GetAwaiter().GetResult();
+
+        return app;
+    }
+
+    private static async Task InitializeDatabaseAsync(IServiceProvider services)
+    {
+        try
+        {
+            var migrator = services.GetRequiredService<DatabaseMigrator>();
+            await migrator.MigrateAsync();
+
+            var seeder = services.GetRequiredService<ExerciseSeeder>();
+            await seeder.SeedAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Golyath] Database initialization failed: {ex}");
+            throw;
+        }
     }
 }

@@ -68,6 +68,12 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Golyath.Application\Golyath.Application.csproj" />
+	  <ProjectReference Include="..\Golyath.Infrastructure\Golyath.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>
