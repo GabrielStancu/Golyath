@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="Golyath.Application/Golyath.Application.csproj" />
-  <Project Path="Golyath.Core/Golyath.Core.csproj" />
-  <Project Path="Golyath.Infrastructure/Golyath.Infrastructure.csproj" />
-  <Project Path="Golyath/Golyath.csproj" />
-</Solution>

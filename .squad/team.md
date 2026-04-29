@@ -12,17 +12,21 @@
 
 | Name | Role | Charter | Status |
 |------|------|---------|--------|
-| Ripley | Lead / Architect | [charter](.squad/agents/ripley/charter.md) | 🟢 Active |
-| Hicks | Mobile UI Dev | [charter](.squad/agents/hicks/charter.md) | 🟢 Active |
-| Vasquez | Data & Backend Dev | [charter](.squad/agents/vasquez/charter.md) | 🟢 Active |
-| Hudson | Tester | [charter](.squad/agents/hudson/charter.md) | 🟢 Active |
-| Scribe | Session Logger | [charter](.squad/agents/scribe/charter.md) | 📋 Silent |
-| Ralph | Work Monitor | — | 🔄 Monitor |
+| 🏗️ Mal | Lead & Architect | [charter](.squad/agents/mal/charter.md) | active |
+| 🔧 Kaylee | Backend Dev | [charter](.squad/agents/kaylee/charter.md) | active |
+| ⚛️ Wash | Frontend Dev | [charter](.squad/agents/wash/charter.md) | active |
+| 🧪 Zoe | Tester | [charter](.squad/agents/zoe/charter.md) | active |
+| 📋 Scribe | Session Logger | [charter](.squad/agents/scribe/charter.md) | active |
+| 🔄 Ralph | Work Monitor | [charter](.squad/agents/ralph/charter.md) | active |
 
 ## Project Context
 
-- **Project:** Golyath — offline-first .NET MAUI gym tracking app
+- **Project:** Golyath — offline-first gym tracking app (.NET MAUI)
 - **Owner:** Stancu Gabriel
-- **Stack:** .NET MAUI, C#, SQLite, CommunityToolkit.Mvvm, Clean Architecture
-- **Universe:** Alien (1986)
-- **Created:** 2026-05-02
+- **Stack:** .NET MAUI, C#, SQLite, MVVM, Clean Architecture
+- **Universe:** Firefly
+- **Created:** 2026-05-04
+
+## Directives
+
+- **No auto-commit:** Scribe must NOT auto-commit `.squad/` changes after agent work. Gabriel approves commits manually.

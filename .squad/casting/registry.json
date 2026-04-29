@@ -1,34 +1,50 @@
 {
   "agents": {
-    "ripley": {
-      "persistent_name": "Ripley",
-      "universe": "Alien",
-      "role": "Lead / Architect",
-      "created_at": "2026-05-02T00:00:00Z",
+    "mal": {
+      "persistent_name": "Mal",
+      "universe": "Firefly",
+      "role": "Lead & Architect",
+      "created_at": "2026-05-04T00:00:00Z",
       "legacy_named": false,
       "status": "active"
     },
-    "hicks": {
-      "persistent_name": "Hicks",
-      "universe": "Alien",
-      "role": "Mobile UI Dev",
-      "created_at": "2026-05-02T00:00:00Z",
+    "kaylee": {
+      "persistent_name": "Kaylee",
+      "universe": "Firefly",
+      "role": "Backend Dev",
+      "created_at": "2026-05-04T00:00:00Z",
       "legacy_named": false,
       "status": "active"
     },
-    "vasquez": {
-      "persistent_name": "Vasquez",
-      "universe": "Alien",
-      "role": "Data & Backend Dev",
-      "created_at": "2026-05-02T00:00:00Z",
+    "wash": {
+      "persistent_name": "Wash",
+      "universe": "Firefly",
+      "role": "Frontend Dev",
+      "created_at": "2026-05-04T00:00:00Z",
       "legacy_named": false,
       "status": "active"
     },
-    "hudson": {
-      "persistent_name": "Hudson",
-      "universe": "Alien",
+    "zoe": {
+      "persistent_name": "Zoe",
+      "universe": "Firefly",
       "role": "Tester",
-      "created_at": "2026-05-02T00:00:00Z",
+      "created_at": "2026-05-04T00:00:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "scribe": {
+      "persistent_name": "Scribe",
+      "universe": "exempt",
+      "role": "Session Logger",
+      "created_at": "2026-05-04T00:00:00Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "ralph": {
+      "persistent_name": "Ralph",
+      "universe": "exempt",
+      "role": "Work Monitor",
+      "created_at": "2026-05-04T00:00:00Z",
       "legacy_named": false,
       "status": "active"
     }
