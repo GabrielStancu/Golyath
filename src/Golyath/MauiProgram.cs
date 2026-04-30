@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Golyath.Infrastructure.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Golyath;
 
@@ -15,8 +16,10 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        builder.Services.AddInfrastructure();
+
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
