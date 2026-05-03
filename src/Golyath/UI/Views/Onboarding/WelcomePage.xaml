@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Golyath.UI.Views.Onboarding.WelcomePage"
+             BackgroundColor="{StaticResource AppDarkBg}"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Brand section -->
+        <VerticalStackLayout Grid.Row="0"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="16"
+                             Padding="32,0">
+
+            <Label Text="GOLYATH"
+                   FontSize="56"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Accent}"
+                   HorizontalOptions="Center"
+                   CharacterSpacing="6" />
+
+            <Label Text="Your Personal Training Intelligence"
+                   FontSize="16"
+                   TextColor="#AAAAAA"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+        </VerticalStackLayout>
+
+        <!-- Action buttons -->
+        <VerticalStackLayout Grid.Row="1"
+                             Padding="32,0,32,64"
+                             Spacing="12">
+
+            <Button Text="START TRAINING"
+                    Command="{Binding NewProfileCommand}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource AccentText}"
+                    FontAttributes="Bold"
+                    CornerRadius="14"
+                    HeightRequest="56"
+                    FontSize="16"
+                    CharacterSpacing="1" />
+
+            <Button Text="Restore from Backup"
+                    Command="{Binding RestoreBackupCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="#AAAAAA"
+                    BorderColor="#444444"
+                    BorderWidth="1"
+                    CornerRadius="14"
+                    HeightRequest="56"
+                    FontSize="15" />
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>

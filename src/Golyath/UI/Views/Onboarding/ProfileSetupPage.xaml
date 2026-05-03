@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Golyath.UI.Views.Onboarding.ProfileSetupPage"
+             Title=""
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="28,16,28,48" Spacing="0">
+
+            <!-- Step indicator -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,8,0,32">
+                <BoxView WidthRequest="32" HeightRequest="4" CornerRadius="2"
+                         BackgroundColor="{StaticResource Accent}" />
+                <BoxView WidthRequest="32" HeightRequest="4" CornerRadius="2"
+                         BackgroundColor="{AppThemeBinding Light=#DDDDDD, Dark=#333333}" />
+            </HorizontalStackLayout>
+
+            <!-- Header -->
+            <Label Text="Tell us about you"
+                   FontSize="28" FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                   Margin="0,0,0,4" />
+            <Label Text="Personalise your training experience"
+                   FontSize="15"
+                   TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
+                   Margin="0,0,0,28" />
+
+            <!-- Nickname -->
+            <Label Text="NICKNAME" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <Entry Placeholder="e.g. Alex"
+                       Text="{Binding Nickname}"
+                       FontSize="16"
+                       ReturnType="Next"
+                       PlaceholderColor="{AppThemeBinding Light=#BBBBBB, Dark=#555555}"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Birthday -->
+            <Label Text="BIRTHDAY" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <DatePicker Date="{Binding Birthday}"
+                            MaximumDate="{Binding MaxBirthday}"
+                            MinimumDate="1920-01-01"
+                            FontSize="16"
+                            HeightRequest="48"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Units toggle -->
+            <Label Text="UNITS" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,8" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,20">
+                <Button Grid.Column="0" Text="kg / cm"
+                        CornerRadius="10" HeightRequest="44" FontSize="14"
+                        Command="{Binding SelectMetricCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMetricSelected}" Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Accent}" />
+                            <Setter Property="TextColor" Value="{StaticResource AccentText}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMetricSelected}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="1" Text="lb / in"
+                        CornerRadius="10" HeightRequest="44" FontSize="14"
+                        Command="{Binding SelectImperialCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsImperialUnit}" Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Accent}" />
+                            <Setter Property="TextColor" Value="{StaticResource AccentText}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsImperialUnit}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
+
+            <!-- Height -->
+            <Label Text="{Binding HeightLabel, StringFormat='{0}'}"
+                   FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <Entry Text="{Binding HeightInput}"
+                       Keyboard="Numeric"
+                       FontSize="16"
+                       ReturnType="Next"
+                       HeightRequest="48"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Weight -->
+            <Label Text="{Binding WeightLabel, StringFormat='{0}'}"
+                   FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <Entry Text="{Binding WeightInput}"
+                       Keyboard="Numeric"
+                       FontSize="16"
+                       ReturnType="Done"
+                       HeightRequest="48"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Gender -->
+            <Label Text="GENDER" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="8,4" Margin="0,0,0,28">
+                <Picker ItemsSource="{Binding GenderOptions}"
+                        SelectedItem="{Binding SelectedGenderDisplay}"
+                        FontSize="16"
+                        HeightRequest="48"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Validation message -->
+            <Label Text="{Binding ValidationMessage}"
+                   TextColor="#E05555"
+                   FontSize="14"
+                   IsVisible="{Binding HasValidationMessage}"
+                   Margin="0,0,0,12" />
+
+            <!-- Continue button -->
+            <Button Text="Continue →"
+                    Command="{Binding ContinueCommand}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource AccentText}"
+                    FontAttributes="Bold"
+                    CornerRadius="14"
+                    HeightRequest="56"
+                    FontSize="16" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Golyath.UI.Views.Profile.EditProfilePage"
+             Title="My Profile"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="28,16,28,48" Spacing="0">
+
+            <!-- Nickname -->
+            <Label Text="NICKNAME" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <Entry Text="{Binding Nickname}"
+                       FontSize="16" ReturnType="Next"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Birthday -->
+            <Label Text="BIRTHDAY" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <DatePicker Date="{Binding Birthday}"
+                            MaximumDate="{Binding MaxBirthday}"
+                            MinimumDate="1920-01-01"
+                            FontSize="16" HeightRequest="48"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Units -->
+            <Label Text="UNITS" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,8" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,20">
+                <Button Grid.Column="0" Text="kg / cm"
+                        CornerRadius="10" HeightRequest="44" FontSize="14"
+                        Command="{Binding SelectMetricCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMetricSelected}" Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Accent}" />
+                            <Setter Property="TextColor" Value="{StaticResource AccentText}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMetricSelected}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="1" Text="lb / in"
+                        CornerRadius="10" HeightRequest="44" FontSize="14"
+                        Command="{Binding SelectImperialCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsImperialUnit}" Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Accent}" />
+                            <Setter Property="TextColor" Value="{StaticResource AccentText}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsImperialUnit}" Value="False">
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}" />
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
+
+            <!-- Height -->
+            <Label Text="{Binding HeightLabel}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <Entry Text="{Binding HeightInput}" Keyboard="Numeric"
+                       FontSize="16" ReturnType="Next" HeightRequest="48"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Weight -->
+            <Label Text="{Binding WeightLabel}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,4" Margin="0,0,0,20">
+                <Entry Text="{Binding WeightInput}" Keyboard="Numeric"
+                       FontSize="16" ReturnType="Done" HeightRequest="48"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Gender -->
+            <Label Text="GENDER" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="8,4" Margin="0,0,0,20">
+                <Picker ItemsSource="{Binding GenderOptions}"
+                        SelectedItem="{Binding SelectedGenderDisplay}"
+                        FontSize="16" HeightRequest="48"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Fitness Goal -->
+            <Label Text="FITNESS GOAL" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="8,4" Margin="0,0,0,28">
+                <Picker ItemsSource="{Binding GoalOptions}"
+                        SelectedItem="{Binding SelectedGoalDisplay}"
+                        FontSize="16" HeightRequest="48"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+            </Border>
+
+            <!-- Divider -->
+            <BoxView HeightRequest="1" Margin="0,0,0,28"
+                     BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}" />
+
+            <!-- Dark mode toggle -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,32">
+                <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="2">
+                    <Label Text="Dark Mode"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                    <Label Text="Easier on the eyes in low light"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
+                </VerticalStackLayout>
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding IsDarkMode}"
+                        OnColor="{StaticResource Accent}"
+                        VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Status message -->
+            <Label Text="{Binding SaveMessage}"
+                   FontSize="14"
+                   TextColor="{StaticResource Accent}"
+                   IsVisible="{Binding HasSaveMessage}"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,12" />
+
+            <!-- Save button -->
+            <Button Text="Save Changes"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource AccentText}"
+                    FontAttributes="Bold"
+                    CornerRadius="14"
+                    HeightRequest="56"
+                    FontSize="16" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Accent}"
+                               HorizontalOptions="Center"
+                               Margin="0,12,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

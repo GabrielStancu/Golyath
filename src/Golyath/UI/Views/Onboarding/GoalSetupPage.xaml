@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:enums="clr-namespace:Golyath.Core.Enums;assembly=Golyath"
+             x:Class="Golyath.UI.Views.Onboarding.GoalSetupPage"
+             x:Name="GoalPage"
+             Title=""
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="28,16">
+
+        <!-- Step indicator -->
+        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Center" Spacing="6" Margin="0,8,0,32">
+            <BoxView WidthRequest="32" HeightRequest="4" CornerRadius="2"
+                     BackgroundColor="{AppThemeBinding Light=#DDDDDD, Dark=#333333}" />
+            <BoxView WidthRequest="32" HeightRequest="4" CornerRadius="2"
+                     BackgroundColor="{StaticResource Accent}" />
+        </HorizontalStackLayout>
+
+        <!-- Content -->
+        <VerticalStackLayout Grid.Row="1" Spacing="0">
+
+            <Label Text="What's your goal?"
+                   FontSize="28" FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                   Margin="0,0,0,4" />
+            <Label Text="We'll tailor your workouts and suggestions"
+                   FontSize="15"
+                   TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
+                   Margin="0,0,0,28" />
+
+            <!-- 2×2 goal card grid -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                  ColumnSpacing="12" RowSpacing="12">
+
+                <!-- Strength -->
+                <Border Grid.Row="0" Grid.Column="0"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="16,14"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsStrengthSelected}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Accent}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsStrengthSelected}" Value="False">
+                            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}" />
+                            <Setter Property="StrokeThickness" Value="1" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectGoalCommand}"
+                                              CommandParameter="{x:Static enums:FitnessGoal.Strength}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="💪" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="Strength" FontSize="15" FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                        <Label Text="Build raw power and lift heavier"
+                               FontSize="12" HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Hypertrophy -->
+                <Border Grid.Row="0" Grid.Column="1"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="16,14"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsHypertrophySelected}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Accent}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsHypertrophySelected}" Value="False">
+                            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}" />
+                            <Setter Property="StrokeThickness" Value="1" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectGoalCommand}"
+                                              CommandParameter="{x:Static enums:FitnessGoal.Hypertrophy}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="🏋️" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="Hypertrophy" FontSize="15" FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                        <Label Text="Maximise muscle size and definition"
+                               FontSize="12" HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Fat Loss -->
+                <Border Grid.Row="1" Grid.Column="0"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="16,14"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsFatLossSelected}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Accent}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsFatLossSelected}" Value="False">
+                            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}" />
+                            <Setter Property="StrokeThickness" Value="1" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectGoalCommand}"
+                                              CommandParameter="{x:Static enums:FitnessGoal.FatLoss}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="🔥" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="Fat Loss" FontSize="15" FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                        <Label Text="Burn fat while preserving muscle"
+                               FontSize="12" HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Balanced -->
+                <Border Grid.Row="1" Grid.Column="1"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="16,14"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsBalancedSelected}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Accent}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsBalancedSelected}" Value="False">
+                            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}" />
+                            <Setter Property="StrokeThickness" Value="1" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectGoalCommand}"
+                                              CommandParameter="{x:Static enums:FitnessGoal.Balanced}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="⚖️" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="Balanced" FontSize="15" FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                        <Label Text="All-around fitness and health"
+                               FontSize="12" HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </Grid>
+
+        </VerticalStackLayout>
+
+        <!-- Continue button -->
+        <VerticalStackLayout Grid.Row="2" Margin="0,24,0,16">
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Accent}"
+                               HorizontalOptions="Center"
+                               Margin="0,0,0,8" />
+            <Button Text="Let's Go! →"
+                    Command="{Binding CompleteCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource AccentText}"
+                    FontAttributes="Bold"
+                    CornerRadius="14"
+                    HeightRequest="56"
+                    FontSize="16" />
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>
