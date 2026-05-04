@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Workout"
+             x:Class="Golyath.UI.Views.Workout.ActiveWorkoutPage"
+             x:DataType="vm:ActiveWorkoutViewModel"
+             BackgroundColor="{StaticResource AppDarkBg}"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ── Header ── -->
+        <Grid Grid.Row="0" RowDefinitions="Auto,1">
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="*,Auto"
+                  Padding="16,12"
+                  BackgroundColor="{StaticResource AppDarkSurface}">
+                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                    <Label Text="{Binding WorkoutTitle}"
+                           TextColor="White"
+                           FontSize="18"
+                           FontAttributes="Bold" />
+                    <Label Text="{Binding ElapsedTime}"
+                           TextColor="{StaticResource Accent}"
+                           FontSize="14"
+                           FontFamily="OpenSansRegular" />
+                </VerticalStackLayout>
+                <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                    <Button Text="Discard"
+                            Command="{Binding AbandonWorkoutCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="#888888"
+                            FontSize="13"
+                            Padding="8,6" />
+                    <Button Text="FINISH"
+                            Command="{Binding CompleteWorkoutCommand}"
+                            BackgroundColor="{StaticResource Accent}"
+                            TextColor="{StaticResource AccentText}"
+                            FontAttributes="Bold"
+                            CornerRadius="10"
+                            FontSize="14"
+                            Padding="16,8" />
+                </HorizontalStackLayout>
+            </Grid>
+            <BoxView Grid.Row="1" Color="{StaticResource AppDarkBorder}" />
+        </Grid>
+
+        <!-- ── Exercise list ── -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="0" Padding="16,12,16,100">
+
+                <!-- Activity indicator -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Accent}"
+                                   HorizontalOptions="Center"
+                                   Margin="0,40" />
+
+                <!-- Exercises using BindableLayout (avoids CollectionView-in-ScrollView issues) -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:WorkoutExerciseViewModel">
+
+                            <Border BackgroundColor="{StaticResource AppDarkSurface}"
+                                    Stroke="{StaticResource AppDarkBorder}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 14"
+                                    Padding="14,12">
+
+                                <VerticalStackLayout Spacing="10">
+
+                                    <!-- Exercise header -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding ExerciseName}"
+                                               TextColor="White"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <Button Grid.Column="1"
+                                                Text="✕"
+                                                Command="{Binding RemoveCommand}"
+                                                BackgroundColor="Transparent"
+                                                TextColor="#555555"
+                                                FontSize="15"
+                                                Padding="8,4"
+                                                MinimumWidthRequest="36"
+                                                MinimumHeightRequest="36" />
+                                    </Grid>
+
+                                    <!-- Sets column header -->
+                                    <Grid ColumnDefinitions="36,*,80,52" ColumnSpacing="6" Padding="4,0,0,0">
+                                        <Label Grid.Column="0" Text="SET" TextColor="#666666" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" />
+                                        <Label Grid.Column="1" Text="WEIGHT" TextColor="#666666" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" HorizontalOptions="Center" />
+                                        <Label Grid.Column="2" Text="REPS" TextColor="#666666" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" HorizontalOptions="Center" />
+                                        <Label Grid.Column="3" TextColor="#666666" FontSize="11" />
+                                    </Grid>
+
+                                    <!-- Sets -->
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sets}" Spacing="6">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:WorkoutSetViewModel">
+
+                                                <SwipeView>
+                                                    <SwipeView.RightItems>
+                                                        <SwipeItems>
+                                                            <SwipeItem Text="Duplicate"
+                                                                       BackgroundColor="#1A3A5C"
+                                                                       Command="{Binding DuplicateCommand}" />
+                                                        </SwipeItems>
+                                                    </SwipeView.RightItems>
+
+                                                    <Grid ColumnDefinitions="36,*,80,52"
+                                                          ColumnSpacing="6"
+                                                          Padding="4,2,0,2">
+
+                                                        <!-- Set number -->
+                                                        <Label Grid.Column="0"
+                                                               Text="{Binding SetNumber}"
+                                                               TextColor="#888888"
+                                                               FontSize="14"
+                                                               VerticalOptions="Center"
+                                                               HorizontalOptions="Center" />
+
+                                                        <!-- Weight: [−] entry [+] -->
+                                                        <Grid Grid.Column="1"
+                                                              ColumnDefinitions="30,*,30"
+                                                              ColumnSpacing="2">
+                                                            <Button Grid.Column="0"
+                                                                    Text="−"
+                                                                    Command="{Binding DecrementWeightCommand}"
+                                                                    BackgroundColor="#2A2A2A"
+                                                                    TextColor="White"
+                                                                    FontSize="18"
+                                                                    CornerRadius="8"
+                                                                    Padding="0"
+                                                                    HeightRequest="40"
+                                                                    WidthRequest="30" />
+                                                            <Entry Grid.Column="1"
+                                                                   Text="{Binding WeightText}"
+                                                                   Keyboard="Numeric"
+                                                                   TextColor="White"
+                                                                   BackgroundColor="#222222"
+                                                                   HorizontalTextAlignment="Center"
+                                                                   FontSize="14"
+                                                                   HeightRequest="40" />
+                                                            <Button Grid.Column="2"
+                                                                    Text="+"
+                                                                    Command="{Binding IncrementWeightCommand}"
+                                                                    BackgroundColor="#2A2A2A"
+                                                                    TextColor="White"
+                                                                    FontSize="18"
+                                                                    CornerRadius="8"
+                                                                    Padding="0"
+                                                                    HeightRequest="40"
+                                                                    WidthRequest="30" />
+                                                        </Grid>
+
+                                                        <!-- Reps entry -->
+                                                        <Entry Grid.Column="2"
+                                                               Text="{Binding RepsText}"
+                                                               Keyboard="Numeric"
+                                                               TextColor="White"
+                                                               BackgroundColor="#222222"
+                                                               HorizontalTextAlignment="Center"
+                                                               FontSize="14"
+                                                               HeightRequest="40" />
+
+                                                        <!-- Complete button -->
+                                                        <Button Grid.Column="3"
+                                                                Text="✓"
+                                                                Command="{Binding CompleteSetCommand}"
+                                                                TextColor="White"
+                                                                FontSize="18"
+                                                                CornerRadius="8"
+                                                                HeightRequest="40"
+                                                                Padding="0">
+                                                            <Button.Triggers>
+                                                                <DataTrigger TargetType="Button"
+                                                                             Binding="{Binding IsCompleted}"
+                                                                             Value="False">
+                                                                    <Setter Property="BackgroundColor" Value="#2A2A2A" />
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="Button"
+                                                                             Binding="{Binding IsCompleted}"
+                                                                             Value="True">
+                                                                    <Setter Property="BackgroundColor" Value="#2D7A3A" />
+                                                                </DataTrigger>
+                                                            </Button.Triggers>
+                                                        </Button>
+
+                                                    </Grid>
+                                                </SwipeView>
+
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+
+                                    <!-- Add Set button -->
+                                    <Button Text="+ Add Set"
+                                            Command="{Binding AddSetCommand}"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource Accent}"
+                                            BorderColor="#333333"
+                                            BorderWidth="1"
+                                            CornerRadius="8"
+                                            HeightRequest="40"
+                                            FontSize="14" />
+
+                                </VerticalStackLayout>
+                            </Border>
+
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Add Exercise button -->
+                <Button Text="+ ADD EXERCISE"
+                        Command="{Binding RequestAddExerciseCommand}"
+                        BackgroundColor="{StaticResource AppDarkSurface}"
+                        TextColor="{StaticResource Accent}"
+                        BorderColor="{StaticResource Accent}"
+                        BorderWidth="1"
+                        CornerRadius="14"
+                        HeightRequest="54"
+                        FontAttributes="Bold"
+                        FontSize="15"
+                        CharacterSpacing="1"
+                        Margin="0,12,0,0" />
+
+                <!-- Empty state (shown when not loading and no exercises added) -->
+                <Label Text="Tap &quot;+ ADD EXERCISE&quot; to start logging"
+                       TextColor="#555555"
+                       FontSize="14"
+                       HorizontalOptions="Center"
+                       Margin="0,8,0,0"
+                       IsVisible="False">
+                    <Label.Triggers>
+                        <MultiTrigger TargetType="Label">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding IsBusy}" Value="False" />
+                                <BindingCondition Binding="{Binding Exercises.Count}" Value="0" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="True" />
+                        </MultiTrigger>
+                    </Label.Triggers>
+                </Label>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ── Rest Timer bar ── -->
+        <Grid Grid.Row="2"
+              IsVisible="{Binding IsRestTimerVisible}"
+              BackgroundColor="{StaticResource AppDarkSurface}"
+              RowDefinitions="1.5,Auto">
+            <BoxView Grid.Row="0" Color="{StaticResource Accent}" />
+            <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="20,10">
+                <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center">
+                    <Label Text="REST"
+                           TextColor="#888888"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           CharacterSpacing="2" />
+                    <Label Text="{Binding RestTimeDisplay}"
+                           TextColor="{StaticResource Accent}"
+                           FontSize="30"
+                           FontAttributes="Bold"
+                           FontFamily="OpenSansRegular" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1"
+                        Text="SKIP"
+                        Command="{Binding SkipRestCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="#888888"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        Padding="12,8" />
+            </Grid>
+        </Grid>
+
+    </Grid>
+</ContentPage>

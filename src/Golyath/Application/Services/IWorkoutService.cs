@@ -1,0 +1,20 @@
+using Golyath.Core.Entities;
+
+namespace Golyath.Application.Services;
+
+public interface IWorkoutService
+{
+    Task<Workout> StartWorkoutAsync(string? name = null);
+    Task<Workout?> GetActiveWorkoutAsync();
+    Task<WorkoutExercise> AddExerciseAsync(int workoutId, int exerciseId);
+    Task RemoveExerciseAsync(int workoutExerciseId);
+    Task<WorkoutSet> AddSetAsync(int workoutExerciseId, double weight, int reps, string? tempo = null, string? notes = null);
+    Task<WorkoutSet> CompleteSetAsync(int setId);
+    Task<WorkoutSet> DuplicateSetAsync(int setId);
+    Task UpdateSetAsync(WorkoutSet set);
+    Task CompleteWorkoutAsync(int workoutId);
+    Task AbandonWorkoutAsync(int workoutId);
+    Task<IReadOnlyList<WorkoutExercise>> GetWorkoutExercisesAsync(int workoutId);
+    Task<IReadOnlyList<WorkoutSet>> GetSetsForExerciseAsync(int workoutExerciseId);
+    Task<WorkoutSet?> GetLastSetForAutofillAsync(int exerciseId);
+}

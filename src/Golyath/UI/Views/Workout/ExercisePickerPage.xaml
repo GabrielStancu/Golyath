@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Workout"
+             xmlns:entities="clr-namespace:Golyath.Core.Entities;assembly=Golyath"
+             x:Class="Golyath.UI.Views.Workout.ExercisePickerPage"
+             x:Name="ThisPage"
+             x:DataType="vm:ExercisePickerViewModel"
+             Title="Add Exercise"
+             BackgroundColor="{StaticResource AppDarkBg}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Search bar -->
+        <SearchBar Grid.Row="0"
+                   Text="{Binding SearchQuery}"
+                   Placeholder="Search exercises…"
+                   PlaceholderColor="#666666"
+                   TextColor="White"
+                   BackgroundColor="{StaticResource AppDarkSurface}"
+                   CancelButtonColor="{StaticResource Accent}"
+                   Margin="0,0,0,0" />
+
+        <!-- Loading indicator -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource Accent}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center" />
+
+        <!-- Exercise list -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Exercises}"
+                        IsVisible="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="entities:Exercise">
+                    <Grid Padding="16,10">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.SelectExerciseCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+
+                        <Border BackgroundColor="{StaticResource AppDarkSurface}"
+                                Stroke="{StaticResource AppDarkBorder}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="14,10">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       TextColor="White"
+                                       FontSize="15"
+                                       FontAttributes="Bold" />
+                                <Label Text="{Binding PrimaryMuscle}"
+                                       TextColor="#888888"
+                                       FontSize="12" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

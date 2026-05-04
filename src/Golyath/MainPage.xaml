@@ -25,14 +25,25 @@
                HorizontalTextAlignment="Center"
                TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
 
-        <Button Text="My Profile"
-                Clicked="OnProfileClicked"
+        <Button Text="START WORKOUT"
+                Clicked="OnStartWorkoutClicked"
                 BackgroundColor="{StaticResource Accent}"
                 TextColor="{StaticResource AccentText}"
                 FontAttributes="Bold"
-                CornerRadius="12"
-                HeightRequest="48"
+                CornerRadius="14"
+                HeightRequest="56"
+                FontSize="16"
+                CharacterSpacing="1"
                 Margin="0,16,0,0" />
+
+        <Button Text="My Profile"
+                Clicked="OnProfileClicked"
+                BackgroundColor="Transparent"
+                TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                BorderColor="{AppThemeBinding Light=#DDDDDD, Dark=#333333}"
+                BorderWidth="1"
+                CornerRadius="12"
+                HeightRequest="48" />
 
     </VerticalStackLayout>
 
