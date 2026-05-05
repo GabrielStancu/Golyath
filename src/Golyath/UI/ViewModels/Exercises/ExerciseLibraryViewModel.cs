@@ -1,23 +1,28 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Golyath.Core.Abstractions;
 using Golyath.Core.Entities;
 using Golyath.Core.Enums;
 
-namespace Golyath.UI.ViewModels.Workout;
+namespace Golyath.UI.ViewModels.Exercises;
 
-public partial class ExercisePickerViewModel : ObservableObject
+public partial class ExerciseLibraryViewModel : ObservableObject
 {
     private readonly IExerciseRepository _exerciseRepository;
 
+    // Pre-computed per-exercise search data built once on load
     private record ExerciseEntry(Exercise Exercise, string NameLower, MuscleGroup[] AllMuscles);
     private IReadOnlyList<ExerciseEntry> _index = [];
 
     private bool _applyingFilter;
     private CancellationTokenSource? _searchCts;
+
+    // Last non-null user selections — restored when Picker transiently sets SelectedItem=null
     private string _lastValidMuscle = "All";
     private string _lastValidEquipment = "All";
+
+    // ── Bindable collections as full-replace List<T> to avoid ObservableCollection.Clear()
+    //    which sends CollectionChanged.Reset and causes Picker to clear SelectedItem.
 
     private List<Exercise> _exercises = [];
     public List<Exercise> Exercises
@@ -60,7 +65,7 @@ public partial class ExercisePickerViewModel : ObservableObject
         SelectedEquipment is not (null or "All") && Enum.TryParse<EquipmentType>(SelectedEquipment, out var e)
             ? e : null;
 
-    public ExercisePickerViewModel(IExerciseRepository exerciseRepository)
+    public ExerciseLibraryViewModel(IExerciseRepository exerciseRepository)
     {
         _exerciseRepository = exerciseRepository;
     }
@@ -84,6 +89,7 @@ public partial class ExercisePickerViewModel : ObservableObject
         }
     }
 
+    // Debounce search: wait 300 ms after the last keystroke before filtering
     partial void OnSearchQueryChanged(string value)
     {
         _searchCts?.Cancel();
@@ -98,14 +104,24 @@ public partial class ExercisePickerViewModel : ObservableObject
 
     partial void OnSelectedMuscleGroupChanged(string? value)
     {
-        if (value is null) { SelectedMuscleGroup = _lastValidMuscle; return; }
+        if (value is null)
+        {
+            // Picker transiently clears SelectedItem when its ItemsSource property changes —
+            // restore the last known-good value instead of jumping to "All".
+            SelectedMuscleGroup = _lastValidMuscle;
+            return;
+        }
         _lastValidMuscle = value;
         ApplyFilter();
     }
 
     partial void OnSelectedEquipmentChanged(string? value)
     {
-        if (value is null) { SelectedEquipment = _lastValidEquipment; return; }
+        if (value is null)
+        {
+            SelectedEquipment = _lastValidEquipment;
+            return;
+        }
         _lastValidEquipment = value;
         ApplyFilter();
     }
@@ -122,6 +138,7 @@ public partial class ExercisePickerViewModel : ObservableObject
 
             UpdateAvailableOptions(query, muscle, equipment);
 
+            // Re-read after options update may have reset selections
             muscle = ActiveMuscle;
             equipment = ActiveEquipment;
 
@@ -133,6 +150,7 @@ public partial class ExercisePickerViewModel : ObservableObject
             if (equipment is not null)
                 filtered = filtered.Where(e => e.Exercise.Equipment == equipment.Value);
 
+            // Assign new list — single PropertyChanged, no N×CollectionChanged
             Exercises = filtered.OrderBy(e => e.Exercise.Name).Select(e => e.Exercise).ToList();
         }
         finally
@@ -146,6 +164,7 @@ public partial class ExercisePickerViewModel : ObservableObject
         var savedMuscle = SelectedMuscleGroup ?? "All";
         var savedEquipment = SelectedEquipment ?? "All";
 
+        // Muscles available = primary + secondary of exercises matching search & current equipment
         var forMuscle = _index.AsEnumerable();
         if (!string.IsNullOrEmpty(query))
             forMuscle = forMuscle.Where(e => e.NameLower.Contains(query));
@@ -158,6 +177,7 @@ public partial class ExercisePickerViewModel : ObservableObject
             .Distinct()
             .ToHashSet();
 
+        // Equipment available = distinct equipment matching search & current muscle
         var forEquip = _index.AsEnumerable();
         if (!string.IsNullOrEmpty(query))
             forEquip = forEquip.Where(e => e.NameLower.Contains(query));
@@ -169,6 +189,7 @@ public partial class ExercisePickerViewModel : ObservableObject
             .Distinct()
             .ToHashSet();
 
+        // Replace full list (PropertyChanged) instead of Clear()+Add (CollectionChanged.Reset)
         var desiredMuscles = new[] { "All" }.Concat(availableMuscles.OrderBy(s => s)).ToList();
         if (!MuscleGroupOptions.SequenceEqual(desiredMuscles))
             MuscleGroupOptions = desiredMuscles;
@@ -177,6 +198,7 @@ public partial class ExercisePickerViewModel : ObservableObject
         if (!EquipmentOptions.SequenceEqual(desiredEquipment))
             EquipmentOptions = desiredEquipment;
 
+        // Reset selections that are no longer valid; update _lastValid to match
         if (savedMuscle != "All" && !availableMuscles.Contains(savedMuscle))
         {
             _lastValidMuscle = "All";
@@ -201,15 +223,16 @@ public partial class ExercisePickerViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task PreviewExercise(Exercise exercise)
+    private async Task NavigateToDetail(Exercise exercise)
     {
-        await Shell.Current.GoToAsync($"ExerciseDetailPage?ExerciseId={exercise.Id}&FromPicker=true");
+        await Shell.Current.GoToAsync(
+            $"{nameof(Views.Exercises.ExerciseDetailPage)}?ExerciseId={exercise.Id}");
     }
 
     [RelayCommand]
-    private async Task SelectExercise(Exercise exercise)
+    private async Task NavigateToCreate()
     {
-        WeakReferenceMessenger.Default.Send(new ExercisePickedMessage(exercise));
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync(nameof(Views.Exercises.CreateExercisePage));
     }
 }
+

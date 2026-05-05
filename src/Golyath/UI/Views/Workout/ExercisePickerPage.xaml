@@ -9,7 +9,7 @@
              Title="Add Exercise"
              BackgroundColor="{StaticResource AppDarkBg}">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
 
         <!-- Search bar -->
         <SearchBar Grid.Row="0"
@@ -21,8 +21,42 @@
                    CancelButtonColor="{StaticResource Accent}"
                    Margin="0,0,0,0" />
 
+        <!-- Filters -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*,Auto"
+              ColumnSpacing="8"
+              Padding="12,6"
+              BackgroundColor="{StaticResource AppDarkSurface}">
+
+            <Picker Grid.Column="0"
+                    ItemsSource="{Binding MuscleGroupOptions}"
+                    SelectedItem="{Binding SelectedMuscleGroup}"
+                    Title="Muscle"
+                    TextColor="White"
+                    TitleColor="#888888"
+                    BackgroundColor="Transparent" />
+
+            <Picker Grid.Column="1"
+                    ItemsSource="{Binding EquipmentOptions}"
+                    SelectedItem="{Binding SelectedEquipment}"
+                    Title="Equipment"
+                    TextColor="White"
+                    TitleColor="#888888"
+                    BackgroundColor="Transparent" />
+
+            <Button Grid.Column="2"
+                    Text="✕"
+                    BackgroundColor="Transparent"
+                    TextColor="#888888"
+                    FontSize="15"
+                    Padding="8,4"
+                    VerticalOptions="Center"
+                    Command="{Binding ClearFiltersCommand}"
+                    ToolTipProperties.Text="Clear filters" />
+        </Grid>
+
         <!-- Loading indicator -->
-        <ActivityIndicator Grid.Row="1"
+        <ActivityIndicator Grid.Row="2"
                            IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
                            Color="{StaticResource Accent}"
@@ -30,33 +64,55 @@
                            HorizontalOptions="Center" />
 
         <!-- Exercise list -->
-        <CollectionView Grid.Row="1"
+        <CollectionView Grid.Row="2"
                         ItemsSource="{Binding Exercises}"
                         IsVisible="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="entities:Exercise">
-                    <Grid Padding="16,10">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.SelectExerciseCommand}"
-                                CommandParameter="{Binding .}" />
-                        </Grid.GestureRecognizers>
+                    <Grid Padding="16,6" ColumnDefinitions="*,Auto" ColumnSpacing="8">
 
-                        <Border BackgroundColor="{StaticResource AppDarkSurface}"
+                        <!-- Exercise card (tap to select) -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource AppDarkSurface}"
                                 Stroke="{StaticResource AppDarkBorder}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 10"
                                 Padding="14,10">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.SelectExerciseCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
                             <VerticalStackLayout Spacing="2">
                                 <Label Text="{Binding Name}"
                                        TextColor="White"
                                        FontSize="15"
                                        FontAttributes="Bold" />
                                 <Label Text="{Binding PrimaryMuscle}"
-                                       TextColor="#888888"
-                                       FontSize="12" />
+                                       TextColor="{StaticResource Accent}"
+                                       FontSize="12"
+                                       FontAttributes="Bold" />
+                                <Label Text="{Binding SecondaryMusclesDisplay}"
+                                       IsVisible="{Binding SecondaryMusclesDisplay, Converter={StaticResource IsNotEmptyStringConverter}}"
+                                       TextColor="#666666"
+                                       FontSize="11" />
                             </VerticalStackLayout>
                         </Border>
+
+                        <!-- Preview button -->
+                        <Button Grid.Column="1"
+                                Text="?"
+                                Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.PreviewExerciseCommand}"
+                                CommandParameter="{Binding .}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Accent}"
+                                FontSize="20"
+                                FontAttributes="Bold"
+                                WidthRequest="44"
+                                HeightRequest="44"
+                                VerticalOptions="Center"
+                                Padding="0" />
+
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

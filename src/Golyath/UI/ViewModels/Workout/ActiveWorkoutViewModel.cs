@@ -48,8 +48,11 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         _exerciseRepository = exerciseRepository;
     }
 
-    public void RegisterMessenger() =>
+    public void RegisterMessenger()
+    {
+        WeakReferenceMessenger.Default.Unregister<ExercisePickedMessage>(this);
         WeakReferenceMessenger.Default.Register(this);
+    }
 
     public void UnregisterMessenger() =>
         WeakReferenceMessenger.Default.Unregister<ExercisePickedMessage>(this);

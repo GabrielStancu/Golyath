@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Exercises"
+             x:Class="Golyath.UI.Views.Exercises.ExerciseDetailPage"
+             x:DataType="vm:ExerciseDetailViewModel"
+             Title="{Binding Exercise.Name}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- ── Main scrollable content ── -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="0">
+
+                <!-- Loading indicator -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Accent}"
+                                   HorizontalOptions="Center"
+                                   Margin="0,60" />
+
+                <!-- Content (hidden while loading) -->
+                <VerticalStackLayout IsVisible="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}"
+                                     Spacing="0">
+
+                    <!-- Exercise image carousel -->
+                    <Grid IsVisible="{Binding HasImages}"
+                          BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}">
+                        <CarouselView x:Name="ImageCarousel"
+                                      ItemsSource="{Binding Images}"
+                                      Position="{Binding CarouselPosition, Mode=TwoWay}"
+                                      Loop="True"
+                                      HeightRequest="240"
+                                      IndicatorView="ImageIndicator">
+                            <CarouselView.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Null}">
+                                    <Image Source="{Binding .}"
+                                           Aspect="AspectFill"
+                                           HeightRequest="240" />
+                                </DataTemplate>
+                            </CarouselView.ItemTemplate>
+                        </CarouselView>
+                        <IndicatorView x:Name="ImageIndicator"
+                                       IndicatorColor="#444444"
+                                       SelectedIndicatorColor="{StaticResource Accent}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="End"
+                                       Margin="0,0,0,8"
+                                       HeightRequest="20" />
+                    </Grid>
+
+                    <VerticalStackLayout Padding="20,20,20,100" Spacing="20">
+
+                        <!-- Exercise name -->
+                        <Label Text="{Binding Exercise.Name}"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                               FontSize="24"
+                               FontAttributes="Bold" />
+
+                        <!-- Muscle / Equipment / Movement badges -->
+                        <HorizontalStackLayout Spacing="8">
+                            <Border BackgroundColor="{StaticResource Accent}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 6"
+                                    Padding="10,4">
+                                <Label Text="{Binding Exercise.PrimaryMuscle}"
+                                       TextColor="{StaticResource AccentText}"
+                                       FontSize="13"
+                                       FontAttributes="Bold" />
+                            </Border>
+
+                            <Border BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 6"
+                                    Padding="10,4">
+                                <Label Text="{Binding Exercise.Equipment}"
+                                       TextColor="{AppThemeBinding Light=#444444, Dark=#CCCCCC}"
+                                       FontSize="13" />
+                            </Border>
+
+                            <Border BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 6"
+                                    Padding="10,4">
+                                <Label Text="{Binding Exercise.MovementType}"
+                                       TextColor="{AppThemeBinding Light=#444444, Dark=#CCCCCC}"
+                                       FontSize="13" />
+                            </Border>
+                        </HorizontalStackLayout>
+
+                        <!-- Secondary muscles -->
+                        <VerticalStackLayout Spacing="8"
+                                             IsVisible="{Binding Exercise.SecondaryMusclesRaw, Converter={StaticResource IsNotEmptyStringConverter}}">
+                            <Label Text="SECONDARY MUSCLES"
+                                   TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1" />
+
+                            <Label TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}"
+                                   FontSize="14">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Exercise.SecondaryMusclesRaw}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+
+                        <!-- Instructions -->
+                        <VerticalStackLayout Spacing="12"
+                                             IsVisible="{Binding Exercise.InstructionsRaw, Converter={StaticResource IsNotEmptyStringConverter}}">
+                            <Label Text="HOW TO PERFORM"
+                                   TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1" />
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Exercise.Instructions}"
+                                                 Spacing="10">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Grid ColumnDefinitions="28,*" ColumnSpacing="8">
+                                            <!-- step number injected via index — MAUI doesn't bind index natively,
+                                                 so we use a bullet instead -->
+                                            <Border Grid.Column="0"
+                                                    BackgroundColor="{StaticResource Accent}"
+                                                    StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 4"
+                                                    WidthRequest="22"
+                                                    HeightRequest="22"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Start"
+                                                    Margin="0,2,0,0">
+                                                <Label Text="•"
+                                                       TextColor="{StaticResource AccentText}"
+                                                       FontSize="14"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center" />
+                                            </Border>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding .}"
+                                                   TextColor="{AppThemeBinding Light=#333333, Dark=#DDDDDD}"
+                                                   FontSize="14"
+                                                   LineBreakMode="WordWrap" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
+                        <!-- Notes (custom exercises) -->
+                        <VerticalStackLayout Spacing="8"
+                                             IsVisible="{Binding Exercise.Notes, Converter={StaticResource IsNotNullConverter}}">
+                            <Label Text="NOTES"
+                                   TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1" />
+                            <Label Text="{Binding Exercise.Notes}"
+                                   TextColor="{AppThemeBinding Light=#333333, Dark=#DDDDDD}"
+                                   FontSize="14"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ── Add to workout button ── -->
+        <Border Grid.Row="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 0"
+                Padding="16,12">
+            <Button Text="ADD TO WORKOUT"
+                    Command="{Binding AddToWorkoutCommand}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource AccentText}"
+                    FontAttributes="Bold"
+                    FontSize="15"
+                    CornerRadius="12"
+                    HeightRequest="52"
+                    CharacterSpacing="1" />
+        </Border>
+
+    </Grid>
+
+</ContentPage>

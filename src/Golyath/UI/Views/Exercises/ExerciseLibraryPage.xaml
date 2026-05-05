@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Exercises"
+             xmlns:entities="clr-namespace:Golyath.Core.Entities;assembly=Golyath"
+             x:Class="Golyath.UI.Views.Exercises.ExerciseLibraryPage"
+             x:Name="ThisPage"
+             x:DataType="vm:ExerciseLibraryViewModel"
+             Title="Exercises"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- ── Search bar ── -->
+        <SearchBar Grid.Row="0"
+                   Text="{Binding SearchQuery}"
+                   Placeholder="Search exercises…"
+                   PlaceholderColor="{AppThemeBinding Light=#999999, Dark=#666666}"
+                   TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                   CancelButtonColor="{StaticResource Accent}"
+                   Margin="12,8,12,0" />
+
+        <!-- ── Filters row ── -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*,Auto"
+              ColumnSpacing="8"
+              Padding="12,8">
+
+            <Picker Grid.Column="0"
+                    ItemsSource="{Binding MuscleGroupOptions}"
+                    SelectedItem="{Binding SelectedMuscleGroup}"
+                    Title="Muscle"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                    TitleColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}" />
+
+            <Picker Grid.Column="1"
+                    ItemsSource="{Binding EquipmentOptions}"
+                    SelectedItem="{Binding SelectedEquipment}"
+                    Title="Equipment"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                    TitleColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}" />
+
+            <Button Grid.Column="2"
+                    Text="✕"
+                    Command="{Binding ClearFiltersCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                    FontSize="16"
+                    Padding="8,4"
+                    VerticalOptions="Center"
+                    ToolTipProperties.Text="Clear filters" />
+        </Grid>
+
+    <!-- ── List + FAB overlay ── -->
+        <Grid Grid.Row="2">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Accent}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
+
+            <CollectionView ItemsSource="{Binding Exercises}"
+                            IsVisible="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}"
+                            SelectionMode="None">
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
+                                         Spacing="8" Margin="0,60">
+                        <Label Text="No exercises found"
+                               TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                               FontSize="16"
+                               HorizontalOptions="Center" />
+                        <Label Text="Try adjusting your search or filters"
+                               TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}"
+                               FontSize="13"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="entities:Exercise">
+                        <Grid Padding="12,5">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference ThisPage}, Path=BindingContext.NavigateToDetailCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="14,12">
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="TailTruncation" />
+
+                                    <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+                                           Text="›"
+                                           TextColor="{StaticResource Accent}"
+                                           FontSize="22"
+                                           VerticalOptions="Center"
+                                           Margin="8,0,0,0" />
+
+                                    <HorizontalStackLayout Grid.Row="1" Grid.Column="0"
+                                                           Spacing="6" Margin="0,4,0,0">
+                                        <Border BackgroundColor="{StaticResource Accent}"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 4"
+                                                Padding="6,2">
+                                            <Label Text="{Binding PrimaryMuscle}"
+                                                   TextColor="{StaticResource AccentText}"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold" />
+                                        </Border>
+
+                                        <Border BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 4"
+                                                Padding="6,2">
+                                            <Label Text="{Binding Equipment}"
+                                                   TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}"
+                                                   FontSize="11" />
+                                        </Border>
+
+                                        <Border BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 4"
+                                                Padding="6,2"
+                                                IsVisible="{Binding IsCustom}">
+                                            <Label Text="Custom"
+                                                   TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}"
+                                                   FontSize="11" />
+                                        </Border>
+                                    </HorizontalStackLayout>
+
+                                    <!-- Secondary muscles -->
+                                    <Label Grid.Row="2" Grid.Column="0"
+                                           Text="{Binding SecondaryMusclesDisplay}"
+                                           IsVisible="{Binding SecondaryMusclesDisplay, Converter={StaticResource IsNotEmptyStringConverter}}"
+                                           TextColor="{AppThemeBinding Light=#999999, Dark=#666666}"
+                                           FontSize="11"
+                                           Margin="0,3,0,0" />
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <!-- FAB: add custom exercise -->
+            <Button Text="+"
+                    Command="{Binding NavigateToCreateCommand}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource AccentText}"
+                    FontSize="26"
+                    FontAttributes="Bold"
+                    CornerRadius="28"
+                    WidthRequest="56"
+                    HeightRequest="56"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Margin="0,0,20,20"
+                    Shadow="{Shadow Brush={StaticResource Accent}, Radius=12, Opacity=0.4}" />
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

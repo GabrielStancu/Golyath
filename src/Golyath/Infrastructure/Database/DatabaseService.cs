@@ -62,6 +62,7 @@ public sealed class DatabaseService : IAsyncDisposable
     /// </summary>
     private static IEnumerable<IMigration> GetMigrations() =>
     [
-        new Migration001_InitialSchema()
+        new Migration001_InitialSchema(),
+        new Migration002_ExerciseMetadata()
     ];
 }

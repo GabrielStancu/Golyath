@@ -2,10 +2,13 @@ using Golyath.Application.Services;
 using Golyath.Core.Abstractions;
 using Golyath.Infrastructure.Database;
 using Golyath.Infrastructure.Repositories;
+using Golyath.Infrastructure.Services;
 using Golyath.UI;
+using Golyath.UI.ViewModels.Exercises;
 using Golyath.UI.ViewModels.Onboarding;
 using Golyath.UI.ViewModels.Profile;
 using Golyath.UI.ViewModels.Workout;
+using Golyath.UI.Views.Exercises;
 using Golyath.UI.Views.Onboarding;
 using Golyath.UI.Views.Profile;
 using Golyath.UI.Views.Workout;
@@ -34,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IWorkoutService, WorkoutService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<OnboardingDataService>();
+        services.AddTransient<IExerciseSeederService, ExerciseSeederService>();
 
         // Shell (singleton so the same instance is reused when switching from onboarding)
         services.AddSingleton<AppShell>();
@@ -57,6 +61,14 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ActiveWorkoutPage>();
         services.AddTransient<ExercisePickerViewModel>();
         services.AddTransient<ExercisePickerPage>();
+
+        // Exercise library
+        services.AddTransient<ExerciseLibraryViewModel>();
+        services.AddTransient<ExerciseLibraryPage>();
+        services.AddTransient<ExerciseDetailViewModel>();
+        services.AddTransient<ExerciseDetailPage>();
+        services.AddTransient<CreateExerciseViewModel>();
+        services.AddTransient<CreateExercisePage>();
 
         return services;
     }

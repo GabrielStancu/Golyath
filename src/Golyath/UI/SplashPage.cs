@@ -1,4 +1,5 @@
 using Golyath.Application.Services;
+using Golyath.Core.Abstractions;
 using Golyath.UI.Views.Onboarding;
 
 namespace Golyath.UI;
@@ -23,6 +24,9 @@ internal sealed class SplashPage : ContentPage
 
         var themeService = _services.GetRequiredService<IThemeService>();
         themeService.ApplyPreferredTheme();
+
+        var seeder = _services.GetRequiredService<IExerciseSeederService>();
+        await seeder.SeedAsync();
 
         var userService = _services.GetRequiredService<IUserService>();
         var hasUser = await userService.HasCompletedOnboardingAsync();
