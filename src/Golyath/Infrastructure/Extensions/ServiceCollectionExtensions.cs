@@ -4,10 +4,12 @@ using Golyath.Infrastructure.Database;
 using Golyath.Infrastructure.Repositories;
 using Golyath.Infrastructure.Services;
 using Golyath.UI;
+using Golyath.UI.ViewModels.Dashboard;
 using Golyath.UI.ViewModels.Exercises;
 using Golyath.UI.ViewModels.Onboarding;
 using Golyath.UI.ViewModels.Profile;
 using Golyath.UI.ViewModels.Workout;
+using Golyath.UI.Views.Dashboard;
 using Golyath.UI.Views.Exercises;
 using Golyath.UI.Views.Onboarding;
 using Golyath.UI.Views.Profile;
@@ -35,6 +37,7 @@ public static class ServiceCollectionExtensions
         // Application services
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IWorkoutService, WorkoutService>();
+        services.AddTransient<IDashboardService, DashboardService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<OnboardingDataService>();
         services.AddTransient<IExerciseSeederService, ExerciseSeederService>();
@@ -42,6 +45,10 @@ public static class ServiceCollectionExtensions
         // Shell (singleton so the same instance is reused when switching from onboarding)
         services.AddSingleton<AppShell>();
         services.AddTransient<MainPage>();
+
+        // Dashboard
+        services.AddTransient<DashboardViewModel>();
+        services.AddTransient<DashboardPage>();
 
         // Onboarding views + view models
         services.AddTransient<WelcomeViewModel>();

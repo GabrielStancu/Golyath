@@ -59,13 +59,11 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 
 		<!-- Exercise dataset — JSON definitions -->
-		<MauiAsset Include="..\..\exercises\*.json"
-		           LogicalName="exercises/%(Filename)%(Extension)" />
+		<MauiAsset Include="..\..\exercises\*.json" LogicalName="exercises/%(Filename)%(Extension)" />
 
 		<!-- Exercise dataset — form images (2 per exercise) -->
 		<!-- %(RecursiveDir) uses backslash on Windows; normalize to forward slash for ms-appx:// -->
-		<MauiAsset Include="..\..\exercises\**\*.jpg"
-		           LogicalName="exercises/$([System.String]::Copy('%(RecursiveDir)').Replace('\', '/'))%(Filename)%(Extension)" />
+		<MauiAsset Include="..\..\exercises\**\*.jpg" LogicalName="exercises/$([System.String]::Copy('%(RecursiveDir)').Replace('\', '/'))%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>

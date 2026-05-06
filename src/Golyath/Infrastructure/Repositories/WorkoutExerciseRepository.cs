@@ -16,4 +16,14 @@ public sealed class WorkoutExerciseRepository : BaseRepository<WorkoutExercise>,
             .OrderBy(we => we.Order)
             .ToListAsync();
     }
+
+    public async Task<IReadOnlyList<WorkoutExercise>> GetByWorkoutIdsAsync(IEnumerable<int> workoutIds)
+    {
+        var ids = workoutIds.ToHashSet();
+        if (ids.Count == 0) return [];
+        var db = await GetDbAsync();
+        return await db.Table<WorkoutExercise>()
+            .Where(we => ids.Contains(we.WorkoutId))
+            .ToListAsync();
+    }
 }

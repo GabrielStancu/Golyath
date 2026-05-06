@@ -25,4 +25,22 @@ public sealed class WorkoutRepository : BaseRepository<Workout>, IWorkoutReposit
             .OrderByDescending(w => w.StartedAt)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Workout?> GetLastCompletedAsync()
+    {
+        var db = await GetDbAsync();
+        return await db.Table<Workout>()
+            .Where(w => w.CompletedAt != null)
+            .OrderByDescending(w => w.CompletedAt)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<IReadOnlyList<Workout>> GetCompletedInRangeAsync(DateTime from, DateTime to)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<Workout>()
+            .Where(w => w.CompletedAt != null && w.CompletedAt >= from && w.CompletedAt <= to)
+            .OrderByDescending(w => w.CompletedAt)
+            .ToListAsync();
+    }
 }
