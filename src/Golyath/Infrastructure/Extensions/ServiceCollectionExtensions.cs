@@ -6,11 +6,13 @@ using Golyath.Infrastructure.Services;
 using Golyath.UI;
 using Golyath.UI.ViewModels.Dashboard;
 using Golyath.UI.ViewModels.Exercises;
+using Golyath.UI.ViewModels.History;
 using Golyath.UI.ViewModels.Onboarding;
 using Golyath.UI.ViewModels.Profile;
 using Golyath.UI.ViewModels.Workout;
 using Golyath.UI.Views.Dashboard;
 using Golyath.UI.Views.Exercises;
+using Golyath.UI.Views.History;
 using Golyath.UI.Views.Onboarding;
 using Golyath.UI.Views.Profile;
 using Golyath.UI.Views.Workout;
@@ -33,11 +35,14 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IWorkoutRepository, WorkoutRepository>();
         services.AddTransient<IWorkoutExerciseRepository, WorkoutExerciseRepository>();
         services.AddTransient<IWorkoutSetRepository, WorkoutSetRepository>();
+        services.AddTransient<ITagRepository, TagRepository>();
+        services.AddTransient<IWorkoutTagRepository, WorkoutTagRepository>();
 
         // Application services
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IWorkoutService, WorkoutService>();
         services.AddTransient<IDashboardService, DashboardService>();
+        services.AddTransient<IWorkoutHistoryService, WorkoutHistoryService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<OnboardingDataService>();
         services.AddTransient<IExerciseSeederService, ExerciseSeederService>();
@@ -76,6 +81,12 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ExerciseDetailPage>();
         services.AddTransient<CreateExerciseViewModel>();
         services.AddTransient<CreateExercisePage>();
+
+        // Workout history
+        services.AddTransient<HistoryViewModel>();
+        services.AddTransient<HistoryPage>();
+        services.AddTransient<WorkoutDetailViewModel>();
+        services.AddTransient<WorkoutDetailPage>();
 
         return services;
     }

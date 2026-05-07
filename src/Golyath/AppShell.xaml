@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:Golyath"
     xmlns:dashboard="clr-namespace:Golyath.UI.Views.Dashboard"
     xmlns:exercises="clr-namespace:Golyath.UI.Views.Exercises"
+    xmlns:history="clr-namespace:Golyath.UI.Views.History"
     Title="Golyath"
     FlyoutBehavior="Disabled">
 
@@ -14,6 +15,11 @@
             Title="Dashboard"
             ContentTemplate="{DataTemplate dashboard:DashboardPage}"
             Route="DashboardPage" />
+
+        <ShellContent
+            Title="History"
+            ContentTemplate="{DataTemplate history:HistoryPage}"
+            Route="HistoryPage" />
 
         <ShellContent
             Title="Exercises"
