@@ -10,6 +10,7 @@ using Golyath.UI.ViewModels.Analytics;
 using Golyath.UI.ViewModels.History;
 using Golyath.UI.ViewModels.Onboarding;
 using Golyath.UI.ViewModels.Profile;
+using Golyath.UI.ViewModels.Suggestions;
 using Golyath.UI.ViewModels.Workout;
 using Golyath.UI.Views.Dashboard;
 using Golyath.UI.Views.Exercises;
@@ -17,6 +18,7 @@ using Golyath.UI.Views.Analytics;
 using Golyath.UI.Views.History;
 using Golyath.UI.Views.Onboarding;
 using Golyath.UI.Views.Profile;
+using Golyath.UI.Views.Suggestions;
 using Golyath.UI.Views.Workout;
 
 namespace Golyath.Infrastructure.Extensions;
@@ -46,6 +48,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDashboardService, DashboardService>();
         services.AddTransient<IWorkoutHistoryService, WorkoutHistoryService>();
         services.AddTransient<IAnalyticsService, AnalyticsService>();
+        services.AddTransient<ISuggestionsService, SuggestionsService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<OnboardingDataService>();
         services.AddTransient<IExerciseSeederService, ExerciseSeederService>();
@@ -94,6 +97,10 @@ public static class ServiceCollectionExtensions
         // Analytics
         services.AddTransient<AnalyticsViewModel>();
         services.AddTransient<AnalyticsPage>();
+
+        // Suggestions
+        services.AddTransient<SuggestionsViewModel>();
+        services.AddTransient<SuggestionsPage>();
 
         return services;
     }

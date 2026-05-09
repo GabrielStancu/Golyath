@@ -8,6 +8,7 @@
     xmlns:exercises="clr-namespace:Golyath.UI.Views.Exercises"
     xmlns:history="clr-namespace:Golyath.UI.Views.History"
     xmlns:analytics="clr-namespace:Golyath.UI.Views.Analytics"
+    xmlns:suggestions="clr-namespace:Golyath.UI.Views.Suggestions"
     Title="Golyath"
     FlyoutBehavior="Disabled">
 
@@ -31,6 +32,11 @@
             Title="Analytics"
             ContentTemplate="{DataTemplate analytics:AnalyticsPage}"
             Route="AnalyticsPage" />
+
+        <ShellContent
+            Title="Suggestions"
+            ContentTemplate="{DataTemplate suggestions:SuggestionsPage}"
+            Route="SuggestionsPage" />
 
     </TabBar>
 

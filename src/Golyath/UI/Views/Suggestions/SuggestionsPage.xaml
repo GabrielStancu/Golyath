@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Suggestions"
+             xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             x:Class="Golyath.UI.Views.Suggestions.SuggestionsPage"
+             x:DataType="vm:SuggestionsViewModel"
+             Title="Suggestions"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <RefreshView Command="{Binding RefreshCommand}"
+                 IsRefreshing="{Binding IsBusy}"
+                 RefreshColor="{StaticResource Accent}">
+
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="14">
+
+                <!-- ── Header ─────────────────────────────────────────────── -->
+                <VerticalStackLayout Spacing="2" Padding="4,0,0,0">
+                    <Label Text="Smart Suggestions"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                    <Label Text="Personalised recommendations based on your training data"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                </VerticalStackLayout>
+
+                <!-- ── Loading indicator ──────────────────────────────────── -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Accent}"
+                                   HorizontalOptions="Center"
+                                   Margin="0,24,0,0" />
+
+                <!-- ── Empty state ────────────────────────────────────────── -->
+                <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                     Spacing="12"
+                                     Padding="0,48,0,0"
+                                     HorizontalOptions="Center">
+                    <Label Text="🏆"
+                           FontSize="56"
+                           HorizontalOptions="Center" />
+                    <Label Text="No Suggestions Right Now"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                    <Label Text="Keep training! Suggestions will appear once you have enough data to analyse."
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
+                           MaximumWidthRequest="280" />
+                </VerticalStackLayout>
+
+                <!-- ── Suggestion cards ───────────────────────────────────── -->
+                <VerticalStackLayout IsVisible="{Binding HasItems}"
+                                     Spacing="12"
+                                     BindableLayout.ItemsSource="{Binding Items}">
+
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:TrainingSuggestion">
+                            <Border StrokeShape="RoundRectangle 16"
+                                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                                    Padding="16">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+
+                                    <!-- Icon -->
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Icon}"
+                                           FontSize="32"
+                                           VerticalOptions="Start"
+                                           Margin="0,2,0,0" />
+
+                                    <!-- Content -->
+                                    <VerticalStackLayout Grid.Column="1" Spacing="6">
+
+                                        <!-- Title row with priority badge -->
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding Title}"
+                                                   FontSize="15"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                                                   LineBreakMode="WordWrap" />
+
+                                            <Border Grid.Column="1"
+                                                    BackgroundColor="{Binding PriorityColor}"
+                                                    StrokeShape="RoundRectangle 6"
+                                                    Stroke="Transparent"
+                                                    Padding="6,2"
+                                                    VerticalOptions="Start"
+                                                    Margin="6,2,0,0">
+                                                <Label Text="{Binding PriorityLabel}"
+                                                       FontSize="10"
+                                                       FontAttributes="Bold"
+                                                       TextColor="White"
+                                                       CharacterSpacing="0.5" />
+                                            </Border>
+                                        </Grid>
+
+                                        <!-- Detail text -->
+                                        <Label Text="{Binding Detail}"
+                                               FontSize="13"
+                                               LineBreakMode="WordWrap"
+                                               TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+
+                </VerticalStackLayout>
+
+                <!-- Bottom spacer -->
+                <BoxView HeightRequest="16" Color="Transparent" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </RefreshView>
+
+</ContentPage>
