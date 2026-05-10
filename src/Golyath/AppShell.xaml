@@ -10,6 +10,7 @@
     xmlns:analytics="clr-namespace:Golyath.UI.Views.Analytics"
     xmlns:suggestions="clr-namespace:Golyath.UI.Views.Suggestions"
     xmlns:goals="clr-namespace:Golyath.UI.Views.Goals"
+    xmlns:settings="clr-namespace:Golyath.UI.Views.Settings"
     Title="Golyath"
     FlyoutBehavior="Disabled">
 
@@ -43,6 +44,11 @@
             Title="Goals"
             ContentTemplate="{DataTemplate goals:GoalsPage}"
             Route="GoalsPage" />
+
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate settings:SettingsPage}"
+            Route="SettingsPage" />
 
     </TabBar>
 

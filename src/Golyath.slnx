@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="Golyath/Golyath.csproj" />
+  <Project Path="Golyath/Golyath.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>

@@ -1,4 +1,5 @@
-﻿using Golyath.Infrastructure.Extensions;
+﻿using CommunityToolkit.Maui;
+using Golyath.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Golyath;
@@ -10,6 +11,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

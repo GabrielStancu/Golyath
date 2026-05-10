@@ -11,8 +11,22 @@ internal sealed class Migration002_ExerciseMetadata : IMigration
 
     public async Task ApplyAsync(SQLiteAsyncConnection db)
     {
-        // SQLite ALTER TABLE only supports ADD COLUMN — safe to run on existing data.
-        await db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN ExternalId TEXT");
-        await db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN InstructionsRaw TEXT NOT NULL DEFAULT ''");
+        // On a fresh install Migration001 already created these columns (sqlite-net reflects
+        // the current entity), so guard before altering to avoid "duplicate column" errors.
+        var existing = (await db.QueryAsync<ColumnInfo>("PRAGMA table_info(Exercises)"))
+            .Select(c => c.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (!existing.Contains("ExternalId"))
+            await db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN ExternalId TEXT");
+
+        if (!existing.Contains("InstructionsRaw"))
+            await db.ExecuteAsync("ALTER TABLE Exercises ADD COLUMN InstructionsRaw TEXT NOT NULL DEFAULT ''");
+    }
+
+    private sealed class ColumnInfo
+    {
+        [Column("name")]
+        public string Name { get; set; } = string.Empty;
     }
 }

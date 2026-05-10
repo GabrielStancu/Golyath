@@ -9,6 +9,7 @@ using Golyath.UI.ViewModels.Exercises;
 using Golyath.UI.ViewModels.Analytics;
 using Golyath.UI.ViewModels.Goals;
 using Golyath.UI.ViewModels.History;
+using Golyath.UI.ViewModels.Settings;
 using Golyath.UI.ViewModels.Onboarding;
 using Golyath.UI.ViewModels.Profile;
 using Golyath.UI.ViewModels.Suggestions;
@@ -20,6 +21,7 @@ using Golyath.UI.Views.Goals;
 using Golyath.UI.Views.History;
 using Golyath.UI.Views.Onboarding;
 using Golyath.UI.Views.Profile;
+using Golyath.UI.Views.Settings;
 using Golyath.UI.Views.Suggestions;
 using Golyath.UI.Views.Workout;
 
@@ -58,6 +60,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<OnboardingDataService>();
         services.AddTransient<IExerciseSeederService, ExerciseSeederService>();
+        services.AddTransient<IDataPortabilityService, DataPortabilityService>();
 
         // Shell (singleton so the same instance is reused when switching from onboarding)
         services.AddSingleton<AppShell>();
@@ -113,6 +116,10 @@ public static class ServiceCollectionExtensions
         services.AddTransient<GoalsPage>();
         services.AddTransient<AddGoalViewModel>();
         services.AddTransient<AddGoalPage>();
+
+        // Settings
+        services.AddTransient<SettingsViewModel>();
+        services.AddTransient<SettingsPage>();
 
         return services;
     }

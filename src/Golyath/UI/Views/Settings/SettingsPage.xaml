@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Settings"
+             x:Class="Golyath.UI.Views.Settings.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Settings"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- ── Section Header ──────────────────────────────────────── -->
+            <Label Text="DATA &amp; BACKUP"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="#888888"
+                   Margin="4,8,0,0" />
+
+            <!-- ── Export Card ─────────────────────────────────────────── -->
+            <Border StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}"
+                    StrokeShape="RoundRectangle 12">
+                <Border.Shadow>
+                    <Shadow Brush="#20000000" Offset="0,2" Radius="8" Opacity="0.15" />
+                </Border.Shadow>
+                <VerticalStackLayout Padding="16" Spacing="10">
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="&#x1F4E4;"
+                               FontSize="22"
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Export Data"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+                            <Label Text="Save a backup of all your workouts and data"
+                                   FontSize="13"
+                                   TextColor="#888888" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <Button Text="Export"
+                            Command="{Binding ExportDataCommand}"
+                            BackgroundColor="{StaticResource Accent}"
+                            TextColor="Black"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            IsEnabled="{Binding IsNotBusy}"
+                            HorizontalOptions="Start"
+                            Padding="24,10" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Import Card ─────────────────────────────────────────── -->
+            <Border StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}"
+                    StrokeShape="RoundRectangle 12">
+                <Border.Shadow>
+                    <Shadow Brush="#20000000" Offset="0,2" Radius="8" Opacity="0.15" />
+                </Border.Shadow>
+                <VerticalStackLayout Padding="16" Spacing="10">
+
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="&#x1F4E5;"
+                               FontSize="22"
+                               VerticalOptions="Center" />
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Import Data"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+                            <Label Text="Restore from a previous backup file"
+                                   FontSize="13"
+                                   TextColor="#888888" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <Button Text="Import"
+                            Command="{Binding ImportDataCommand}"
+                            BackgroundColor="{StaticResource Accent}"
+                            TextColor="Black"
+                            CornerRadius="8"
+                            FontAttributes="Bold"
+                            IsEnabled="{Binding IsNotBusy}"
+                            HorizontalOptions="Start"
+                            Padding="24,10" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Activity Indicator ──────────────────────────────────── -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Accent}"
+                               HorizontalOptions="Center"
+                               Margin="0,8,0,0" />
+
+            <!-- ── Status Message ──────────────────────────────────────── -->
+            <Label Text="{Binding StatusMessage}"
+                   IsVisible="{Binding HasStatus}"
+                   FontSize="14"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}"
+                   Margin="0,4,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

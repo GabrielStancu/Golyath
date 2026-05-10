@@ -55,4 +55,10 @@ public sealed class WorkoutTagRepository : IWorkoutTagRepository
             "DELETE FROM WorkoutTags WHERE WorkoutId = ? AND TagId = ?",
             workoutId, tagId);
     }
+
+    public async Task<IReadOnlyList<WorkoutTag>> GetAllAsync()
+    {
+        var db = await _databaseService.GetConnectionAsync();
+        return await db.Table<WorkoutTag>().ToListAsync();
+    }
 }
