@@ -11,6 +11,7 @@ public partial class GoalsViewModel : ObservableObject
 {
     private readonly IGoalService _goalService;
     private readonly IUserService _userService;
+    private readonly IPersonalRecordService _prService;
 
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private ObservableCollection<GoalSummary> _activeGoals = [];
@@ -19,10 +20,20 @@ public partial class GoalsViewModel : ObservableObject
     [ObservableProperty] private bool _hasCompletedGoals;
     [ObservableProperty] private bool _isEmpty;
 
-    public GoalsViewModel(IGoalService goalService, IUserService userService)
+    // ── Tab state ────────────────────────────────────────────────────────────
+    [ObservableProperty] private bool _showGoals = true;
+    [ObservableProperty] private bool _showRecords;
+
+    // ── Personal Records ─────────────────────────────────────────────────────
+    [ObservableProperty] private ObservableCollection<PersonalRecord> _personalRecords = [];
+    [ObservableProperty] private bool _hasPersonalRecords;
+    [ObservableProperty] private bool _isRecordsEmpty;
+
+    public GoalsViewModel(IGoalService goalService, IUserService userService, IPersonalRecordService prService)
     {
         _goalService = goalService;
         _userService = userService;
+        _prService = prService;
     }
 
     public async Task LoadAsync()
@@ -43,11 +54,30 @@ public partial class GoalsViewModel : ObservableObject
             HasActiveGoals = ActiveGoals.Count > 0;
             HasCompletedGoals = CompletedGoals.Count > 0;
             IsEmpty = goals.Count == 0;
+
+            var records = await _prService.GetPersonalRecordsAsync(user.Id);
+            PersonalRecords = new ObservableCollection<PersonalRecord>(records);
+            HasPersonalRecords = PersonalRecords.Count > 0;
+            IsRecordsEmpty = PersonalRecords.Count == 0;
         }
         finally
         {
             IsLoading = false;
         }
+    }
+
+    [RelayCommand]
+    private void SwitchToGoals()
+    {
+        ShowGoals = true;
+        ShowRecords = false;
+    }
+
+    [RelayCommand]
+    private void SwitchToRecords()
+    {
+        ShowGoals = false;
+        ShowRecords = true;
     }
 
     [RelayCommand]
