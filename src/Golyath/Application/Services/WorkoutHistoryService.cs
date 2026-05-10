@@ -107,6 +107,7 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
             var completedSets = sets.Where(s => s.IsCompleted).ToList();
 
             var setDtos = completedSets.Select(s => new SetSummaryDto(
+                SetId: s.Id,
                 SetNumber: s.SetNumber,
                 Weight: s.Weight,
                 Reps: s.Reps,
@@ -114,7 +115,9 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
                 Notes: s.Notes)).ToList();
 
             exerciseSummaries.Add(new WorkoutExerciseSummaryDto(
+                WorkoutExerciseId: we.Id,
                 ExerciseName: exercise?.Name ?? "Unknown exercise",
+                ExerciseNotes: we.Notes,
                 Sets: setDtos));
         }
 
@@ -130,6 +133,9 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
 
     public Task<IReadOnlyList<Tag>> GetAllTagsAsync() =>
         _tagRepository.GetAllAsync();
+
+    public Task<IReadOnlyList<Tag>> GetTagsForWorkoutAsync(int workoutId) =>
+        _workoutTagRepository.GetTagsForWorkoutAsync(workoutId);
 
     public async Task<Tag> GetOrCreateTagAsync(string name)
     {

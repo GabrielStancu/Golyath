@@ -12,4 +12,12 @@ public partial class WorkoutDetailPage : ContentPage
         _viewModel = viewModel;
         BindingContext = _viewModel;
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        // Reload if WorkoutId is already set but data hasn't loaded yet
+        if (_viewModel.WorkoutId > 0 && _viewModel.Detail is null && !_viewModel.IsBusy)
+            _ = _viewModel.LoadAsync();
+    }
 }

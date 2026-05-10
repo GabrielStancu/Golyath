@@ -11,7 +11,8 @@
     <Grid RowDefinitions="Auto,*,Auto">
 
         <!-- ── Header ── -->
-        <Grid Grid.Row="0" RowDefinitions="Auto,1">
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto,1">
+            <!-- Title + buttons row -->
             <Grid Grid.Row="0"
                   ColumnDefinitions="*,Auto"
                   Padding="16,12"
@@ -43,7 +44,66 @@
                             Padding="16,8" />
                 </HorizontalStackLayout>
             </Grid>
-            <BoxView Grid.Row="1" Color="{StaticResource AppDarkBorder}" />
+
+            <!-- Tags + workout notes row -->
+            <VerticalStackLayout Grid.Row="1"
+                                 BackgroundColor="{StaticResource AppDarkSurface}"
+                                 Padding="12,4,12,10"
+                                 Spacing="6">
+
+                <!-- Tag chips + add button -->
+                <FlexLayout Wrap="Wrap"
+                            Direction="Row"
+                            AlignItems="Center"
+                            BindableLayout.ItemsSource="{Binding WorkoutTags}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:TagChipViewModel">
+                            <Border StrokeShape="RoundRectangle 8"
+                                    BackgroundColor="#1A3020"
+                                    Stroke="#2D5C3A"
+                                    StrokeThickness="1"
+                                    Padding="8,3"
+                                    Margin="0,0,4,4">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="12"
+                                           TextColor="{StaticResource Accent}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="✕"
+                                           FontSize="10"
+                                           TextColor="#888888"
+                                           VerticalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding RemoveCommand}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <Button Text="+ Tag"
+                        Command="{Binding AddTagCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="#888888"
+                        BorderColor="#444444"
+                        BorderWidth="1"
+                        CornerRadius="6"
+                        FontSize="12"
+                        Padding="8,3"
+                        HorizontalOptions="Start" />
+
+                <!-- Workout-level notes -->
+                <Entry Text="{Binding WorkoutNotes}"
+                       Placeholder="Workout notes…"
+                       PlaceholderColor="#555555"
+                       TextColor="#CCCCCC"
+                       BackgroundColor="Transparent"
+                       FontSize="13" />
+            </VerticalStackLayout>
+
+            <BoxView Grid.Row="2" Color="{StaticResource AppDarkBorder}" />
         </Grid>
 
         <!-- ── Exercise list ── -->
@@ -89,12 +149,21 @@
                                                 MinimumHeightRequest="36" />
                                     </Grid>
 
+                                    <!-- Exercise-level notes -->
+                                    <Entry Text="{Binding ExerciseNotes, Mode=TwoWay}"
+                                           Placeholder="Exercise notes…"
+                                           PlaceholderColor="#666666"
+                                           TextColor="#CCCCCC"
+                                           BackgroundColor="#1E1E1E"
+                                           FontSize="12" />
+
                                     <!-- Sets column header -->
-                                    <Grid ColumnDefinitions="36,*,80,52" ColumnSpacing="6" Padding="4,0,0,0">
+                                    <Grid ColumnDefinitions="36,*,80,52,60" ColumnSpacing="6" Padding="4,0,0,0">
                                         <Label Grid.Column="0" Text="SET" TextColor="#666666" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" />
                                         <Label Grid.Column="1" Text="WEIGHT" TextColor="#666666" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" HorizontalOptions="Center" />
                                         <Label Grid.Column="2" Text="REPS" TextColor="#666666" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" HorizontalOptions="Center" />
                                         <Label Grid.Column="3" TextColor="#666666" FontSize="11" />
+                                        <Label Grid.Column="4" Text="TEMPO" TextColor="#666666" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" HorizontalOptions="Center" />
                                     </Grid>
 
                                     <!-- Sets -->
@@ -111,17 +180,19 @@
                                                         </SwipeItems>
                                                     </SwipeView.RightItems>
 
-                                                    <Grid ColumnDefinitions="36,*,80,52"
-                                                          ColumnSpacing="6"
-                                                          Padding="4,2,0,2">
+                                                    <VerticalStackLayout Spacing="2">
 
-                                                        <!-- Set number -->
-                                                        <Label Grid.Column="0"
-                                                               Text="{Binding SetNumber}"
-                                                               TextColor="#888888"
-                                                               FontSize="14"
-                                                               VerticalOptions="Center"
-                                                               HorizontalOptions="Center" />
+                                                        <Grid ColumnDefinitions="36,*,80,52,60"
+                                                              ColumnSpacing="6"
+                                                              Padding="4,2,0,2">
+
+                                                            <!-- Set number -->
+                                                            <Label Grid.Column="0"
+                                                                   Text="{Binding SetNumber}"
+                                                                   TextColor="#888888"
+                                                                   FontSize="14"
+                                                                   VerticalOptions="Center"
+                                                                   HorizontalOptions="Center" />
 
                                                         <!-- Weight: [−] entry [+] -->
                                                         <Grid Grid.Column="1"
@@ -190,7 +261,21 @@
                                                             </Button.Triggers>
                                                         </Button>
 
+                                                        <!-- Tempo entry -->
+                                                        <Entry Grid.Column="4"
+                                                               Text="{Binding TempoText, Mode=TwoWay}"
+                                                               Keyboard="Text"
+                                                               Placeholder="3-1-2"
+                                                               PlaceholderColor="#555555"
+                                                               TextColor="#AAAAAA"
+                                                               BackgroundColor="#222222"
+                                                               HorizontalTextAlignment="Center"
+                                                               FontSize="12"
+                                                               HeightRequest="40" />
+
                                                     </Grid>
+
+                                                    </VerticalStackLayout>
                                                 </SwipeView>
 
                                             </DataTemplate>

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.History"
-             xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             xmlns:wvm="clr-namespace:Golyath.UI.ViewModels.Workout"
              x:Class="Golyath.UI.Views.History.WorkoutDetailPage"
              x:DataType="vm:WorkoutDetailViewModel"
              Title="Workout"
@@ -52,46 +52,77 @@
                         </VerticalStackLayout>
 
                         <!-- Duration -->
-                        <Grid ColumnDefinitions="Auto,*">
-                            <Label Grid.Column="0"
-                                   Text="⏱"
-                                   FontSize="16"
-                                   VerticalOptions="Center" />
-                            <Label Grid.Column="1"
-                                   Text="{Binding Detail.DurationFormatted}"
-                                   FontSize="15"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource Accent}"
-                                   VerticalOptions="Center"
-                                   Margin="6,0,0,0" />
-                        </Grid>
+                        <Label Text="{Binding Detail.DurationFormatted}"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Accent}" />
 
                         <!-- Tags -->
-                        <FlexLayout BindableLayout.ItemsSource="{Binding Detail.TagNames}"
-                                    IsVisible="{Binding Detail.TagNames.Count, Converter={StaticResource IsNotZeroConverter}}"
-                                    Wrap="Wrap"
-                                    Direction="Row"
-                                    AlignItems="Center">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <Border StrokeShape="RoundRectangle 6"
-                                            BackgroundColor="{StaticResource Accent}"
-                                            Padding="8,3"
-                                            Margin="0,0,4,4">
-                                        <Label Text="{Binding .}"
-                                               FontSize="11"
-                                               TextColor="{StaticResource AccentText}" />
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </FlexLayout>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="TAGS"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1"
+                                   TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}" />
+                            <FlexLayout BindableLayout.ItemsSource="{Binding Tags}"
+                                        Wrap="Wrap"
+                                        Direction="Row"
+                                        AlignItems="Center">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="wvm:TagChipViewModel">
+                                        <Border StrokeShape="RoundRectangle 8"
+                                                BackgroundColor="{AppThemeBinding Light=#F0F9F0, Dark=#1A3020}"
+                                                Stroke="{AppThemeBinding Light=#A8D5A8, Dark=#2D5C3A}"
+                                                StrokeThickness="1"
+                                                Padding="8,3"
+                                                Margin="0,0,6,6">
+                                            <HorizontalStackLayout Spacing="5">
+                                                <Label Text="{Binding Name}"
+                                                       FontSize="12"
+                                                       TextColor="{StaticResource Accent}"
+                                                       VerticalOptions="Center" />
+                                                <Label Text="x"
+                                                       FontSize="11"
+                                                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
+                                                       VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding RemoveCommand}" />
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                            <Button Text="+ Add Tag"
+                                    Command="{Binding AddTagCommand}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{AppThemeBinding Light=#666666, Dark=#AAAAAA}"
+                                    BorderColor="{AppThemeBinding Light=#CCCCCC, Dark=#444444}"
+                                    BorderWidth="1"
+                                    CornerRadius="6"
+                                    FontSize="12"
+                                    Padding="10,4"
+                                    HorizontalOptions="Start" />
+                        </VerticalStackLayout>
 
-                        <!-- Notes (if present) -->
-                        <Label Text="{Binding Detail.Notes}"
-                               IsVisible="{Binding Detail.Notes, Converter={StaticResource IsNotNullConverter}}"
-                               FontSize="13"
-                               TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}"
-                               LineBreakMode="WordWrap" />
+                        <!-- Workout notes -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="WORKOUT NOTES"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   CharacterSpacing="1"
+                                   TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}" />
+                            <Editor Text="{Binding EditableNotes, Mode=TwoWay}"
+                                    Placeholder="Add workout notes..."
+                                    PlaceholderColor="{AppThemeBinding Light=#BBBBBB, Dark=#555555}"
+                                    TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}"
+                                    BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
+                                    FontSize="13"
+                                    MinimumHeightRequest="60"
+                                    AutoSize="TextChanges" />
+                        </VerticalStackLayout>
+
                     </VerticalStackLayout>
                 </Border>
 
@@ -103,11 +134,11 @@
                        TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
                        Margin="4,0,0,0" />
 
-                <!-- Exercise cards -->
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Detail.Exercises}"
+                <!-- Exercise cards — bound to editable HistoryExerciseViewModel collection -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Exercises}"
                                      Spacing="10">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="dto:WorkoutExerciseSummaryDto">
+                        <DataTemplate x:DataType="vm:HistoryExerciseViewModel">
                             <Border StrokeShape="RoundRectangle 14"
                                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                                     BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
@@ -128,8 +159,16 @@
                                                VerticalOptions="Center" />
                                     </Grid>
 
-                                    <!-- Sets table header -->
-                                    <Grid ColumnDefinitions="50,*,*,*" ColumnSpacing="8">
+                                    <!-- Exercise notes (editable) -->
+                                    <Entry Text="{Binding ExerciseNotes, Mode=TwoWay}"
+                                           Placeholder="Exercise notes..."
+                                           PlaceholderColor="{AppThemeBinding Light=#BBBBBB, Dark=#555555}"
+                                           TextColor="{AppThemeBinding Light=#444444, Dark=#CCCCCC}"
+                                           BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
+                                           FontSize="12" />
+
+                                    <!-- Sets column header -->
+                                    <Grid ColumnDefinitions="40,*,*,70" ColumnSpacing="8">
                                         <Label Grid.Column="0"
                                                Text="SET"
                                                FontSize="10"
@@ -137,19 +176,19 @@
                                                CharacterSpacing="0.8"
                                                TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}" />
                                         <Label Grid.Column="1"
-                                               Text="WEIGHT × REPS"
+                                               Text="WEIGHT"
                                                FontSize="10"
                                                FontAttributes="Bold"
                                                CharacterSpacing="0.8"
                                                TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}" />
                                         <Label Grid.Column="2"
-                                               Text="TEMPO"
+                                               Text="REPS"
                                                FontSize="10"
                                                FontAttributes="Bold"
                                                CharacterSpacing="0.8"
                                                TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}" />
                                         <Label Grid.Column="3"
-                                               Text="NOTES"
+                                               Text="TEMPO"
                                                FontSize="10"
                                                FontAttributes="Bold"
                                                CharacterSpacing="0.8"
@@ -160,32 +199,52 @@
                                     <BoxView HeightRequest="1"
                                              Color="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}" />
 
-                                    <!-- Set rows -->
+                                    <!-- Set rows (editable) -->
                                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sets}"
-                                                         Spacing="6">
+                                                         Spacing="4">
                                         <BindableLayout.ItemTemplate>
-                                            <DataTemplate x:DataType="dto:SetSummaryDto">
-                                                <Grid ColumnDefinitions="50,*,*,*"
-                                                      ColumnSpacing="8">
-                                                    <Label Grid.Column="0"
-                                                           Text="{Binding Label}"
-                                                           FontSize="13"
-                                                           TextColor="{AppThemeBinding Light=#555555, Dark=#999999}" />
-                                                    <Label Grid.Column="1"
-                                                           Text="{Binding WeightReps}"
-                                                           FontSize="13"
-                                                           FontAttributes="Bold"
-                                                           TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
-                                                    <Label Grid.Column="2"
-                                                           Text="{Binding Tempo}"
-                                                           FontSize="12"
-                                                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}" />
-                                                    <Label Grid.Column="3"
-                                                           Text="{Binding Notes}"
-                                                           FontSize="12"
-                                                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
-                                                           LineBreakMode="TailTruncation" />
-                                                </Grid>
+                                            <DataTemplate x:DataType="vm:HistorySetViewModel">
+                                                <VerticalStackLayout Spacing="2">
+
+                                                    <!-- Set number + editable weight/reps/tempo -->
+                                                    <Grid ColumnDefinitions="40,*,*,70"
+                                                          ColumnSpacing="8">
+                                                        <Label Grid.Column="0"
+                                                               Text="{Binding SetNumber, StringFormat='Set {0}'}"
+                                                               FontSize="12"
+                                                               VerticalOptions="Center"
+                                                               TextColor="{AppThemeBinding Light=#666666, Dark=#999999}" />
+                                                        <Entry Grid.Column="1"
+                                                               Text="{Binding WeightText, Mode=TwoWay}"
+                                                               Keyboard="Numeric"
+                                                               Placeholder="0"
+                                                               PlaceholderColor="{AppThemeBinding Light=#CCCCCC, Dark=#555555}"
+                                                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                                                               BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
+                                                               FontSize="13"
+                                                               FontAttributes="Bold"
+                                                               HeightRequest="36" />
+                                                        <Entry Grid.Column="2"
+                                                               Text="{Binding RepsText, Mode=TwoWay}"
+                                                               Keyboard="Numeric"
+                                                               Placeholder="0"
+                                                               PlaceholderColor="{AppThemeBinding Light=#CCCCCC, Dark=#555555}"
+                                                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                                                               BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
+                                                               FontSize="13"
+                                                               HeightRequest="36" />
+                                                        <Entry Grid.Column="3"
+                                                               Text="{Binding TempoText, Mode=TwoWay}"
+                                                               Keyboard="Text"
+                                                               Placeholder="--"
+                                                               PlaceholderColor="{AppThemeBinding Light=#CCCCCC, Dark=#555555}"
+                                                               TextColor="{AppThemeBinding Light=#666666, Dark=#888888}"
+                                                               BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
+                                                               FontSize="12"
+                                                               HeightRequest="36" />
+                                                    </Grid>
+
+                                                </VerticalStackLayout>
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
                                     </VerticalStackLayout>

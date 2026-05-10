@@ -99,6 +99,17 @@ public sealed class WorkoutService : IWorkoutService
     public Task UpdateSetAsync(WorkoutSet set) =>
         _workoutSetRepository.UpdateAsync(set);
 
+    public async Task UpdateSetFieldsAsync(int setId, double weight, int reps, string? tempo, string? notes)
+    {
+        var set = await _workoutSetRepository.GetByIdAsync(setId);
+        if (set is null) return;
+        set.Weight = weight;
+        set.Reps = reps;
+        set.Tempo = string.IsNullOrWhiteSpace(tempo) ? null : tempo;
+        set.Notes = string.IsNullOrWhiteSpace(notes) ? null : notes;
+        await _workoutSetRepository.UpdateAsync(set);
+    }
+
     public async Task CompleteWorkoutAsync(int workoutId)
     {
         var workout = await _workoutRepository.GetByIdAsync(workoutId)
@@ -113,6 +124,22 @@ public sealed class WorkoutService : IWorkoutService
         var workout = await _workoutRepository.GetByIdAsync(workoutId);
         if (workout is not null)
             await _workoutRepository.DeleteAsync(workout);
+    }
+
+    public async Task UpdateWorkoutNotesAsync(int workoutId, string? notes)
+    {
+        var workout = await _workoutRepository.GetByIdAsync(workoutId);
+        if (workout is null) return;
+        workout.Notes = notes;
+        await _workoutRepository.UpdateAsync(workout);
+    }
+
+    public async Task UpdateExerciseNotesAsync(int workoutExerciseId, string? notes)
+    {
+        var we = await _workoutExerciseRepository.GetByIdAsync(workoutExerciseId);
+        if (we is null) return;
+        we.Notes = notes;
+        await _workoutExerciseRepository.UpdateAsync(we);
     }
 
     public Task<IReadOnlyList<WorkoutExercise>> GetWorkoutExercisesAsync(int workoutId) =>

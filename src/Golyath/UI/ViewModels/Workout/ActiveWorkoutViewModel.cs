@@ -13,6 +13,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
 {
     private readonly IWorkoutService _workoutService;
     private readonly IExerciseRepository _exerciseRepository;
+    private readonly ITagService _tagService;
     private WorkoutEntity? _workout;
     private IDispatcherTimer? _workoutTimer;
     private IDispatcherTimer? _restTimer;
@@ -20,6 +21,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     private const int DefaultRestSeconds = 90;
 
     public ObservableCollection<WorkoutExerciseViewModel> Exercises { get; } = [];
+    public ObservableCollection<TagChipViewModel> WorkoutTags { get; } = [];
 
     [ObservableProperty]
     private string _workoutTitle = "New Workout";
@@ -39,13 +41,24 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     [ObservableProperty]
     private bool _isBusy;
 
+    [ObservableProperty]
+    private string _workoutNotes = string.Empty;
+
     public event EventHandler? WorkoutCompleted;
     public event EventHandler? AddExerciseRequested;
 
-    public ActiveWorkoutViewModel(IWorkoutService workoutService, IExerciseRepository exerciseRepository)
+    public ActiveWorkoutViewModel(IWorkoutService workoutService, IExerciseRepository exerciseRepository, ITagService tagService)
     {
         _workoutService = workoutService;
         _exerciseRepository = exerciseRepository;
+        _tagService = tagService;
+    }
+
+    partial void OnWorkoutNotesChanged(string value)
+    {
+        if (_workout is null) return;
+        var notes = string.IsNullOrWhiteSpace(value) ? null : value;
+        _ = _workoutService.UpdateWorkoutNotesAsync(_workout.Id, notes);
     }
 
     public void RegisterMessenger()
@@ -70,13 +83,16 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
             {
                 _workout = active;
                 WorkoutTitle = active.Name ?? "Workout";
+                WorkoutNotes = active.Notes ?? string.Empty;
                 _elapsedSeconds = (int)(DateTime.UtcNow - active.StartedAt).TotalSeconds;
                 await LoadExercisesAsync();
+                await LoadTagsAsync();
             }
             else
             {
                 _workout = await _workoutService.StartWorkoutAsync();
                 WorkoutTitle = "New Workout";
+                WorkoutNotes = string.Empty;
                 _elapsedSeconds = 0;
             }
             StartWorkoutTimer();
@@ -133,6 +149,57 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
 
     [RelayCommand]
     private void RequestAddExercise() => AddExerciseRequested?.Invoke(this, EventArgs.Empty);
+
+    // ─── Tags ─────────────────────────────────────────────────────────────────
+
+    private async Task LoadTagsAsync()
+    {
+        if (_workout is null) return;
+        WorkoutTags.Clear();
+        var tags = await _tagService.GetTagsForWorkoutAsync(_workout.Id);
+        foreach (var tag in tags)
+            WorkoutTags.Add(new TagChipViewModel(tag, RemoveTagAsync));
+    }
+
+    [RelayCommand]
+    private async Task AddTag()
+    {
+        if (_workout is null) return;
+
+        var allTags = await _tagService.GetAllTagsAsync();
+        var options = allTags.Select(t => t.Name).Append("+ Create new tag").ToArray();
+
+        var choice = await Shell.Current.DisplayActionSheet("Add Tag", "Cancel", null, options);
+        if (string.IsNullOrEmpty(choice) || choice == "Cancel") return;
+
+        string tagName;
+        if (choice == "+ Create new tag")
+        {
+            tagName = await Shell.Current.DisplayPromptAsync(
+                "New Tag", "Enter tag name:",
+                maxLength: 50, keyboard: Keyboard.Text) ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(tagName)) return;
+        }
+        else
+        {
+            tagName = choice;
+        }
+
+        // Skip if already attached
+        if (WorkoutTags.Any(c => c.Name.Equals(tagName, StringComparison.OrdinalIgnoreCase)))
+            return;
+
+        var tag = await _tagService.GetOrCreateTagAsync(tagName);
+        await _tagService.AddTagToWorkoutAsync(_workout.Id, tag.Id);
+        WorkoutTags.Add(new TagChipViewModel(tag, RemoveTagAsync));
+    }
+
+    private async Task RemoveTagAsync(TagChipViewModel chip)
+    {
+        if (_workout is null) return;
+        await _tagService.RemoveTagFromWorkoutAsync(_workout.Id, chip.TagId);
+        WorkoutTags.Remove(chip);
+    }
 
     [RelayCommand]
     private async Task CompleteWorkout()

@@ -12,8 +12,11 @@ public interface IWorkoutService
     Task<WorkoutSet> CompleteSetAsync(int setId);
     Task<WorkoutSet> DuplicateSetAsync(int setId);
     Task UpdateSetAsync(WorkoutSet set);
+    Task UpdateSetFieldsAsync(int setId, double weight, int reps, string? tempo, string? notes);
     Task CompleteWorkoutAsync(int workoutId);
     Task AbandonWorkoutAsync(int workoutId);
+    Task UpdateWorkoutNotesAsync(int workoutId, string? notes);
+    Task UpdateExerciseNotesAsync(int workoutExerciseId, string? notes);
     Task<IReadOnlyList<WorkoutExercise>> GetWorkoutExercisesAsync(int workoutId);
     Task<IReadOnlyList<WorkoutSet>> GetSetsForExerciseAsync(int workoutExerciseId);
     Task<WorkoutSet?> GetLastSetForAutofillAsync(int exerciseId);

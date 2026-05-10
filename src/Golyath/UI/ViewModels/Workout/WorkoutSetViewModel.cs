@@ -18,7 +18,9 @@ public partial class WorkoutSetViewModel : ObservableObject
 
         _weightText = set.Weight.ToString("F1", CultureInfo.InvariantCulture);
         _repsText = set.Reps.ToString();
+        _tempoText = set.Tempo ?? string.Empty;
         _isCompleted = set.IsCompleted;
+        _notesText = set.Notes ?? string.Empty;
     }
 
     public int Id => _set.Id;
@@ -35,10 +37,28 @@ public partial class WorkoutSetViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(CanComplete))]
     private bool _isCompleted;
 
+    [ObservableProperty]
+    private string _tempoText;
+
+    [ObservableProperty]
+    private string _notesText;
+
     public bool CanComplete => !IsCompleted;
 
     public event EventHandler<WorkoutSetViewModel>? SetCompleted;
     public event EventHandler<WorkoutSetViewModel>? DuplicateRequested;
+
+    partial void OnTempoTextChanged(string value)
+    {
+        _set.Tempo = string.IsNullOrWhiteSpace(value) ? null : value;
+        _ = _workoutService.UpdateSetAsync(_set);
+    }
+
+    partial void OnNotesTextChanged(string value)
+    {
+        _set.Notes = string.IsNullOrWhiteSpace(value) ? null : value;
+        _ = _workoutService.UpdateSetAsync(_set);
+    }
 
     partial void OnWeightTextChanged(string value)
     {

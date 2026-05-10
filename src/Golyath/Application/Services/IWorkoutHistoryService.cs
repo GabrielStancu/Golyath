@@ -18,6 +18,9 @@ public interface IWorkoutHistoryService
     /// <summary>Full detail for a single completed workout.</summary>
     Task<WorkoutHistoryDetailDto?> GetWorkoutDetailAsync(int workoutId);
 
+    /// <summary>Tags currently attached to a workout.</summary>
+    Task<IReadOnlyList<Tag>> GetTagsForWorkoutAsync(int workoutId);
+
     /// <summary>All tags that have been created.</summary>
     Task<IReadOnlyList<Tag>> GetAllTagsAsync();
 

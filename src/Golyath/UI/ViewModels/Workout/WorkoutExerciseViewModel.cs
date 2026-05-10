@@ -9,10 +9,14 @@ namespace Golyath.UI.ViewModels.Workout;
 public partial class WorkoutExerciseViewModel : ObservableObject
 {
     private readonly IWorkoutService _workoutService;
+    private readonly WorkoutExercise _workoutExercise;
 
     public int WorkoutExerciseId { get; }
     public string ExerciseName { get; }
     public int ExerciseId { get; }
+
+    [ObservableProperty]
+    private string _exerciseNotes;
 
     public ObservableCollection<WorkoutSetViewModel> Sets { get; } = [];
 
@@ -21,10 +25,18 @@ public partial class WorkoutExerciseViewModel : ObservableObject
 
     public WorkoutExerciseViewModel(WorkoutExercise workoutExercise, Exercise exercise, IWorkoutService workoutService)
     {
+        _workoutExercise = workoutExercise;
         WorkoutExerciseId = workoutExercise.Id;
         ExerciseName = exercise.Name;
         ExerciseId = exercise.Id;
         _workoutService = workoutService;
+        _exerciseNotes = workoutExercise.Notes ?? string.Empty;
+    }
+
+    partial void OnExerciseNotesChanged(string value)
+    {
+        _workoutExercise.Notes = string.IsNullOrWhiteSpace(value) ? null : value;
+        _ = _workoutService.UpdateExerciseNotesAsync(WorkoutExerciseId, _workoutExercise.Notes);
     }
 
     public void LoadSets(IEnumerable<WorkoutSet> sets)
