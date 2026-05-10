@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Goals"
+             xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             x:Class="Golyath.UI.Views.Goals.GoalsPage"
+             x:DataType="vm:GoalsViewModel"
+             Title="Goals"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding NavigateToAddGoalCommand}" Order="Primary" Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+
+            <!-- ── Header ─────────────────────────────────────────────────── -->
+            <VerticalStackLayout Spacing="2" Padding="4,0,0,0">
+                <Label Text="Goals"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                <Label Text="Track your strength, consistency, and balance"
+                       FontSize="13"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+            </VerticalStackLayout>
+
+            <!-- ── Loading indicator ──────────────────────────────────────── -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Accent}"
+                               HorizontalOptions="Center"
+                               Margin="0,24,0,0" />
+
+            <!-- ── Empty state ────────────────────────────────────────────── -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 Spacing="12"
+                                 Padding="0,48,0,0"
+                                 HorizontalOptions="Center">
+                <Label Text="🎯"
+                       FontSize="56"
+                       HorizontalOptions="Center" />
+                <Label Text="No Goals Yet"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                <Label Text="Tap + to set your first goal and start tracking progress."
+                       FontSize="14"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
+                       MaximumWidthRequest="280" />
+            </VerticalStackLayout>
+
+            <!-- ── Active goals ───────────────────────────────────────────── -->
+            <VerticalStackLayout IsVisible="{Binding HasActiveGoals}" Spacing="10">
+
+                <Label Text="ACTIVE"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.2"
+                       Padding="4,0,0,0"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+
+                <VerticalStackLayout Spacing="10"
+                                     BindableLayout.ItemsSource="{Binding ActiveGoals}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:GoalSummary">
+                            <Border StrokeShape="RoundRectangle 16"
+                                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                                    Padding="16">
+                                <VerticalStackLayout Spacing="10">
+
+                                    <!-- Type badge + description row -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <Border Grid.Column="0"
+                                                StrokeShape="RoundRectangle 6"
+                                                Padding="6,3"
+                                                BackgroundColor="{Binding Type, Converter={StaticResource GoalTypeBadgeColorConverter}}"
+                                                Stroke="Transparent"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding TypeLabel}"
+                                                   FontSize="10"
+                                                   FontAttributes="Bold"
+                                                   CharacterSpacing="0.8"
+                                                   TextColor="White" />
+                                        </Border>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Description}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                                        <ImageButton Grid.Column="2"
+                                                     Source="trash.png"
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=DeleteGoalCommand}"
+                                                     CommandParameter="{Binding .}"
+                                                     BackgroundColor="Transparent"
+                                                     WidthRequest="28"
+                                                     HeightRequest="28"
+                                                     Opacity="0.45"
+                                                     VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <!-- Exercise name (strength goals only) -->
+                                    <Label Text="{Binding ExerciseName}"
+                                           IsVisible="{Binding ExerciseName, Converter={StaticResource IsNotNullConverter}}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
+                                           Margin="0,-4,0,0" />
+
+                                    <!-- Progress bar -->
+                                    <ProgressBar Progress="{Binding ProgressRatio}"
+                                                 ProgressColor="{StaticResource Accent}"
+                                                 BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#2A2A2A}"
+                                                 HeightRequest="6" />
+
+                                    <!-- Progress text + target date row -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding ProgressText}"
+                                               FontSize="13"
+                                               TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                        <Label Grid.Column="1"
+                                               IsVisible="{Binding TargetDate, Converter={StaticResource IsNotNullConverter}}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light=#888888, Dark=#888888}">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="By " />
+                                                    <Span Text="{Binding TargetDate, StringFormat='{0:MMM d, yyyy}'}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </Grid>
+
+                                    <!-- How progress is tracked -->
+                                    <Label Text="{Binding ProgressHint}"
+                                           FontSize="11"
+                                           TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}"
+                                           FontAttributes="Italic" />
+
+                                    <!-- Manual complete button -->
+                                    <Button Text="Mark as Complete"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=CompleteGoalCommand}"
+                                            CommandParameter="{Binding .}"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource Accent}"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            Padding="0,4"
+                                            HorizontalOptions="Start"
+                                            BorderWidth="0" />
+
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- ── Completed goals ────────────────────────────────────────── -->
+            <VerticalStackLayout IsVisible="{Binding HasCompletedGoals}" Spacing="10">
+
+                <Label Text="COMPLETED"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.2"
+                       Padding="4,0,0,0"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+
+                <VerticalStackLayout Spacing="10"
+                                     BindableLayout.ItemsSource="{Binding CompletedGoals}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:GoalSummary">
+                            <Border StrokeShape="RoundRectangle 16"
+                                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                                    Padding="16"
+                                    Opacity="0.75">
+                                <VerticalStackLayout Spacing="8">
+
+                                    <!-- Type badge + description + checkmark -->
+                                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                                        <Border Grid.Column="0"
+                                                StrokeShape="RoundRectangle 6"
+                                                Padding="6,3"
+                                                BackgroundColor="{Binding Type, Converter={StaticResource GoalTypeBadgeColorConverter}}"
+                                                Stroke="Transparent"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding TypeLabel}"
+                                                   FontSize="10"
+                                                   FontAttributes="Bold"
+                                                   CharacterSpacing="0.8"
+                                                   TextColor="White" />
+                                        </Border>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Description}"
+                                               FontSize="15"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"
+                                               TextDecorations="Strikethrough"
+                                               TextColor="{AppThemeBinding Light=#888888, Dark=#666666}" />
+                                        <Label Grid.Column="2"
+                                               Text="✓"
+                                               FontSize="18"
+                                               TextColor="#4CAF50"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center" />
+                                        <ImageButton Grid.Column="3"
+                                                     Source="trash.png"
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=DeleteGoalCommand}"
+                                                     CommandParameter="{Binding .}"
+                                                     BackgroundColor="Transparent"
+                                                     WidthRequest="28"
+                                                     HeightRequest="28"
+                                                     Opacity="0.35"
+                                                     VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <!-- Progress text -->
+                                    <Label Text="{Binding ProgressText}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#888888, Dark=#666666}" />
+
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- Bottom padding -->
+            <BoxView HeightRequest="16" Color="Transparent" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Goals"
+             x:Class="Golyath.UI.Views.Goals.AddGoalPage"
+             x:DataType="vm:AddGoalViewModel"
+             Title="New Goal"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" Order="Primary" Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- ── Goal type selector ─────────────────────────────────────── -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="GOAL TYPE"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.2"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                        Padding="4">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="4">
+
+                        <Border Grid.Column="0"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent"
+                                BackgroundColor="{Binding SelectedGoalTypeLabel,
+                                    Converter={StaticResource GoalTypeTabBgConverter},
+                                    ConverterParameter=Strength}">
+                            <Button Text="Strength"
+                                    Command="{Binding SelectGoalTypeCommand}"
+                                    CommandParameter="Strength"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{Binding SelectedGoalTypeLabel,
+                                        Converter={StaticResource GoalTypeTabTextConverter},
+                                        ConverterParameter=Strength}"
+                                    FontSize="13"
+                                    Padding="0,10" />
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent"
+                                BackgroundColor="{Binding SelectedGoalTypeLabel,
+                                    Converter={StaticResource GoalTypeTabBgConverter},
+                                    ConverterParameter=Frequency}">
+                            <Button Text="Frequency"
+                                    Command="{Binding SelectGoalTypeCommand}"
+                                    CommandParameter="Frequency"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{Binding SelectedGoalTypeLabel,
+                                        Converter={StaticResource GoalTypeTabTextConverter},
+                                        ConverterParameter=Frequency}"
+                                    FontSize="13"
+                                    Padding="0,10" />
+                        </Border>
+
+                        <Border Grid.Column="2"
+                                StrokeShape="RoundRectangle 8"
+                                Stroke="Transparent"
+                                BackgroundColor="{Binding SelectedGoalTypeLabel,
+                                    Converter={StaticResource GoalTypeTabBgConverter},
+                                    ConverterParameter=Balance}">
+                            <Button Text="Balance"
+                                    Command="{Binding SelectGoalTypeCommand}"
+                                    CommandParameter="Balance"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{Binding SelectedGoalTypeLabel,
+                                        Converter={StaticResource GoalTypeTabTextConverter},
+                                        ConverterParameter=Balance}"
+                                    FontSize="13"
+                                    Padding="0,10" />
+                        </Border>
+
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- ── Description ────────────────────────────────────────────── -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="DESCRIPTION"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.2"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                        Padding="12,4">
+                    <Entry Text="{Binding Description}"
+                           Placeholder="e.g. Bench Press 100 kg"
+                           PlaceholderColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           BackgroundColor="Transparent"
+                           FontSize="15" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- ── Exercise picker (Strength only) ───────────────────────── -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding ShowExercisePicker}">
+                <Label Text="EXERCISE"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.2"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                        Padding="8,4">
+                    <Picker ItemsSource="{Binding Exercises}"
+                            SelectedItem="{Binding SelectedExercise}"
+                            ItemDisplayBinding="{Binding Name}"
+                            Title="Select exercise"
+                            TitleColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                            BackgroundColor="Transparent"
+                            FontSize="15" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- ── Target value ───────────────────────────────────────────── -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{Binding TargetLabel}"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.2"
+                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                        Padding="12,4">
+                    <Entry Text="{Binding TargetValueText}"
+                           Placeholder="{Binding TargetHint}"
+                           PlaceholderColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           BackgroundColor="Transparent"
+                           Keyboard="Numeric"
+                           FontSize="15" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- ── Target date (optional) ─────────────────────────────────── -->
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="TARGET DATE"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1.2"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding HasTargetDate}"
+                            OnColor="{StaticResource Accent}"
+                            ThumbColor="White" />
+                </Grid>
+
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                        Padding="12,4"
+                        IsVisible="{Binding HasTargetDate}">
+                    <DatePicker Date="{Binding TargetDate}"
+                                TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                                BackgroundColor="Transparent"
+                                FontSize="15" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- ── Error message ──────────────────────────────────────────── -->
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotEmptyStringConverter}}"
+                   FontSize="13"
+                   TextColor="#E53935"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- ── Save button ────────────────────────────────────────────── -->
+            <Button Text="Save Goal"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}"
+                    BackgroundColor="{StaticResource Accent}"
+                    TextColor="{StaticResource AccentText}"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    CornerRadius="14"
+                    HeightRequest="52"
+                    Margin="0,8,0,0" />
+
+            <!-- Bottom padding -->
+            <BoxView HeightRequest="16" Color="Transparent" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

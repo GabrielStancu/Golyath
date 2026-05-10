@@ -1,4 +1,5 @@
 ﻿using Golyath.UI.Views.Exercises;
+using Golyath.UI.Views.Goals;
 using Golyath.UI.Views.History;
 using Golyath.UI.Views.Profile;
 using Golyath.UI.Views.Workout;
@@ -16,5 +17,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(ExerciseDetailPage), typeof(ExerciseDetailPage));
         Routing.RegisterRoute(nameof(CreateExercisePage), typeof(CreateExercisePage));
         Routing.RegisterRoute("WorkoutDetail", typeof(WorkoutDetailPage));
+        Routing.RegisterRoute(nameof(AddGoalPage), typeof(AddGoalPage));
     }
 }

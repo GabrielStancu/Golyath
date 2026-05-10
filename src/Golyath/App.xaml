@@ -16,6 +16,9 @@
             <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
             <converters:IsNotEmptyStringConverter x:Key="IsNotEmptyStringConverter" />
             <converters:IsNotZeroConverter x:Key="IsNotZeroConverter" />
+            <converters:GoalTypeBadgeColorConverter x:Key="GoalTypeBadgeColorConverter" />
+            <converters:GoalTypeTabBgConverter x:Key="GoalTypeTabBgConverter" />
+            <converters:GoalTypeTabTextConverter x:Key="GoalTypeTabTextConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
