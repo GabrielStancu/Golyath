@@ -2,17 +2,88 @@ using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Golyath.Application.Services;
+using Golyath.Core.Enums;
 
 namespace Golyath.UI.ViewModels.Settings;
 
 public partial class SettingsViewModel : ObservableObject
 {
     private readonly IDataPortabilityService _dataPortabilityService;
+    private readonly IUserService _userService;
+    private readonly ISettingsService _settingsService;
+    private Core.Entities.User? _currentUser;
 
-    public SettingsViewModel(IDataPortabilityService dataPortabilityService)
+    // (label, seconds) pairs shown in the rest-timer picker
+    public static readonly IReadOnlyList<(string Label, int Seconds)> RestTimerOptions =
+    [
+        ("30 sec", 30),
+        ("45 sec", 45),
+        ("1 min", 60),
+        ("1 min 30 sec", 90),
+        ("2 min", 120),
+        ("3 min", 180),
+        ("5 min", 300),
+    ];
+
+    public IReadOnlyList<string> RestTimerLabels { get; } =
+        RestTimerOptions.Select(o => o.Label).ToList();
+
+    public SettingsViewModel(
+        IDataPortabilityService dataPortabilityService,
+        IUserService userService,
+        ISettingsService settingsService)
     {
         _dataPortabilityService = dataPortabilityService;
+        _userService = userService;
+        _settingsService = settingsService;
+
+        var savedSeconds = _settingsService.GetDefaultRestSeconds();
+        var idx = RestTimerOptions.ToList().FindIndex(o => o.Seconds == savedSeconds);
+        _selectedRestTimerIndex = idx >= 0 ? idx : 3; // default index for 90 s
     }
+
+    public async Task InitializeAsync()
+    {
+        _currentUser = await _userService.GetCurrentUserAsync();
+        if (_currentUser is not null)
+        {
+            _isImperialUnit = _currentUser.PreferredUnit == WeightUnit.Lb;
+            OnPropertyChanged(nameof(IsImperialUnit));
+            OnPropertyChanged(nameof(IsMetricSelected));
+        }
+    }
+
+    // ─── Preferences ─────────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMetricSelected))]
+    private bool _isImperialUnit;
+
+    public bool IsMetricSelected => !IsImperialUnit;
+
+    [ObservableProperty]
+    private int _selectedRestTimerIndex;
+
+    partial void OnIsImperialUnitChanged(bool value)
+    {
+        if (_currentUser is null) return;
+        _currentUser.PreferredUnit = value ? WeightUnit.Lb : WeightUnit.Kg;
+        _ = _userService.UpdateUserAsync(_currentUser);
+    }
+
+    partial void OnSelectedRestTimerIndexChanged(int value)
+    {
+        if (value < 0 || value >= RestTimerOptions.Count) return;
+        _settingsService.SetDefaultRestSeconds(RestTimerOptions[value].Seconds);
+    }
+
+    [RelayCommand]
+    private void SelectMetric() => IsImperialUnit = false;
+
+    [RelayCommand]
+    private void SelectImperial() => IsImperialUnit = true;
+
+    // ─── Shared state ─────────────────────────────────────────────────────────
 
     [ObservableProperty]
     bool _isBusy;

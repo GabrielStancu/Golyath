@@ -58,6 +58,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IGoalService, GoalService>();
         services.AddTransient<IPersonalRecordService, PersonalRecordService>();
         services.AddSingleton<IThemeService, ThemeService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<OnboardingDataService>();
         services.AddTransient<IExerciseSeederService, ExerciseSeederService>();
         services.AddTransient<IDataPortabilityService, DataPortabilityService>();

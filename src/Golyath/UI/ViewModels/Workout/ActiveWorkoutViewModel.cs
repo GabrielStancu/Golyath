@@ -14,11 +14,11 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     private readonly IWorkoutService _workoutService;
     private readonly IExerciseRepository _exerciseRepository;
     private readonly ITagService _tagService;
+    private readonly ISettingsService _settingsService;
     private WorkoutEntity? _workout;
     private IDispatcherTimer? _workoutTimer;
     private IDispatcherTimer? _restTimer;
     private int _elapsedSeconds;
-    private const int DefaultRestSeconds = 90;
 
     public ObservableCollection<WorkoutExerciseViewModel> Exercises { get; } = [];
     public ObservableCollection<TagChipViewModel> WorkoutTags { get; } = [];
@@ -47,11 +47,12 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     public event EventHandler? WorkoutCompleted;
     public event EventHandler? AddExerciseRequested;
 
-    public ActiveWorkoutViewModel(IWorkoutService workoutService, IExerciseRepository exerciseRepository, ITagService tagService)
+    public ActiveWorkoutViewModel(IWorkoutService workoutService, IExerciseRepository exerciseRepository, ITagService tagService, ISettingsService settingsService)
     {
         _workoutService = workoutService;
         _exerciseRepository = exerciseRepository;
         _tagService = tagService;
+        _settingsService = settingsService;
     }
 
     partial void OnWorkoutNotesChanged(string value)
@@ -243,7 +244,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     }
 
     private void OnSetCompleted(object? sender, WorkoutSetViewModel _) =>
-        StartRestTimer(DefaultRestSeconds);
+        StartRestTimer(_settingsService.GetDefaultRestSeconds());
 
     private async void OnRemoveExercise(object? sender, WorkoutExerciseViewModel vm)
     {
