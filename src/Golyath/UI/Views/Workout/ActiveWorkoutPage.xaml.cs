@@ -51,4 +51,9 @@ public partial class ActiveWorkoutPage : ContentPage
         _viewModel.UnregisterMessenger();
         await Navigation.PopAsync();
     }
+
+    private async void OnBackClicked(object? sender, TappedEventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
 }

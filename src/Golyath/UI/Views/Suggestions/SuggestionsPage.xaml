@@ -6,25 +6,54 @@
              x:Class="Golyath.UI.Views.Suggestions.SuggestionsPage"
              x:DataType="vm:SuggestionsViewModel"
              Title="Suggestions"
+             Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
-    <RefreshView Command="{Binding RefreshCommand}"
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ── Header panel with bottom-rounded corners ───────────────── -->
+        <Border Grid.Row="0"
+                BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 0,0,20,20"
+                Padding="16,16,16,16">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="Transparent"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                    </Border.GestureRecognizers>
+                    <Label Text="‹"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                    <Label Text="Smart Suggestions"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                    <Label Text="Personalised recommendations based on your training data"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+    <RefreshView Grid.Row="1"
+                 Command="{Binding RefreshCommand}"
                  IsRefreshing="{Binding IsBusy}"
                  RefreshColor="{StaticResource Accent}">
 
         <ScrollView>
             <VerticalStackLayout Padding="16" Spacing="14">
-
-                <!-- ── Header ─────────────────────────────────────────────── -->
-                <VerticalStackLayout Spacing="2" Padding="4,0,0,0">
-                    <Label Text="Smart Suggestions"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
-                    <Label Text="Personalised recommendations based on your training data"
-                           FontSize="13"
-                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
-                </VerticalStackLayout>
 
                 <!-- ── Loading indicator ──────────────────────────────────── -->
                 <ActivityIndicator IsRunning="{Binding IsBusy}"
@@ -122,5 +151,7 @@
         </ScrollView>
 
     </RefreshView>
+
+    </Grid>
 
 </ContentPage>

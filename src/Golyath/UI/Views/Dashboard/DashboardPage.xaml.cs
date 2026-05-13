@@ -1,5 +1,4 @@
 using Golyath.UI.ViewModels.Dashboard;
-using Golyath.UI.Views.Profile;
 
 namespace Golyath.UI.Views.Dashboard;
 
@@ -17,11 +16,16 @@ public partial class DashboardPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // Page fade-in transition
+        this.Opacity = 0;
+        _ = this.FadeTo(1, 300, Easing.CubicOut);
+
         await _viewModel.LoadAsync();
     }
 
-    private async void OnProfileClicked(object? sender, EventArgs e)
+    private async void OnSettingsClicked(object? sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(EditProfilePage));
+        await Shell.Current.GoToAsync("SettingsPage");
     }
 }

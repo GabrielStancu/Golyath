@@ -16,6 +16,16 @@ public partial class AnalyticsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // Page fade-in transition
+        this.Opacity = 0;
+        _ = this.FadeTo(1, 300, Easing.CubicOut);
+
         await _vm.LoadAsync();
+    }
+
+    private async void OnSuggestionsTapped(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("SuggestionsPage");
     }
 }

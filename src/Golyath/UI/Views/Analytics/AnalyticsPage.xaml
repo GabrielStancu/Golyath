@@ -5,38 +5,58 @@
              xmlns:controls="clr-namespace:Golyath.UI.Controls"
              x:Class="Golyath.UI.Views.Analytics.AnalyticsPage"
              x:DataType="vm:AnalyticsViewModel"
-             Title="Analytics"
+             Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- ── Inline header ─────────────────────────────────────────────── -->
+        <Border Grid.Row="0"
+                BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 0,0,20,20"
+                Padding="16,16,16,16">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="Analytics"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                <Label Text="Track your progress"
+                       FontSize="13"
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+            </VerticalStackLayout>
+        </Border>
 
         <!-- ── Period filter ─────────────────────────────────────────────── -->
-        <Border Grid.Row="0"
-                BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                StrokeShape="Rectangle"
-                Padding="16,8">
+        <Border Grid.Row="1"
+                Style="{StaticResource CardBorder}"
+                Padding="12,8"
+                Margin="12,4,12,4">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
                 <Label Grid.Column="0"
                        Text="Period:"
                        FontSize="13"
                        VerticalOptions="Center"
-                       TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
-                <Picker Grid.Column="1"
-                        ItemsSource="{x:Static vm:AnalyticsViewModel.PeriodOptions}"
-                        SelectedItem="{Binding SelectedPeriod}"
-                        FontSize="13"
-                        TextColor="{AppThemeBinding Light=#111111, Dark=White}"
-                        BackgroundColor="Transparent" />
+                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                        BackgroundColor="Transparent"
+                        Padding="4,0">
+                    <Picker ItemsSource="{x:Static vm:AnalyticsViewModel.PeriodOptions}"
+                            SelectedItem="{Binding SelectedPeriod}"
+                            FontSize="13"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                            BackgroundColor="Transparent" />
+                </Border>
             </Grid>
         </Border>
 
         <!-- ── Metric tab bar ────────────────────────────────────────────── -->
-        <Border Grid.Row="1"
-                BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                StrokeShape="Rectangle"
-                Padding="12,6">
+        <Border Grid.Row="2"
+                Style="{StaticResource CardBorder}"
+                Padding="12,6"
+                Margin="12,0,12,4">
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
 
                 <Border Grid.Column="0"
@@ -82,7 +102,7 @@
         </Border>
 
         <!-- ── Chart content ─────────────────────────────────────────────── -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
 
             <!-- Loading -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"
@@ -96,51 +116,52 @@
                 <VerticalStackLayout Padding="16" Spacing="12">
 
                     <!-- Exercise picker -->
-                    <Border StrokeShape="RoundRectangle 12"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                            Padding="12,8">
+                    <Border Style="{StaticResource CardBorder}">
                         <VerticalStackLayout Spacing="2">
                             <Label Text="EXERCISE"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="1.2"
-                                   TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                                   Style="{StaticResource SectionHeader}" />
                             <Picker ItemsSource="{Binding ExerciseOptions}"
                                     SelectedItem="{Binding SelectedExercise}"
                                     ItemDisplayBinding="{Binding Name}"
                                     FontSize="14"
-                                    TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                     BackgroundColor="Transparent" />
                         </VerticalStackLayout>
                     </Border>
 
                     <!-- Chart card -->
-                    <Border StrokeShape="RoundRectangle 16"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                            Padding="12">
+                    <Border Style="{StaticResource CardBorder}">
                         <VerticalStackLayout Spacing="6">
                             <Label Text="STRENGTH PROGRESSION"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="1.2"
-                                   TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                                   Style="{StaticResource SectionHeader}" />
                             <Label Text="{Binding StrengthExerciseName}"
                                    FontSize="15"
                                    FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
-                            <controls:LineChart Points="{Binding StrengthPoints}"
-                                               HeightRequest="220" />
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                            <controls:AnimatedLineChart Points="{Binding StrengthPoints}"
+                                                        HeightRequest="220" />
                         </VerticalStackLayout>
                     </Border>
 
                     <Label IsVisible="{Binding HasStrengthData, Converter={StaticResource InvertBoolConverter}}"
                            Text="Log more sessions to see your strength curve here."
-                           FontSize="13"
+                           Style="{StaticResource CardSubtitle}"
                            HorizontalTextAlignment="Center"
-                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
                            Margin="0,8" />
+
+                    <!-- Smart suggestions link -->
+                    <Border Style="{StaticResource CardBorder}" Padding="12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSuggestionsTapped" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="View Smart Suggestions →"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
 
                 </VerticalStackLayout>
             </ScrollView>
@@ -149,19 +170,12 @@
             <ScrollView IsVisible="{Binding IsVolumeVisible}">
                 <VerticalStackLayout Padding="16" Spacing="12">
 
-                    <Border StrokeShape="RoundRectangle 16"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                            Padding="12">
+                    <Border Style="{StaticResource CardBorder}">
                         <VerticalStackLayout Spacing="6">
                             <Label Text="WEEKLY TRAINING VOLUME"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="1.2"
-                                   TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                                   Style="{StaticResource SectionHeader}" />
                             <Label Text="Total weight moved per week (kg × reps)"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                                   Style="{StaticResource CardSubtitle}" />
                             <controls:VolumeBarChart Points="{Binding VolumePoints}"
                                                      HeightRequest="220" />
                         </VerticalStackLayout>
@@ -169,10 +183,23 @@
 
                     <Label IsVisible="{Binding HasVolumeData, Converter={StaticResource InvertBoolConverter}}"
                            Text="Complete workouts to see your weekly volume trend here."
-                           FontSize="13"
+                           Style="{StaticResource CardSubtitle}"
                            HorizontalTextAlignment="Center"
-                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
                            Margin="0,8" />
+
+                    <!-- Smart suggestions link -->
+                    <Border Style="{StaticResource CardBorder}" Padding="12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSuggestionsTapped" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="View Smart Suggestions →"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
 
                 </VerticalStackLayout>
             </ScrollView>
@@ -181,19 +208,24 @@
             <ScrollView IsVisible="{Binding IsMusclesVisible}">
                 <VerticalStackLayout Padding="16" Spacing="12">
 
-                    <Border StrokeShape="RoundRectangle 16"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                            Padding="12">
+                    <!-- Donut chart overview -->
+                    <Border Style="{StaticResource CardBorder}">
                         <VerticalStackLayout Spacing="6">
                             <Label Text="MUSCLE GROUP DISTRIBUTION"
-                                   FontSize="11"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="1.2"
-                                   TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                                   Style="{StaticResource SectionHeader}" />
                             <Label Text="Completed sets by primary muscle"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+                                   Style="{StaticResource CardSubtitle}" />
+                            <controls:DonutChart Segments="{Binding MuscleDistribution, Converter={StaticResource MuscleGroupToDonutConverter}}"
+                                                  HeightRequest="200"
+                                                  Margin="0,8" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Detailed bar breakdown -->
+                    <Border Style="{StaticResource CardBorder}">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="DETAILED BREAKDOWN"
+                                   Style="{StaticResource SectionHeader}" />
                             <controls:HorizontalBarChart Items="{Binding MuscleDistribution}"
                                                          HeightRequest="{Binding MuscleChartHeight}" />
                         </VerticalStackLayout>
@@ -201,10 +233,23 @@
 
                     <Label IsVisible="{Binding HasMuscleData, Converter={StaticResource InvertBoolConverter}}"
                            Text="Log workouts to see which muscle groups you train most."
-                           FontSize="13"
+                           Style="{StaticResource CardSubtitle}"
                            HorizontalTextAlignment="Center"
-                           TextColor="{AppThemeBinding Light=#888888, Dark=#888888}"
                            Margin="0,8" />
+
+                    <!-- Smart suggestions link -->
+                    <Border Style="{StaticResource CardBorder}" Padding="12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSuggestionsTapped" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="View Smart Suggestions →"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
 
                 </VerticalStackLayout>
             </ScrollView>

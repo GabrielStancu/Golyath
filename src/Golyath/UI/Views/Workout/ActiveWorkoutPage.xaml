@@ -14,10 +14,20 @@
         <Grid Grid.Row="0" RowDefinitions="Auto,Auto,1">
             <!-- Title + buttons row -->
             <Grid Grid.Row="0"
-                  ColumnDefinitions="*,Auto"
+                  ColumnDefinitions="Auto,*,Auto"
                   Padding="16,12"
                   BackgroundColor="{StaticResource AppDarkSurface}">
-                <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+                <Label Grid.Column="0"
+                       Text="‹"
+                       FontSize="28"
+                       TextColor="White"
+                       VerticalOptions="Center"
+                       Margin="0,0,8,0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                     <Label Text="{Binding WorkoutTitle}"
                            TextColor="White"
                            FontSize="18"
@@ -27,7 +37,7 @@
                            FontSize="14"
                            FontFamily="OpenSansRegular" />
                 </VerticalStackLayout>
-                <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
                     <Button Text="Discard"
                             Command="{Binding AbandonWorkoutCommand}"
                             BackgroundColor="Transparent"

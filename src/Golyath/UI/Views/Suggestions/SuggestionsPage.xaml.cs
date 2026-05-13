@@ -18,4 +18,9 @@ public partial class SuggestionsPage : ContentPage
         base.OnAppearing();
         await _vm.LoadAsync();
     }
+
+    private async void OnBackClicked(object? sender, TappedEventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
 }

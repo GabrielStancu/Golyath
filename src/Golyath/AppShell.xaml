@@ -5,50 +5,67 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Golyath"
     xmlns:dashboard="clr-namespace:Golyath.UI.Views.Dashboard"
-    xmlns:exercises="clr-namespace:Golyath.UI.Views.Exercises"
+    xmlns:workout="clr-namespace:Golyath.UI.Views.Workout"
     xmlns:history="clr-namespace:Golyath.UI.Views.History"
+    xmlns:exercises="clr-namespace:Golyath.UI.Views.Exercises"
     xmlns:analytics="clr-namespace:Golyath.UI.Views.Analytics"
-    xmlns:suggestions="clr-namespace:Golyath.UI.Views.Suggestions"
-    xmlns:goals="clr-namespace:Golyath.UI.Views.Goals"
-    xmlns:settings="clr-namespace:Golyath.UI.Views.Settings"
     Title="Golyath"
-    FlyoutBehavior="Disabled">
+    FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1A1A1A}"
+    Shell.TabBarTitleColor="#FFD700"
+    Shell.TabBarUnselectedColor="#888888">
 
     <TabBar>
         <ShellContent
-            Title="Dashboard"
+            Title=" "
             ContentTemplate="{DataTemplate dashboard:DashboardPage}"
-            Route="DashboardPage" />
+            Route="DashboardPage">
+            <ShellContent.Icon>
+                <FontImageSource Glyph="&#x1F3E0;" FontFamily="OpenSansRegular" Size="24"
+                                 Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
+            </ShellContent.Icon>
+        </ShellContent>
 
         <ShellContent
-            Title="History"
+            Title=" "
+            ContentTemplate="{DataTemplate workout:WorkoutTemplatesPage}"
+            Route="WorkoutTemplatesPage">
+            <ShellContent.Icon>
+                <FontImageSource Glyph="&#x1F3CB;" FontFamily="OpenSansRegular" Size="24"
+                                 Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title=" "
             ContentTemplate="{DataTemplate history:HistoryPage}"
-            Route="HistoryPage" />
+            Route="HistoryPage">
+            <ShellContent.Icon>
+                <FontImageSource Glyph="&#x1F4CB;" FontFamily="OpenSansRegular" Size="24"
+                                 Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
+            </ShellContent.Icon>
+        </ShellContent>
 
         <ShellContent
-            Title="Exercises"
+            Title=" "
             ContentTemplate="{DataTemplate exercises:ExerciseLibraryPage}"
-            Route="ExerciseLibrary" />
+            Route="ExerciseLibrary">
+            <ShellContent.Icon>
+                <FontImageSource Glyph="&#x1F4AA;" FontFamily="OpenSansRegular" Size="24"
+                                 Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
+            </ShellContent.Icon>
+        </ShellContent>
 
         <ShellContent
-            Title="Analytics"
+            Title=" "
             ContentTemplate="{DataTemplate analytics:AnalyticsPage}"
-            Route="AnalyticsPage" />
-
-        <ShellContent
-            Title="Suggestions"
-            ContentTemplate="{DataTemplate suggestions:SuggestionsPage}"
-            Route="SuggestionsPage" />
-
-        <ShellContent
-            Title="Goals"
-            ContentTemplate="{DataTemplate goals:GoalsPage}"
-            Route="GoalsPage" />
-
-        <ShellContent
-            Title="Settings"
-            ContentTemplate="{DataTemplate settings:SettingsPage}"
-            Route="SettingsPage" />
+            Route="AnalyticsPage">
+            <ShellContent.Icon>
+                <FontImageSource Glyph="&#x1F4CA;" FontFamily="OpenSansRegular" Size="24"
+                                 Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
+            </ShellContent.Icon>
+        </ShellContent>
 
     </TabBar>
 

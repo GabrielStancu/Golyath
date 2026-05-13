@@ -19,6 +19,7 @@
             <converters:GoalTypeBadgeColorConverter x:Key="GoalTypeBadgeColorConverter" />
             <converters:GoalTypeTabBgConverter x:Key="GoalTypeTabBgConverter" />
             <converters:GoalTypeTabTextConverter x:Key="GoalTypeTabTextConverter" />
+            <converters:MuscleGroupToDonutConverter x:Key="MuscleGroupToDonutConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

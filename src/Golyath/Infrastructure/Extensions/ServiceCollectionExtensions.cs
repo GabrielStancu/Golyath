@@ -85,6 +85,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<EditProfilePage>();
 
         // Workout logging
+        services.AddTransient<WorkoutTemplatesViewModel>();
+        services.AddTransient<WorkoutTemplatesPage>();
         services.AddTransient<ActiveWorkoutViewModel>();
         services.AddTransient<ActiveWorkoutPage>();
         services.AddTransient<ExercisePickerViewModel>();
