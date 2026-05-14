@@ -12,7 +12,7 @@
     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
                          Spacing="16" Padding="32">
 
-        <Label Text="🏋️" FontSize="64" HorizontalOptions="Center" />
+        <Label Text="&#xEA4A;" FontFamily="MaterialIcons" FontSize="64" HorizontalOptions="Center" />
 
         <Label Text="Dashboard coming soon"
                FontSize="22" FontAttributes="Bold"

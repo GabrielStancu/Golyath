@@ -44,7 +44,8 @@
                                          Spacing="12"
                                          Padding="0,48,0,0"
                                          HorizontalOptions="Center">
-                        <Label Text="🏋️"
+                        <Label Text="&#xEA4A;"
+                               FontFamily="MaterialIcons"
                                FontSize="56"
                                HorizontalOptions="Center" />
                         <Label Text="No Workouts Yet"
@@ -100,7 +101,8 @@
                                             </HorizontalStackLayout>
                                         </VerticalStackLayout>
                                         <Label Grid.Column="1"
-                                               Text="›"
+                                               Text="&#xE5CC;"
+                                               FontFamily="MaterialIcons"
                                                FontSize="22"
                                                TextColor="{StaticResource Accent}"
                                                VerticalOptions="Center" />

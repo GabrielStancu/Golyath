@@ -86,7 +86,8 @@
                                      Spacing="12"
                                      Padding="0,48,0,0"
                                      HorizontalOptions="Center">
-                    <Label Text="&#x1F3AF;"
+                    <Label Text="&#xE153;"
+                           FontFamily="MaterialIcons"
                            FontSize="56"
                            HorizontalOptions="Center" />
                     <Label Text="No Goals Yet"
@@ -143,14 +144,20 @@
                                                    VerticalOptions="Center"
                                                    TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
                                             <ImageButton Grid.Column="2"
-                                                         Source="trash.png"
                                                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=DeleteGoalCommand}"
                                                          CommandParameter="{Binding .}"
                                                          BackgroundColor="Transparent"
                                                          WidthRequest="28"
                                                          HeightRequest="28"
                                                          Opacity="0.45"
-                                                         VerticalOptions="Center" />
+                                                         VerticalOptions="Center">
+                                                <ImageButton.Source>
+                                                    <FontImageSource Glyph="&#xE872;"
+                                                                    FontFamily="MaterialIcons"
+                                                                    Size="20"
+                                                                    Color="{AppThemeBinding Light=#555555, Dark=#999999}" />
+                                                </ImageButton.Source>
+                                            </ImageButton>
                                         </Grid>
 
                                         <!-- Exercise name (strength goals only) -->
@@ -253,20 +260,27 @@
                                                    TextDecorations="Strikethrough"
                                                    TextColor="{AppThemeBinding Light=#888888, Dark=#666666}" />
                                             <Label Grid.Column="2"
-                                                   Text="&#x2713;"
+                                                   Text="&#xE5CA;"
+                                                   FontFamily="MaterialIcons"
                                                    FontSize="18"
                                                    TextColor="#4CAF50"
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center" />
                                             <ImageButton Grid.Column="3"
-                                                         Source="trash.png"
                                                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=DeleteGoalCommand}"
                                                          CommandParameter="{Binding .}"
                                                          BackgroundColor="Transparent"
                                                          WidthRequest="28"
                                                          HeightRequest="28"
                                                          Opacity="0.35"
-                                                         VerticalOptions="Center" />
+                                                         VerticalOptions="Center">
+                                                <ImageButton.Source>
+                                                    <FontImageSource Glyph="&#xE872;"
+                                                                    FontFamily="MaterialIcons"
+                                                                    Size="20"
+                                                                    Color="{AppThemeBinding Light=#555555, Dark=#999999}" />
+                                                </ImageButton.Source>
+                                            </ImageButton>
                                         </Grid>
 
                                         <!-- Progress text -->
@@ -304,7 +318,8 @@
                                      Spacing="12"
                                      Padding="0,48,0,0"
                                      HorizontalOptions="Center">
-                    <Label Text="&#x1F3C5;"
+                    <Label Text="&#xEA3F;"
+                           FontFamily="MaterialIcons"
                            FontSize="56"
                            HorizontalOptions="Center" />
                     <Label Text="No Records Yet"

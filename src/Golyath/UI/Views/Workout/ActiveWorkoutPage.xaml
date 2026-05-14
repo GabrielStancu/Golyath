@@ -18,7 +18,8 @@
                   Padding="16,12"
                   BackgroundColor="{StaticResource AppDarkSurface}">
                 <Label Grid.Column="0"
-                       Text="‹"
+                       Text="&#xE5CB;"
+                       FontFamily="MaterialIcons"
                        FontSize="28"
                        TextColor="White"
                        VerticalOptions="Center"
@@ -79,7 +80,8 @@
                                            FontSize="12"
                                            TextColor="{StaticResource Accent}"
                                            VerticalOptions="Center" />
-                                    <Label Text="✕"
+                                    <Label Text="&#xE5CD;"
+                                           FontFamily="MaterialIcons"
                                            FontSize="10"
                                            TextColor="#888888"
                                            VerticalOptions="Center">
@@ -149,7 +151,8 @@
                                                FontAttributes="Bold"
                                                VerticalOptions="Center" />
                                         <Button Grid.Column="1"
-                                                Text="✕"
+                                                Text="&#xE5CD;"
+                                                FontFamily="MaterialIcons"
                                                 Command="{Binding RemoveCommand}"
                                                 BackgroundColor="Transparent"
                                                 TextColor="#555555"
@@ -250,7 +253,8 @@
 
                                                         <!-- Complete button -->
                                                         <Button Grid.Column="3"
-                                                                Text="✓"
+                                                                Text="&#xE5CA;"
+                                                                FontFamily="MaterialIcons"
                                                                 Command="{Binding CompleteSetCommand}"
                                                                 TextColor="White"
                                                                 FontSize="18"

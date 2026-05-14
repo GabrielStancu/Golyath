@@ -9,85 +9,82 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,*">
 
-        <!-- ── Inline header ──────────────────────────────────────────────── -->
+        <!-- ── Header panel with search & filters ─────────────────────────── -->
         <Border Grid.Row="0"
                 BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 0,0,20,20"
-                Padding="16,16,16,16">
-            <VerticalStackLayout Spacing="2">
-                <Label Text="Exercise Library"
-                       FontSize="22"
-                       FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                <Label Text="Browse and manage exercises"
-                       FontSize="13"
-                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                Padding="16,16,16,12">
+            <VerticalStackLayout Spacing="10">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Exercise Library"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                    <Label Text="Browse and manage exercises"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                </VerticalStackLayout>
+
+                <!-- Search bar -->
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                        Padding="4,0">
+                    <SearchBar Text="{Binding SearchQuery}"
+                               Placeholder="Search exercises…"
+                               PlaceholderColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                               BackgroundColor="Transparent"
+                               CancelButtonColor="{StaticResource Accent}" />
+                </Border>
+
+                <!-- Filters row -->
+                <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                    <Border Grid.Column="0"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                            Padding="4,0">
+                        <Picker ItemsSource="{Binding MuscleGroupOptions}"
+                                SelectedItem="{Binding SelectedMuscleGroup}"
+                                Title="Muscle"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                BackgroundColor="Transparent" />
+                    </Border>
+
+                    <Border Grid.Column="1"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                            Padding="4,0">
+                        <Picker ItemsSource="{Binding EquipmentOptions}"
+                                SelectedItem="{Binding SelectedEquipment}"
+                                Title="Equipment"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                BackgroundColor="Transparent" />
+                    </Border>
+
+                    <Button Grid.Column="2"
+                            Text="&#xE5CD;"
+                            FontFamily="MaterialIcons"
+                            Command="{Binding ClearFiltersCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                            FontSize="16"
+                            Padding="8,4"
+                            VerticalOptions="Center"
+                            ToolTipProperties.Text="Clear filters" />
+                </Grid>
             </VerticalStackLayout>
         </Border>
 
-        <!-- ── Search bar ── -->
-        <Border Grid.Row="1"
-                StrokeShape="RoundRectangle 12"
-                Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                Padding="4,0"
-                Margin="12,8,12,0">
-            <SearchBar Text="{Binding SearchQuery}"
-                       Placeholder="Search exercises…"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                       BackgroundColor="Transparent"
-                       CancelButtonColor="{StaticResource Accent}" />
-        </Border>
-
-        <!-- ── Filters row ── -->
-        <Grid Grid.Row="2"
-              ColumnDefinitions="*,*,Auto"
-              ColumnSpacing="8"
-              Padding="12,8">
-
-            <Border Grid.Column="0"
-                    StrokeShape="RoundRectangle 12"
-                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                    Padding="4,0">
-                <Picker ItemsSource="{Binding MuscleGroupOptions}"
-                        SelectedItem="{Binding SelectedMuscleGroup}"
-                        Title="Muscle"
-                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                        TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                        BackgroundColor="Transparent" />
-            </Border>
-
-            <Border Grid.Column="1"
-                    StrokeShape="RoundRectangle 12"
-                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                    Padding="4,0">
-                <Picker ItemsSource="{Binding EquipmentOptions}"
-                        SelectedItem="{Binding SelectedEquipment}"
-                        Title="Equipment"
-                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                        TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                        BackgroundColor="Transparent" />
-            </Border>
-
-            <Button Grid.Column="2"
-                    Text="✕"
-                    Command="{Binding ClearFiltersCommand}"
-                    BackgroundColor="Transparent"
-                    TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                    FontSize="16"
-                    Padding="8,4"
-                    VerticalOptions="Center"
-                    ToolTipProperties.Text="Clear filters" />
-        </Grid>
-
     <!-- ── List + FAB overlay ── -->
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="1">
 
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
@@ -134,7 +131,8 @@
                                            LineBreakMode="TailTruncation" />
 
                                     <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
-                                           Text="›"
+                                           Text="&#xE5CC;"
+                                           FontFamily="MaterialIcons"
                                            TextColor="{StaticResource Accent}"
                                            FontSize="22"
                                            VerticalOptions="Center"

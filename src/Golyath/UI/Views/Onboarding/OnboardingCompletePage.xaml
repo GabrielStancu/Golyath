@@ -13,7 +13,8 @@
                              Spacing="16"
                              Padding="32,0">
 
-            <Label Text="🏋️"
+            <Label Text="&#xEA4A;"
+                   FontFamily="MaterialIcons"
                    FontSize="72"
                    HorizontalOptions="Center" />
 

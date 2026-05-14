@@ -48,8 +48,9 @@
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnSettingsClicked" />
                         </Border.GestureRecognizers>
-                        <Label Text="⚙️"
-                               FontSize="20"
+                        <Label Text="&#xE8B8;"
+                               FontFamily="MaterialIcons"
+                               FontSize="22"
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
                     </Border>

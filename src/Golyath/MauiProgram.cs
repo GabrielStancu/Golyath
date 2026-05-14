@@ -18,6 +18,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
             })
             .ConfigureMauiHandlers(handlers =>
             {
@@ -56,6 +57,17 @@ public static class MauiProgram
                     {
                         editText.BackgroundTintList =
                             Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+                    }
+                });
+
+                // Use bounded ripple for Labels with TapGestureRecognizer (back buttons, chevrons)
+                // Prevents the oversized borderless circle ripple
+                LabelHandler.Mapper.AppendToMapping("BoundedTapRipple", (handler, view) =>
+                {
+                    if (view is Label label && label.GestureRecognizers.OfType<TapGestureRecognizer>().Any())
+                    {
+                        handler.PlatformView.Clickable = true;
+                        handler.PlatformView.SetBackgroundResource(Android.Resource.Attribute.SelectableItemBackground);
                     }
                 });
 #elif IOS || MACCATALYST

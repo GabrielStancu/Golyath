@@ -18,4 +18,9 @@ public partial class ExercisePickerPage : ContentPage
         base.OnAppearing();
         _ = _viewModel.InitializeAsync();
     }
+
+    private async void OnBackClicked(object? sender, TappedEventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
 }

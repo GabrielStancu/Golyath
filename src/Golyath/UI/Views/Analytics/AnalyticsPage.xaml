@@ -8,101 +8,91 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,*">
 
-        <!-- ── Inline header ─────────────────────────────────────────────── -->
+        <!-- ── Header panel with filters & metric tabs ───────────────────── -->
         <Border Grid.Row="0"
                 BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 0,0,20,20"
-                Padding="16,16,16,16">
-            <VerticalStackLayout Spacing="2">
-                <Label Text="Analytics"
-                       FontSize="22"
-                       FontAttributes="Bold"
-                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                <Label Text="Track your progress"
-                       FontSize="13"
-                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                Padding="16,16,16,12">
+            <VerticalStackLayout Spacing="10">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Analytics"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                    <Label Text="Track your progress"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                </VerticalStackLayout>
+
+                <!-- Period filter -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Label Grid.Column="0"
+                           Text="Period:"
+                           FontSize="13"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                    <Border Grid.Column="1"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                            Padding="4,0">
+                        <Picker ItemsSource="{x:Static vm:AnalyticsViewModel.PeriodOptions}"
+                                SelectedItem="{Binding SelectedPeriod}"
+                                FontSize="13"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                BackgroundColor="Transparent" />
+                    </Border>
+                </Grid>
+
+                <!-- Metric tab bar -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                    <Border Grid.Column="0"
+                            BackgroundColor="{Binding StrengthTabBg}"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="Transparent">
+                        <Button Text="Strength"
+                                Command="{Binding SelectMetricCommand}"
+                                CommandParameter="0"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding StrengthTabText}"
+                                FontSize="13"
+                                Padding="0,8" />
+                    </Border>
+
+                    <Border Grid.Column="1"
+                            BackgroundColor="{Binding VolumeTabBg}"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="Transparent">
+                        <Button Text="Volume"
+                                Command="{Binding SelectMetricCommand}"
+                                CommandParameter="1"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding VolumeTabText}"
+                                FontSize="13"
+                                Padding="0,8" />
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            BackgroundColor="{Binding MusclesTabBg}"
+                            StrokeShape="RoundRectangle 8"
+                            Stroke="Transparent">
+                        <Button Text="Muscles"
+                                Command="{Binding SelectMetricCommand}"
+                                CommandParameter="2"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding MusclesTabText}"
+                                FontSize="13"
+                                Padding="0,8" />
+                    </Border>
+                </Grid>
             </VerticalStackLayout>
         </Border>
 
-        <!-- ── Period filter ─────────────────────────────────────────────── -->
-        <Border Grid.Row="1"
-                Style="{StaticResource CardBorder}"
-                Padding="12,8"
-                Margin="12,4,12,4">
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                <Label Grid.Column="0"
-                       Text="Period:"
-                       FontSize="13"
-                       VerticalOptions="Center"
-                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                <Border Grid.Column="1"
-                        StrokeShape="RoundRectangle 12"
-                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                        BackgroundColor="Transparent"
-                        Padding="4,0">
-                    <Picker ItemsSource="{x:Static vm:AnalyticsViewModel.PeriodOptions}"
-                            SelectedItem="{Binding SelectedPeriod}"
-                            FontSize="13"
-                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                            BackgroundColor="Transparent" />
-                </Border>
-            </Grid>
-        </Border>
-
-        <!-- ── Metric tab bar ────────────────────────────────────────────── -->
-        <Border Grid.Row="2"
-                Style="{StaticResource CardBorder}"
-                Padding="12,6"
-                Margin="12,0,12,4">
-            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
-
-                <Border Grid.Column="0"
-                        BackgroundColor="{Binding StrengthTabBg}"
-                        StrokeShape="RoundRectangle 8"
-                        Stroke="Transparent">
-                    <Button Text="Strength"
-                            Command="{Binding SelectMetricCommand}"
-                            CommandParameter="0"
-                            BackgroundColor="Transparent"
-                            TextColor="{Binding StrengthTabText}"
-                            FontSize="13"
-                            Padding="0,8" />
-                </Border>
-
-                <Border Grid.Column="1"
-                        BackgroundColor="{Binding VolumeTabBg}"
-                        StrokeShape="RoundRectangle 8"
-                        Stroke="Transparent">
-                    <Button Text="Volume"
-                            Command="{Binding SelectMetricCommand}"
-                            CommandParameter="1"
-                            BackgroundColor="Transparent"
-                            TextColor="{Binding VolumeTabText}"
-                            FontSize="13"
-                            Padding="0,8" />
-                </Border>
-
-                <Border Grid.Column="2"
-                        BackgroundColor="{Binding MusclesTabBg}"
-                        StrokeShape="RoundRectangle 8"
-                        Stroke="Transparent">
-                    <Button Text="Muscles"
-                            Command="{Binding SelectMetricCommand}"
-                            CommandParameter="2"
-                            BackgroundColor="Transparent"
-                            TextColor="{Binding MusclesTabText}"
-                            FontSize="13"
-                            Padding="0,8" />
-                </Border>
-
-            </Grid>
-        </Border>
-
         <!-- ── Chart content ─────────────────────────────────────────────── -->
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="1">
 
             <!-- Loading -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"

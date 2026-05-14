@@ -22,7 +22,7 @@
             ContentTemplate="{DataTemplate dashboard:DashboardPage}"
             Route="DashboardPage">
             <ShellContent.Icon>
-                <FontImageSource Glyph="&#x1F3E0;" FontFamily="OpenSansRegular" Size="24"
+                <FontImageSource Glyph="&#xE88A;" FontFamily="MaterialIcons" Size="28"
                                  Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
             </ShellContent.Icon>
         </ShellContent>
@@ -32,7 +32,7 @@
             ContentTemplate="{DataTemplate workout:WorkoutTemplatesPage}"
             Route="WorkoutTemplatesPage">
             <ShellContent.Icon>
-                <FontImageSource Glyph="&#x1F3CB;" FontFamily="OpenSansRegular" Size="24"
+                <FontImageSource Glyph="&#xEA9B;" FontFamily="MaterialIcons" Size="28"
                                  Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
             </ShellContent.Icon>
         </ShellContent>
@@ -42,7 +42,7 @@
             ContentTemplate="{DataTemplate history:HistoryPage}"
             Route="HistoryPage">
             <ShellContent.Icon>
-                <FontImageSource Glyph="&#x1F4CB;" FontFamily="OpenSansRegular" Size="24"
+                <FontImageSource Glyph="&#xE889;" FontFamily="MaterialIcons" Size="28"
                                  Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
             </ShellContent.Icon>
         </ShellContent>
@@ -52,7 +52,7 @@
             ContentTemplate="{DataTemplate exercises:ExerciseLibraryPage}"
             Route="ExerciseLibrary">
             <ShellContent.Icon>
-                <FontImageSource Glyph="&#x1F4AA;" FontFamily="OpenSansRegular" Size="24"
+                <FontImageSource Glyph="&#xE865;" FontFamily="MaterialIcons" Size="28"
                                  Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
             </ShellContent.Icon>
         </ShellContent>
@@ -62,7 +62,7 @@
             ContentTemplate="{DataTemplate analytics:AnalyticsPage}"
             Route="AnalyticsPage">
             <ShellContent.Icon>
-                <FontImageSource Glyph="&#x1F4CA;" FontFamily="OpenSansRegular" Size="24"
+                <FontImageSource Glyph="&#xE26B;" FontFamily="MaterialIcons" Size="28"
                                  Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
             </ShellContent.Icon>
         </ShellContent>
