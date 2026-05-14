@@ -1,6 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
+using Golyath.UI.Controls;
+using Golyath.UI.ViewModels.Workout;
 
 namespace Golyath.UI.ViewModels.History;
 
@@ -16,6 +19,8 @@ public partial class HistorySetViewModel : ObservableObject
     [ObservableProperty] private string _repsText;
     [ObservableProperty] private string _tempoText;
     [ObservableProperty] private string _notesText;
+
+    public string TempoDisplay => string.IsNullOrEmpty(TempoText) ? "—" : TempoText;
 
     public HistorySetViewModel(SetSummaryDto dto, IWorkoutService workoutService)
     {
@@ -40,6 +45,19 @@ public partial class HistorySetViewModel : ObservableObject
 
     partial void OnWeightTextChanged(string value) => Save();
     partial void OnRepsTextChanged(string value) => Save();
-    partial void OnTempoTextChanged(string value) => Save();
+    partial void OnTempoTextChanged(string value)
+    {
+        Save();
+        OnPropertyChanged(nameof(TempoDisplay));
+    }
     partial void OnNotesTextChanged(string value) => Save();
+
+    [RelayCommand]
+    private async Task SelectTempo()
+    {
+        var popup = new SelectionPopup("Tempo", WorkoutSetViewModel.TempoOptions, string.IsNullOrEmpty(TempoText) ? null : TempoText);
+        var result = await popup.ShowAsync();
+        if (result is string selected)
+            TempoText = selected == "None" ? string.Empty : selected;
+    }
 }

@@ -17,12 +17,15 @@ public partial class CreateExerciseViewModel : ObservableObject
     private string _name = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedMuscleGroupDisplay))]
     private int _selectedMuscleGroupIndex = 0;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedEquipmentDisplay))]
     private int _selectedEquipmentIndex = 0;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedMovementTypeDisplay))]
     private int _selectedMovementTypeIndex = 0;
 
     [ObservableProperty]
@@ -36,6 +39,10 @@ public partial class CreateExerciseViewModel : ObservableObject
     public List<string> MuscleGroupOptions { get; } = Enum.GetNames<MuscleGroup>().ToList();
     public List<string> EquipmentOptions { get; } = Enum.GetNames<EquipmentType>().ToList();
     public List<string> MovementTypeOptions { get; } = Enum.GetNames<MovementType>().ToList();
+
+    public string SelectedMuscleGroupDisplay => MuscleGroupOptions[SelectedMuscleGroupIndex];
+    public string SelectedEquipmentDisplay => EquipmentOptions[SelectedEquipmentIndex];
+    public string SelectedMovementTypeDisplay => MovementTypeOptions[SelectedMovementTypeIndex];
 
     public CreateExerciseViewModel(IExerciseRepository exerciseRepository)
     {

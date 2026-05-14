@@ -98,11 +98,23 @@
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                     BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                    Padding="8,4" Margin="0,0,0,20">
-                <Picker ItemsSource="{Binding GenderOptions}"
-                        SelectedItem="{Binding SelectedGenderDisplay}"
-                        FontSize="16" HeightRequest="48"
-                        TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                    Padding="14,12" Margin="0,0,0,20">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnGenderTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="{Binding SelectedGenderDisplay}"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="&#xE5CF;"
+                           FontFamily="MaterialIcons"
+                           FontSize="18"
+                           TextColor="{AppThemeBinding Light=#888888, Dark=#666666}"
+                           VerticalOptions="Center" />
+                </Grid>
             </Border>
 
             <!-- Fitness Goal -->
@@ -111,11 +123,23 @@
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                     BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                    Padding="8,4" Margin="0,0,0,28">
-                <Picker ItemsSource="{Binding GoalOptions}"
-                        SelectedItem="{Binding SelectedGoalDisplay}"
-                        FontSize="16" HeightRequest="48"
-                        TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                    Padding="14,12" Margin="0,0,0,28">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnGoalTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="{Binding SelectedGoalDisplay}"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="&#xE5CF;"
+                           FontFamily="MaterialIcons"
+                           FontSize="18"
+                           TextColor="{AppThemeBinding Light=#888888, Dark=#666666}"
+                           VerticalOptions="Center" />
+                </Grid>
             </Border>
 
             <!-- Divider -->

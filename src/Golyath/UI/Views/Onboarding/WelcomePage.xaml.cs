@@ -1,4 +1,5 @@
 using Golyath.Application.Services;
+using Golyath.UI.Controls;
 using Golyath.UI.ViewModels.Onboarding;
 
 namespace Golyath.UI.Views.Onboarding;
@@ -64,7 +65,8 @@ public partial class WelcomePage : ContentPage
 
             if (!result.Success)
             {
-                await DisplayAlert("Restore Failed", result.Message, "OK");
+                var errorPopup = new ConfirmPopup("Restore Failed", result.Message, "OK", "Close");
+                await errorPopup.ShowAsync(this);
                 return;
             }
 
@@ -73,7 +75,8 @@ public partial class WelcomePage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Restore Failed", ex.Message, "OK");
+            var errorPopup = new ConfirmPopup("Restore Failed", ex.Message, "OK", "Close");
+            await errorPopup.ShowAsync(this);
         }
     }
 }

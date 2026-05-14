@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
+using Golyath.UI.Controls;
 using Golyath.UI.Views.Goals;
 
 namespace Golyath.UI.ViewModels.Goals;
@@ -89,13 +90,9 @@ public partial class GoalsViewModel : ObservableObject
     [RelayCommand]
     private async Task DeleteGoalAsync(GoalSummary goal)
     {
-        bool confirmed = await Shell.Current.DisplayAlert(
-            "Delete Goal",
-            $"Delete \"{goal.Description}\"?",
-            "Delete",
-            "Cancel");
-
-        if (!confirmed) return;
+        var popup = new ConfirmPopup("Delete Goal", $"Delete \"{goal.Description}\"?", "Delete", "Cancel", isDestructive: true);
+        var result = await popup.ShowAsync();
+        if (result is not true) return;
 
         await _goalService.DeleteGoalAsync(goal.Id);
         await LoadAsync();

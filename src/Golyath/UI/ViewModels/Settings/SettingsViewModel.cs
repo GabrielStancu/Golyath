@@ -1,4 +1,3 @@
-using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Golyath.Application.Services;
@@ -62,7 +61,13 @@ public partial class SettingsViewModel : ObservableObject
     public bool IsMetricSelected => !IsImperialUnit;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedRestTimerLabel))]
     private int _selectedRestTimerIndex;
+
+    public string SelectedRestTimerLabel =>
+        _selectedRestTimerIndex >= 0 && _selectedRestTimerIndex < RestTimerLabels.Count
+            ? RestTimerLabels[_selectedRestTimerIndex]
+            : "Select";
 
     partial void OnIsImperialUnitChanged(bool value)
     {
@@ -148,19 +153,16 @@ public partial class SettingsViewModel : ObservableObject
                 HasStatus = true;
             }
 #else
-            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json));
-            var saveResult = await FileSaver.Default.SaveAsync(fileName, stream, CancellationToken.None);
-            if (saveResult.IsSuccessful)
+            // Non-Android: write to app's cache, then share via native share sheet
+            var tempPath = Path.Combine(FileSystem.CacheDirectory, fileName);
+            await File.WriteAllTextAsync(tempPath, json);
+            await Share.Default.RequestAsync(new ShareFileRequest
             {
-                StatusMessage = "Backup saved successfully.";
-                HasStatus = true;
-            }
-            else if (saveResult.Exception is not null)
-            {
-                StatusMessage = $"Export failed: {saveResult.Exception.Message}";
-                HasStatus = true;
-            }
-            // IsSuccessful=false with no exception means the user cancelled — no message needed
+                Title = "Save Golyath Backup",
+                File = new ShareFile(tempPath, "application/json"),
+            });
+            StatusMessage = "Backup export initiated.";
+            HasStatus = true;
 #endif
         }
         catch (Exception ex)

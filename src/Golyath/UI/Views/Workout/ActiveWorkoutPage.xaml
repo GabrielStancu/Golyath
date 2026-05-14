@@ -275,17 +275,23 @@
                                                             </Button.Triggers>
                                                         </Button>
 
-                                                        <!-- Tempo entry -->
-                                                        <Entry Grid.Column="4"
-                                                               Text="{Binding TempoText, Mode=TwoWay}"
-                                                               Keyboard="Text"
-                                                               Placeholder="3-1-2"
-                                                               PlaceholderColor="#555555"
-                                                               TextColor="#AAAAAA"
-                                                               BackgroundColor="#222222"
-                                                               HorizontalTextAlignment="Center"
-                                                               FontSize="12"
-                                                               HeightRequest="40" />
+                                                        <!-- Tempo dropdown -->
+                                                        <Border Grid.Column="4"
+                                                                StrokeShape="RoundRectangle 6"
+                                                                Stroke="Transparent"
+                                                                BackgroundColor="#222222"
+                                                                HeightRequest="40"
+                                                                Padding="0">
+                                                            <Border.GestureRecognizers>
+                                                                <TapGestureRecognizer Command="{Binding SelectTempoCommand}" />
+                                                            </Border.GestureRecognizers>
+                                                            <Label Text="{Binding TempoDisplay}"
+                                                                   TextColor="#AAAAAA"
+                                                                   FontSize="12"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"
+                                                                   HorizontalTextAlignment="Center" />
+                                                        </Border>
 
                                                     </Grid>
 

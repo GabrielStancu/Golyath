@@ -34,14 +34,23 @@
                             StrokeShape="RoundRectangle 12"
                             Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
-                            Padding="4,0">
-                        <Picker ItemsSource="{x:Static vm:HistoryViewModel.PeriodOptions}"
-                                SelectedItem="{Binding SelectedPeriod}"
-                                Title="Period"
-                                FontSize="13"
-                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                BackgroundColor="Transparent" />
+                            Padding="14,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPeriodFilterTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="{Binding SelectedPeriod}"
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="&#xE5CF;"
+                                   FontFamily="MaterialIcons"
+                                   FontSize="18"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                   VerticalOptions="Center" />
+                        </Grid>
                     </Border>
 
                     <!-- Tag filter -->
@@ -49,15 +58,23 @@
                             StrokeShape="RoundRectangle 12"
                             Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
-                            Padding="4,0">
-                        <Picker ItemsSource="{Binding AvailableTags}"
-                                SelectedItem="{Binding SelectedTag}"
-                                ItemDisplayBinding="{Binding Name}"
-                                Title="All tags"
-                                FontSize="13"
-                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                BackgroundColor="Transparent" />
+                            Padding="14,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTagFilterTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="{Binding SelectedTag.Name, TargetNullValue='All tags'}"
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="&#xE5CF;"
+                                   FontFamily="MaterialIcons"
+                                   FontSize="18"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                   VerticalOptions="Center" />
+                        </Grid>
                     </Border>
 
                     <!-- Clear/Apply buttons -->

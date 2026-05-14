@@ -38,12 +38,23 @@
                             StrokeShape="RoundRectangle 12"
                             Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
-                            Padding="4,0">
-                        <Picker ItemsSource="{x:Static vm:AnalyticsViewModel.PeriodOptions}"
-                                SelectedItem="{Binding SelectedPeriod}"
-                                FontSize="13"
-                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                BackgroundColor="Transparent" />
+                            Padding="14,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPeriodFilterTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="{Binding SelectedPeriod}"
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="1"
+                                   Text="&#xE5CF;"
+                                   FontFamily="MaterialIcons"
+                                   FontSize="18"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                   VerticalOptions="Center" />
+                        </Grid>
                     </Border>
                 </Grid>
 
@@ -110,12 +121,27 @@
                         <VerticalStackLayout Spacing="2">
                             <Label Text="EXERCISE"
                                    Style="{StaticResource SectionHeader}" />
-                            <Picker ItemsSource="{Binding ExerciseOptions}"
-                                    SelectedItem="{Binding SelectedExercise}"
-                                    ItemDisplayBinding="{Binding Name}"
-                                    FontSize="14"
-                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                    BackgroundColor="Transparent" />
+                            <Border StrokeShape="RoundRectangle 10"
+                                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                                    BackgroundColor="Transparent"
+                                    Padding="12,10">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnExercisePickerTapped" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding SelectedExercise.Name, TargetNullValue='Select exercise'}"
+                                           FontSize="14"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="1"
+                                           Text="&#xE5CF;"
+                                           FontFamily="MaterialIcons"
+                                           FontSize="18"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
                         </VerticalStackLayout>
                     </Border>
 

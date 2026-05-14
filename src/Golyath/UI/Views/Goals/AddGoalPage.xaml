@@ -113,15 +113,23 @@
                 <Border StrokeShape="RoundRectangle 12"
                         Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
-                        Padding="8,4">
-                    <Picker ItemsSource="{Binding Exercises}"
-                            SelectedItem="{Binding SelectedExercise}"
-                            ItemDisplayBinding="{Binding Name}"
-                            Title="Select exercise"
-                            TitleColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}"
-                            TextColor="{AppThemeBinding Light=#111111, Dark=White}"
-                            BackgroundColor="Transparent"
-                            FontSize="15" />
+                        Padding="14,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnExercisePickerTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding SelectedExercise.Name, TargetNullValue='Select exercise'}"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                               FontSize="15"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="&#xE5CF;"
+                               FontFamily="MaterialIcons"
+                               FontSize="18"
+                               TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}"
+                               VerticalOptions="Center" />
+                    </Grid>
                 </Border>
             </VerticalStackLayout>
 

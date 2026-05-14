@@ -50,12 +50,23 @@
                         Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 10"
-                        Padding="4,0">
-                    <Picker ItemsSource="{Binding MuscleGroupOptions}"
-                            SelectedIndex="{Binding SelectedMuscleGroupIndex}"
-                            TextColor="{AppThemeBinding Light=#111111, Dark=White}"
-                            BackgroundColor="Transparent"
-                            HeightRequest="48" />
+                        Padding="14,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMuscleGroupTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding SelectedMuscleGroupDisplay}"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                               FontSize="15"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="&#xE5CF;"
+                               FontFamily="MaterialIcons"
+                               FontSize="18"
+                               TextColor="{AppThemeBinding Light=#888888, Dark=#666666}"
+                               VerticalOptions="Center" />
+                    </Grid>
                 </Border>
             </VerticalStackLayout>
 
@@ -70,12 +81,23 @@
                         Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 10"
-                        Padding="4,0">
-                    <Picker ItemsSource="{Binding EquipmentOptions}"
-                            SelectedIndex="{Binding SelectedEquipmentIndex}"
-                            TextColor="{AppThemeBinding Light=#111111, Dark=White}"
-                            BackgroundColor="Transparent"
-                            HeightRequest="48" />
+                        Padding="14,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnEquipmentTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding SelectedEquipmentDisplay}"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                               FontSize="15"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="&#xE5CF;"
+                               FontFamily="MaterialIcons"
+                               FontSize="18"
+                               TextColor="{AppThemeBinding Light=#888888, Dark=#666666}"
+                               VerticalOptions="Center" />
+                    </Grid>
                 </Border>
             </VerticalStackLayout>
 
@@ -90,12 +112,23 @@
                         Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                         StrokeThickness="1"
                         StrokeShape="RoundRectangle 10"
-                        Padding="4,0">
-                    <Picker ItemsSource="{Binding MovementTypeOptions}"
-                            SelectedIndex="{Binding SelectedMovementTypeIndex}"
-                            TextColor="{AppThemeBinding Light=#111111, Dark=White}"
-                            BackgroundColor="Transparent"
-                            HeightRequest="48" />
+                        Padding="14,12">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMovementTypeTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding SelectedMovementTypeDisplay}"
+                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                               FontSize="15"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="&#xE5CF;"
+                               FontFamily="MaterialIcons"
+                               FontSize="18"
+                               TextColor="{AppThemeBinding Light=#888888, Dark=#666666}"
+                               VerticalOptions="Center" />
+                    </Grid>
                 </Border>
             </VerticalStackLayout>
 

@@ -1,3 +1,4 @@
+using Golyath.UI.Controls;
 using Golyath.UI.ViewModels.Analytics;
 
 namespace Golyath.UI.Views.Analytics;
@@ -27,5 +28,25 @@ public partial class AnalyticsPage : ContentPage
     private async void OnSuggestionsTapped(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("SuggestionsPage");
+    }
+
+    private async void OnPeriodFilterTapped(object? sender, TappedEventArgs e)
+    {
+        var popup = new SelectionPopup("Period", AnalyticsViewModel.PeriodOptions, _vm.SelectedPeriod);
+        var result = await popup.ShowAsync(this);
+        if (result is string selected)
+            _vm.SelectedPeriod = selected;
+    }
+
+    private async void OnExercisePickerTapped(object? sender, TappedEventArgs e)
+    {
+        if (_vm.ExerciseOptions.Count == 0) return;
+
+        var names = _vm.ExerciseOptions.Select(ex => ex.Name).ToList();
+        var popup = new SelectionPopup("Select Exercise", names, _vm.SelectedExercise?.Name);
+        var result = await popup.ShowAsync(this);
+
+        if (result is string selected)
+            _vm.SelectedExercise = _vm.ExerciseOptions.FirstOrDefault(ex => ex.Name == selected);
     }
 }

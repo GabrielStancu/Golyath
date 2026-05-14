@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui;
-using Golyath.Infrastructure.Extensions;
+﻿using Golyath.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
@@ -13,7 +12,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -67,7 +65,10 @@ public static class MauiProgram
                     if (view is Label label && label.GestureRecognizers.OfType<TapGestureRecognizer>().Any())
                     {
                         handler.PlatformView.Clickable = true;
-                        handler.PlatformView.SetBackgroundResource(Android.Resource.Attribute.SelectableItemBackground);
+                        var outValue = new Android.Util.TypedValue();
+                        handler.PlatformView.Context?.Theme?.ResolveAttribute(
+                            Android.Resource.Attribute.SelectableItemBackground, outValue, true);
+                        handler.PlatformView.SetBackgroundResource(outValue.ResourceId);
                     }
                 });
 #elif IOS || MACCATALYST

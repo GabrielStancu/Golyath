@@ -233,15 +233,22 @@
                                                                BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
                                                                FontSize="13"
                                                                HeightRequest="36" />
-                                                        <Entry Grid.Column="3"
-                                                               Text="{Binding TempoText, Mode=TwoWay}"
-                                                               Keyboard="Text"
-                                                               Placeholder="--"
-                                                               PlaceholderColor="{AppThemeBinding Light=#CCCCCC, Dark=#555555}"
-                                                               TextColor="{AppThemeBinding Light=#666666, Dark=#888888}"
+                                                        <Border Grid.Column="3"
+                                                               StrokeShape="RoundRectangle 6"
+                                                               Stroke="Transparent"
                                                                BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1E1E1E}"
-                                                               FontSize="12"
-                                                               HeightRequest="36" />
+                                                               HeightRequest="36"
+                                                               Padding="0">
+                                                            <Border.GestureRecognizers>
+                                                                <TapGestureRecognizer Command="{Binding SelectTempoCommand}" />
+                                                            </Border.GestureRecognizers>
+                                                            <Label Text="{Binding TempoDisplay}"
+                                                                   TextColor="{AppThemeBinding Light=#666666, Dark=#888888}"
+                                                                   FontSize="12"
+                                                                   HorizontalOptions="Center"
+                                                                   VerticalOptions="Center"
+                                                                   HorizontalTextAlignment="Center" />
+                                                        </Border>
                                                     </Grid>
 
                                                 </VerticalStackLayout>

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Golyath.Application.Services;
 using Golyath.Core.Abstractions;
+using Golyath.UI.Controls;
 using WorkoutEntity = Golyath.Core.Entities.Workout;
 using Golyath.Core.Entities;
 
@@ -168,22 +169,23 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         if (_workout is null) return;
 
         var allTags = await _tagService.GetAllTagsAsync();
-        var options = allTags.Select(t => t.Name).Append("+ Create new tag").ToArray();
+        var options = allTags.Select(t => t.Name).Append("+ Create new tag").ToList();
 
-        var choice = await Shell.Current.DisplayActionSheet("Add Tag", "Cancel", null, options);
-        if (string.IsNullOrEmpty(choice) || choice == "Cancel") return;
+        var popup = new SelectionPopup("Add Tag", options);
+        var choice = await popup.ShowAsync();
+        if (choice is not string selected || string.IsNullOrEmpty(selected)) return;
 
         string tagName;
-        if (choice == "+ Create new tag")
+        if (selected == "+ Create new tag")
         {
-            tagName = await Shell.Current.DisplayPromptAsync(
-                "New Tag", "Enter tag name:",
-                maxLength: 50, keyboard: Keyboard.Text) ?? string.Empty;
+            var inputPopup = new InputPopup("New Tag", "Enter tag name:", maxLength: 50);
+            var inputResult = await inputPopup.ShowAsync();
+            tagName = inputResult as string ?? string.Empty;
             if (string.IsNullOrWhiteSpace(tagName)) return;
         }
         else
         {
-            tagName = choice;
+            tagName = selected;
         }
 
         // Skip if already attached
@@ -207,11 +209,9 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     {
         if (_workout is null) return;
 
-        var confirm = await Shell.Current.DisplayAlert(
-            "Finish Workout",
-            "Save and finish this workout?",
-            "Finish", "Cancel");
-        if (!confirm) return;
+        var popup = new ConfirmPopup("Finish Workout", "Save and finish this workout?", "Finish", "Cancel");
+        var result = await popup.ShowAsync();
+        if (result is not true) return;
 
         StopTimers();
         await _workoutService.CompleteWorkoutAsync(_workout.Id);
@@ -224,11 +224,9 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     {
         if (_workout is null) return;
 
-        var confirm = await Shell.Current.DisplayAlert(
-            "Discard Workout",
-            "Discard this workout? All logged data will be lost.",
-            "Discard", "Cancel");
-        if (!confirm) return;
+        var popup = new ConfirmPopup("Discard Workout", "Discard this workout? All logged data will be lost.", "Discard", "Cancel", isDestructive: true);
+        var result = await popup.ShowAsync();
+        if (result is not true) return;
 
         StopTimers();
         await _workoutService.AbandonWorkoutAsync(_workout.Id);

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
+using Golyath.UI.Controls;
 using Golyath.UI.ViewModels.Workout;
 
 namespace Golyath.UI.ViewModels.History;
@@ -89,22 +90,23 @@ public partial class WorkoutDetailViewModel : ObservableObject
     private async Task AddTag()
     {
         var allTags = await _historyService.GetAllTagsAsync();
-        var options = allTags.Select(t => t.Name).Append("+ Create new tag").ToArray();
+        var options = allTags.Select(t => t.Name).Append("+ Create new tag").ToList();
 
-        var choice = await Shell.Current.DisplayActionSheet("Add Tag", "Cancel", null, options);
-        if (string.IsNullOrEmpty(choice) || choice == "Cancel") return;
+        var popup = new SelectionPopup("Add Tag", options);
+        var choice = await popup.ShowAsync();
+        if (choice is not string selected || string.IsNullOrEmpty(selected)) return;
 
         string tagName;
-        if (choice == "+ Create new tag")
+        if (selected == "+ Create new tag")
         {
-            tagName = await Shell.Current.DisplayPromptAsync(
-                "New Tag", "Enter tag name:",
-                maxLength: 50, keyboard: Keyboard.Text) ?? string.Empty;
+            var inputPopup = new InputPopup("New Tag", "Enter tag name:", maxLength: 50);
+            var inputResult = await inputPopup.ShowAsync();
+            tagName = inputResult as string ?? string.Empty;
             if (string.IsNullOrWhiteSpace(tagName)) return;
         }
         else
         {
-            tagName = choice;
+            tagName = selected;
         }
 
         var tag = await _historyService.GetOrCreateTagAsync(tagName);

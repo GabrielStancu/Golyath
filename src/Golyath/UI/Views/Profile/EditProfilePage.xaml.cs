@@ -1,3 +1,4 @@
+using Golyath.UI.Controls;
 using Golyath.UI.ViewModels.Profile;
 
 namespace Golyath.UI.Views.Profile;
@@ -30,5 +31,21 @@ public partial class EditProfilePage : ContentPage
     {
         await Task.Delay(800); // Brief display of "Profile saved!"
         await Shell.Current.GoToAsync("..");
+    }
+
+    private async void OnGenderTapped(object? sender, TappedEventArgs e)
+    {
+        var popup = new SelectionPopup("Gender", _viewModel.GenderOptions, _viewModel.SelectedGenderDisplay);
+        var result = await popup.ShowAsync(this);
+        if (result is string selected)
+            _viewModel.SelectedGenderDisplay = selected;
+    }
+
+    private async void OnGoalTapped(object? sender, TappedEventArgs e)
+    {
+        var popup = new SelectionPopup("Fitness Goal", _viewModel.GoalOptions, _viewModel.SelectedGoalDisplay);
+        var result = await popup.ShowAsync(this);
+        if (result is string selected)
+            _viewModel.SelectedGoalDisplay = selected;
     }
 }

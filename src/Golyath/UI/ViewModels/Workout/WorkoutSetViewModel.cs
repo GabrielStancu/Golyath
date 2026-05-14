@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Golyath.Application.Services;
 using Golyath.Core.Entities;
+using Golyath.UI.Controls;
 
 namespace Golyath.UI.ViewModels.Workout;
 
@@ -10,6 +11,19 @@ public partial class WorkoutSetViewModel : ObservableObject
 {
     private readonly IWorkoutService _workoutService;
     private WorkoutSet _set;
+
+    public static readonly IReadOnlyList<string> TempoOptions =
+    [
+        "2-0-2-0",   // Standard
+        "3-1-2-0",   // Controlled
+        "3-0-1-0",   // Explosive concentric
+        "4-0-1-0",   // Slow eccentric
+        "4-1-1-0",   // Time under tension
+        "5-0-1-0",   // Heavy negative
+        "2-1-2-1",   // Pause reps
+        "1-0-1-0",   // Fast / Power
+        "None",
+    ];
 
     public WorkoutSetViewModel(WorkoutSet set, IWorkoutService workoutService)
     {
@@ -52,6 +66,7 @@ public partial class WorkoutSetViewModel : ObservableObject
     {
         _set.Tempo = string.IsNullOrWhiteSpace(value) ? null : value;
         _ = _workoutService.UpdateSetAsync(_set);
+        OnPropertyChanged(nameof(TempoDisplay));
     }
 
     partial void OnNotesTextChanged(string value)
@@ -104,4 +119,15 @@ public partial class WorkoutSetViewModel : ObservableObject
         if (current >= 2.5)
             WeightText = Math.Round(current - 2.5, 2).ToString("F1", CultureInfo.InvariantCulture);
     }
+
+    [RelayCommand]
+    private async Task SelectTempo()
+    {
+        var popup = new SelectionPopup("Tempo", TempoOptions, string.IsNullOrEmpty(TempoText) ? null : TempoText);
+        var result = await popup.ShowAsync();
+        if (result is string selected)
+            TempoText = selected == "None" ? string.Empty : selected;
+    }
+
+    public string TempoDisplay => string.IsNullOrEmpty(TempoText) ? "—" : TempoText;
 }
