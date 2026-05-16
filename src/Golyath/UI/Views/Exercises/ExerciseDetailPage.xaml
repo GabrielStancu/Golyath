@@ -177,15 +177,27 @@
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 0"
                 Padding="16,12">
-            <Button Text="ADD TO WORKOUT"
-                    Command="{Binding AddToWorkoutCommand}"
-                    BackgroundColor="{StaticResource Accent}"
-                    TextColor="{StaticResource AccentText}"
-                    FontAttributes="Bold"
-                    FontSize="15"
-                    CornerRadius="12"
-                    HeightRequest="52"
-                    CharacterSpacing="1" />
+            <VerticalStackLayout Spacing="8">
+                <Button Text="ADD TO WORKOUT"
+                        Command="{Binding AddToWorkoutCommand}"
+                        BackgroundColor="{StaticResource Accent}"
+                        TextColor="{StaticResource AccentText}"
+                        FontAttributes="Bold"
+                        FontSize="15"
+                        CornerRadius="12"
+                        HeightRequest="52"
+                        CharacterSpacing="1" />
+                <Button Text="DELETE EXERCISE"
+                        Command="{Binding DeleteExerciseCommand}"
+                        IsVisible="{Binding IsCustom}"
+                        BackgroundColor="#C62828"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="15"
+                        CornerRadius="12"
+                        HeightRequest="52"
+                        CharacterSpacing="1" />
+            </VerticalStackLayout>
         </Border>
 
     </Grid>

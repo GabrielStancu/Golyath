@@ -262,6 +262,17 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
 
+                <!-- Delete workout button -->
+                <Button Text="Delete Workout"
+                        Command="{Binding DeleteWorkoutCommand}"
+                        BackgroundColor="#C62828"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="15"
+                        CornerRadius="12"
+                        HeightRequest="52"
+                        Margin="0,20,0,0" />
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

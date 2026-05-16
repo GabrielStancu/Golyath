@@ -246,6 +246,15 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
 
     private async void OnRemoveExercise(object? sender, WorkoutExerciseViewModel vm)
     {
+        var popup = new ConfirmPopup(
+            "Remove Exercise",
+            $"Remove {vm.ExerciseName} and all its sets from this workout?",
+            "Remove",
+            "Cancel",
+            isDestructive: true);
+        var result = await popup.ShowAsync();
+        if (result is not true) return;
+
         await _workoutService.RemoveExerciseAsync(vm.WorkoutExerciseId);
         Exercises.Remove(vm);
     }

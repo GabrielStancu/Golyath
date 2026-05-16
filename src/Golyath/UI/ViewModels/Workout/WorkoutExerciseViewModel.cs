@@ -22,6 +22,7 @@ public partial class WorkoutExerciseViewModel : ObservableObject
 
     public event EventHandler<WorkoutSetViewModel>? SetCompleted;
     public event EventHandler<WorkoutExerciseViewModel>? RemoveRequested;
+    public event EventHandler<WorkoutSetViewModel>? RemoveSetRequested;
 
     public WorkoutExerciseViewModel(WorkoutExercise workoutExercise, Exercise exercise, IWorkoutService workoutService)
     {
@@ -51,6 +52,7 @@ public partial class WorkoutExerciseViewModel : ObservableObject
         var vm = new WorkoutSetViewModel(set, _workoutService);
         vm.SetCompleted += (_, s) => SetCompleted?.Invoke(this, s);
         vm.DuplicateRequested += OnDuplicateSet;
+        vm.RemoveRequested += OnRemoveSet;
         Sets.Add(vm);
         return vm;
     }
@@ -72,6 +74,12 @@ public partial class WorkoutExerciseViewModel : ObservableObject
     {
         var set = await _workoutService.DuplicateSetAsync(original.Id);
         AddSetViewModel(set);
+    }
+
+    private async void OnRemoveSet(object? sender, WorkoutSetViewModel setVm)
+    {
+        await _workoutService.RemoveSetAsync(setVm.Id);
+        Sets.Remove(setVm);
     }
 
     [RelayCommand]

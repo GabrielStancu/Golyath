@@ -118,4 +118,22 @@ public partial class WorkoutDetailViewModel : ObservableObject
 
     [RelayCommand]
     private Task GoBackAsync() => Shell.Current.GoToAsync("..");
+
+    [RelayCommand]
+    private async Task DeleteWorkoutAsync()
+    {
+        if (WorkoutId <= 0) return;
+
+        var popup = new ConfirmPopup(
+            "Delete Workout",
+            "Permanently delete this workout and all its data?",
+            "Delete",
+            "Cancel",
+            isDestructive: true);
+        var result = await popup.ShowAsync();
+        if (result is not true) return;
+
+        await _historyService.DeleteWorkoutAsync(WorkoutId);
+        await Shell.Current.GoToAsync("..");
+    }
 }

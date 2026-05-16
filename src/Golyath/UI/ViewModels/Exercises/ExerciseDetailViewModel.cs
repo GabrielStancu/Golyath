@@ -2,8 +2,10 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Golyath.Application.Services;
 using Golyath.Core.Abstractions;
 using Golyath.Core.Entities;
+using Golyath.UI.Controls;
 using Golyath.UI.ViewModels.Workout;
 
 namespace Golyath.UI.ViewModels.Exercises;
@@ -13,6 +15,7 @@ namespace Golyath.UI.ViewModels.Exercises;
 public partial class ExerciseDetailViewModel : ObservableObject
 {
     private readonly IExerciseRepository _exerciseRepository;
+    private readonly IExerciseService _exerciseService;
     private IDispatcherTimer? _imageTimer;
 
     [ObservableProperty]
@@ -33,14 +36,18 @@ public partial class ExerciseDetailViewModel : ObservableObject
     [ObservableProperty]
     private bool _hasImages;
 
+    [ObservableProperty]
+    private bool _isCustom;
+
     public ObservableCollection<ImageSource> Images { get; } = [];
 
     private bool IsFromPicker =>
         string.Equals(FromPickerParam, "true", StringComparison.OrdinalIgnoreCase);
 
-    public ExerciseDetailViewModel(IExerciseRepository exerciseRepository)
+    public ExerciseDetailViewModel(IExerciseRepository exerciseRepository, IExerciseService exerciseService)
     {
         _exerciseRepository = exerciseRepository;
+        _exerciseService = exerciseService;
     }
 
     partial void OnExerciseIdChanged(int value) =>
@@ -50,11 +57,13 @@ public partial class ExerciseDetailViewModel : ObservableObject
     {
         IsBusy = true;
         HasImages = false;
+        IsCustom = false;
         Images.Clear();
         CarouselPosition = 0;
         try
         {
             Exercise = await _exerciseRepository.GetByIdAsync(id);
+            IsCustom = Exercise?.IsCustom == true;
             if (Exercise?.ExternalId is { } externalId)
             {
                 foreach (var i in new[] { 0, 1 })
@@ -103,6 +112,29 @@ public partial class ExerciseDetailViewModel : ObservableObject
     {
         if (Images.Count == 0) return;
         CarouselPosition = (CarouselPosition + 1) % Images.Count;
+    }
+
+    [RelayCommand]
+    private async Task DeleteExercise()
+    {
+        if (Exercise is null || !Exercise.IsCustom) return;
+
+        var usageCount = await _exerciseService.GetWorkoutUsageCountAsync(Exercise.Id);
+        var message = usageCount > 0
+            ? $"This exercise has been used in {usageCount} workout(s). Deleting it will also remove all related history data. This cannot be undone."
+            : "Permanently delete this custom exercise? This cannot be undone.";
+
+        var popup = new ConfirmPopup(
+            "Delete Exercise",
+            message,
+            "Delete",
+            "Cancel",
+            isDestructive: true);
+        var result = await popup.ShowAsync();
+        if (result is not true) return;
+
+        await _exerciseService.DeleteCustomExerciseAsync(Exercise.Id);
+        await Shell.Current.GoToAsync("..");
     }
 
     [RelayCommand]

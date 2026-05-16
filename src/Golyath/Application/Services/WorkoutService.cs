@@ -8,15 +8,18 @@ public sealed class WorkoutService : IWorkoutService
     private readonly IWorkoutRepository _workoutRepository;
     private readonly IWorkoutExerciseRepository _workoutExerciseRepository;
     private readonly IWorkoutSetRepository _workoutSetRepository;
+    private readonly IWorkoutTagRepository _workoutTagRepository;
 
     public WorkoutService(
         IWorkoutRepository workoutRepository,
         IWorkoutExerciseRepository workoutExerciseRepository,
-        IWorkoutSetRepository workoutSetRepository)
+        IWorkoutSetRepository workoutSetRepository,
+        IWorkoutTagRepository workoutTagRepository)
     {
         _workoutRepository = workoutRepository;
         _workoutExerciseRepository = workoutExerciseRepository;
         _workoutSetRepository = workoutSetRepository;
+        _workoutTagRepository = workoutTagRepository;
     }
 
     public async Task<Workout> StartWorkoutAsync(string? name = null)
@@ -47,8 +50,20 @@ public sealed class WorkoutService : IWorkoutService
         return we;
     }
 
-    public Task RemoveExerciseAsync(int workoutExerciseId) =>
-        _workoutExerciseRepository.DeleteByIdAsync(workoutExerciseId);
+    public async Task RemoveExerciseAsync(int workoutExerciseId)
+    {
+        // Delete all sets for this exercise first, then the exercise itself
+        var sets = await _workoutSetRepository.GetByWorkoutExerciseIdAsync(workoutExerciseId);
+        foreach (var set in sets)
+            await _workoutSetRepository.DeleteAsync(set);
+
+        await _workoutExerciseRepository.DeleteByIdAsync(workoutExerciseId);
+    }
+
+    public async Task RemoveSetAsync(int setId)
+    {
+        await _workoutSetRepository.DeleteByIdAsync(setId);
+    }
 
     public async Task<WorkoutSet> AddSetAsync(int workoutExerciseId, double weight, int reps,
         string? tempo = null, string? notes = null)
@@ -121,9 +136,27 @@ public sealed class WorkoutService : IWorkoutService
 
     public async Task AbandonWorkoutAsync(int workoutId)
     {
+        await DeleteWorkoutAsync(workoutId);
+    }
+
+    public async Task DeleteWorkoutAsync(int workoutId)
+    {
         var workout = await _workoutRepository.GetByIdAsync(workoutId);
-        if (workout is not null)
-            await _workoutRepository.DeleteAsync(workout);
+        if (workout is null) return;
+
+        // Cascade: WorkoutSets → WorkoutExercises → WorkoutTags → Workout
+        var exercises = await _workoutExerciseRepository.GetByWorkoutIdAsync(workoutId);
+        foreach (var we in exercises)
+        {
+            var sets = await _workoutSetRepository.GetByWorkoutExerciseIdAsync(we.Id);
+            foreach (var set in sets)
+                await _workoutSetRepository.DeleteAsync(set);
+
+            await _workoutExerciseRepository.DeleteAsync(we);
+        }
+
+        await _workoutTagRepository.RemoveAllForWorkoutAsync(workoutId);
+        await _workoutRepository.DeleteAsync(workout);
     }
 
     public async Task UpdateWorkoutNotesAsync(int workoutId, string? notes)

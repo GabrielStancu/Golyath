@@ -61,6 +61,7 @@ public partial class WorkoutSetViewModel : ObservableObject
 
     public event EventHandler<WorkoutSetViewModel>? SetCompleted;
     public event EventHandler<WorkoutSetViewModel>? DuplicateRequested;
+    public event EventHandler<WorkoutSetViewModel>? RemoveRequested;
 
     partial void OnTempoTextChanged(string value)
     {
@@ -104,6 +105,9 @@ public partial class WorkoutSetViewModel : ObservableObject
 
     [RelayCommand]
     private void Duplicate() => DuplicateRequested?.Invoke(this, this);
+
+    [RelayCommand]
+    private void Remove() => RemoveRequested?.Invoke(this, this);
 
     [RelayCommand]
     private void IncrementWeight()

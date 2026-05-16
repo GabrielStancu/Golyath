@@ -18,6 +18,9 @@ public interface IWorkoutHistoryService
     /// <summary>Full detail for a single completed workout.</summary>
     Task<WorkoutHistoryDetailDto?> GetWorkoutDetailAsync(int workoutId);
 
+    /// <summary>Deletes a completed workout and all its child records.</summary>
+    Task DeleteWorkoutAsync(int workoutId);
+
     /// <summary>Tags currently attached to a workout.</summary>
     Task<IReadOnlyList<Tag>> GetTagsForWorkoutAsync(int workoutId);
 

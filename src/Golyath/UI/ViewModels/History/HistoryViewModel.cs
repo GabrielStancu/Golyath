@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
 using Golyath.Core.Entities;
+using Golyath.UI.Controls;
 
 namespace Golyath.UI.ViewModels.History;
 
@@ -70,6 +71,33 @@ public partial class HistoryViewModel : ObservableObject
     private async Task OpenWorkoutAsync(WorkoutHistorySummaryDto workout)
     {
         await Shell.Current.GoToAsync($"WorkoutDetail?workoutId={workout.Id}");
+    }
+
+    [RelayCommand]
+    private async Task DeleteWorkoutAsync(WorkoutHistorySummaryDto workout)
+    {
+        var popup = new ConfirmPopup(
+            "Delete Workout",
+            "Permanently delete this workout and all its data?",
+            "Delete",
+            "Cancel",
+            isDestructive: true);
+        var result = await popup.ShowAsync();
+        if (result is not true) return;
+
+        IsBusy = true;
+        try
+        {
+            await _historyService.DeleteWorkoutAsync(workout.Id);
+            var list = new List<WorkoutHistorySummaryDto>(Workouts);
+            list.RemoveAll(w => w.Id == workout.Id);
+            Workouts = list;
+            IsEmpty = Workouts.Count == 0;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private void UpdateHasActiveFilters()

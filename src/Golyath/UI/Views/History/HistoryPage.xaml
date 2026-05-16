@@ -133,6 +133,34 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:WorkoutHistorySummaryDto">
                         <Grid Padding="12,6">
+
+                            <!-- Red delete background — visible when card slides left -->
+                            <Border StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="#C62828"
+                                    Padding="0,0,20,0"
+                                    Margin="2"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill">
+                                <Label Text="&#xE872;"
+                                       FontFamily="MaterialIcons"
+                                       FontSize="24"
+                                       TextColor="White"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Center" />
+                            </Border>
+
+                            <SwipeView BackgroundColor="Transparent"
+                                     Threshold="80">
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem IconImageSource="{FontImageSource FontFamily=MaterialIcons, Glyph=&#xE872;, Color=White, Size=24}"
+                                                   BackgroundColor="Transparent"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=DeleteWorkoutCommand}"
+                                                   CommandParameter="{Binding .}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
                             <Border Style="{StaticResource CardBorder}"
                                     Padding="14,12">
                                 <Border.GestureRecognizers>
@@ -144,7 +172,7 @@
                                 <VerticalStackLayout Spacing="10">
 
                                     <!-- Title row -->
-                                    <Grid ColumnDefinitions="*,Auto">
+                                    <Grid ColumnDefinitions="*,Auto,Auto">
                                         <Label Grid.Column="0"
                                                Text="{Binding DisplayName}"
                                                FontSize="15"
@@ -156,6 +184,19 @@
                                                FontSize="12"
                                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                                VerticalOptions="Center" />
+                                        <Label Grid.Column="2"
+                                               Text="&#xE872;"
+                                               FontFamily="MaterialIcons"
+                                               FontSize="20"
+                                               TextColor="{AppThemeBinding Light=#CC0000, Dark=#EF5350}"
+                                               VerticalOptions="Center"
+                                               Margin="8,0,0,0">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=DeleteWorkoutCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
                                     </Grid>
 
                                     <!-- Stats row -->
@@ -223,6 +264,7 @@
 
                                 </VerticalStackLayout>
                             </Border>
+                            </SwipeView>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

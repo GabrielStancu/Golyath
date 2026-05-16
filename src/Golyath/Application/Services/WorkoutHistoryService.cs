@@ -12,6 +12,7 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
     private readonly IExerciseRepository _exerciseRepository;
     private readonly ITagRepository _tagRepository;
     private readonly IWorkoutTagRepository _workoutTagRepository;
+    private readonly IWorkoutService _workoutService;
 
     public WorkoutHistoryService(
         IWorkoutRepository workoutRepository,
@@ -19,7 +20,8 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
         IWorkoutSetRepository workoutSetRepository,
         IExerciseRepository exerciseRepository,
         ITagRepository tagRepository,
-        IWorkoutTagRepository workoutTagRepository)
+        IWorkoutTagRepository workoutTagRepository,
+        IWorkoutService workoutService)
     {
         _workoutRepository = workoutRepository;
         _workoutExerciseRepository = workoutExerciseRepository;
@@ -27,6 +29,7 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
         _exerciseRepository = exerciseRepository;
         _tagRepository = tagRepository;
         _workoutTagRepository = workoutTagRepository;
+        _workoutService = workoutService;
     }
 
     public async Task<IReadOnlyList<WorkoutHistorySummaryDto>> GetHistoryAsync(
@@ -153,6 +156,9 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
 
     public Task RemoveTagAsync(int workoutId, int tagId) =>
         _workoutTagRepository.RemoveAsync(workoutId, tagId);
+
+    public Task DeleteWorkoutAsync(int workoutId) =>
+        _workoutService.DeleteWorkoutAsync(workoutId);
 
     // ── Private helpers ──────────────────────────────────────────────────────
 

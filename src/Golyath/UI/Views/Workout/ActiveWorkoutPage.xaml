@@ -185,6 +185,14 @@
                                             <DataTemplate x:DataType="vm:WorkoutSetViewModel">
 
                                                 <SwipeView>
+                                                    <SwipeView.LeftItems>
+                                                        <SwipeItems>
+                                                            <SwipeItem Text="Delete"
+                                                                       BackgroundColor="#C62828"
+                                                                       Command="{Binding RemoveCommand}" />
+                                                        </SwipeItems>
+                                                    </SwipeView.LeftItems>
+
                                                     <SwipeView.RightItems>
                                                         <SwipeItems>
                                                             <SwipeItem Text="Duplicate"

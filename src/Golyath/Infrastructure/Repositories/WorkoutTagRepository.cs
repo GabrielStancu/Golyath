@@ -56,6 +56,14 @@ public sealed class WorkoutTagRepository : IWorkoutTagRepository
             workoutId, tagId);
     }
 
+    public async Task RemoveAllForWorkoutAsync(int workoutId)
+    {
+        var db = await _databaseService.GetConnectionAsync();
+        await db.ExecuteAsync(
+            "DELETE FROM WorkoutTags WHERE WorkoutId = ?",
+            workoutId);
+    }
+
     public async Task<IReadOnlyList<WorkoutTag>> GetAllAsync()
     {
         var db = await _databaseService.GetConnectionAsync();
