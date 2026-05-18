@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
 using Golyath.UI.Controls;
@@ -134,6 +135,7 @@ public partial class WorkoutDetailViewModel : ObservableObject
         if (result is not true) return;
 
         await _historyService.DeleteWorkoutAsync(WorkoutId);
+        WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(WorkoutId));
         await Shell.Current.GoToAsync("..");
     }
 }

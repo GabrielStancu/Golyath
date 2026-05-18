@@ -1,11 +1,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
+using Golyath.UI.ViewModels.Workout;
 
 namespace Golyath.UI.ViewModels.Suggestions;
 
-public partial class SuggestionsViewModel : ObservableObject
+public partial class SuggestionsViewModel : ObservableObject, IRecipient<WorkoutChangedMessage>
 {
     private readonly ISuggestionsService _suggestions;
 
@@ -17,7 +19,10 @@ public partial class SuggestionsViewModel : ObservableObject
     public SuggestionsViewModel(ISuggestionsService suggestions)
     {
         _suggestions = suggestions;
+        WeakReferenceMessenger.Default.Register(this);
     }
+
+    public void Receive(WorkoutChangedMessage message) => _ = LoadAsync();
 
     public async Task LoadAsync()
     {

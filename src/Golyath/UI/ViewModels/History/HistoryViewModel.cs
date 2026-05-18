@@ -1,9 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
 using Golyath.Core.Entities;
 using Golyath.UI.Controls;
+using Golyath.UI.ViewModels.Workout;
 
 namespace Golyath.UI.ViewModels.History;
 
@@ -89,6 +91,7 @@ public partial class HistoryViewModel : ObservableObject
         try
         {
             await _historyService.DeleteWorkoutAsync(workout.Id);
+            WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(workout.Id));
             var list = new List<WorkoutHistorySummaryDto>(Workouts);
             list.RemoveAll(w => w.Id == workout.Id);
             Workouts = list;

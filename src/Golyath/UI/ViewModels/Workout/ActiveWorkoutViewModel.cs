@@ -215,6 +215,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
 
         StopTimers();
         await _workoutService.CompleteWorkoutAsync(_workout.Id);
+        WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(_workout.Id));
         _workout = null;
         WorkoutCompleted?.Invoke(this, EventArgs.Empty);
     }
@@ -230,6 +231,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
 
         StopTimers();
         await _workoutService.AbandonWorkoutAsync(_workout.Id);
+        WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(_workout.Id));
         _workout = null;
         WorkoutCompleted?.Invoke(this, EventArgs.Empty);
     }

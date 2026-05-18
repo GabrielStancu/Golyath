@@ -1,12 +1,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Golyath.Application.DTOs;
 using Golyath.Application.Services;
+using Golyath.UI.ViewModels.Workout;
 using Golyath.UI.Views.Workout;
 
 namespace Golyath.UI.ViewModels.Dashboard;
 
-public partial class DashboardViewModel : ObservableObject
+public partial class DashboardViewModel : ObservableObject, IRecipient<WorkoutChangedMessage>
 {
     private readonly IDashboardService _dashboardService;
     private readonly IUserService _userService;
@@ -44,7 +46,10 @@ public partial class DashboardViewModel : ObservableObject
     {
         _dashboardService = dashboardService;
         _userService = userService;
+        WeakReferenceMessenger.Default.Register(this);
     }
+
+    public void Receive(WorkoutChangedMessage message) => _ = LoadAsync();
 
     public async Task LoadAsync()
     {

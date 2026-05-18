@@ -357,6 +357,89 @@ public class DataPortabilityServiceTests
     }
 
     // ────────────────────────────────────────────────────────────────────────
+    // Multi-workout import (regression test for ID remapping)
+    // ────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task ImportFromJsonAsync_MultipleWorkouts_SetsRemappedCorrectly()
+    {
+        // Simulate auto-increment across all entity types
+        int nextWorkoutId = 1;
+        _workoutRepo.InsertAsync(Arg.Any<Workout>()).Returns(callInfo =>
+        {
+            callInfo.Arg<Workout>().Id = nextWorkoutId;
+            return Task.FromResult(nextWorkoutId++);
+        });
+
+        int nextWeId = 1;
+        _workoutExerciseRepo.InsertAsync(Arg.Any<WorkoutExercise>()).Returns(callInfo =>
+        {
+            callInfo.Arg<WorkoutExercise>().Id = nextWeId;
+            return Task.FromResult(nextWeId++);
+        });
+
+        _workoutSetRepo.InsertAsync(Arg.Any<WorkoutSet>()).Returns(callInfo =>
+        {
+            return Task.FromResult(1);
+        });
+
+        // Seeded exercise already exists locally with Id=10
+        _exerciseRepo.GetAllAsync().Returns(Task.FromResult<IReadOnlyList<Exercise>>(
+        [
+            new Exercise { Id = 10, Name = "Barbell Squat", IsCustom = false, ExternalId = "Barbell_Squat" }
+        ]));
+
+        var startedAt1 = new DateTime(2026, 5, 1, 10, 0, 0, DateTimeKind.Utc);
+        var startedAt2 = new DateTime(2026, 5, 3, 10, 0, 0, DateTimeKind.Utc);
+
+        var json = MakeBackupJson(
+            workouts:
+            [
+                new WorkoutBackup(100, "Workout A", startedAt1, startedAt1.AddHours(1), 3600, null, startedAt1),
+                new WorkoutBackup(200, "Workout B", startedAt2, startedAt2.AddHours(1), 3600, null, startedAt2)
+            ],
+            exercises:
+            [
+                new ExerciseBackup(50, "Barbell Squat", false,
+                    MuscleGroup.Quads, string.Empty, MovementType.Legs,
+                    EquipmentType.Barbell, null, "Barbell_Squat", string.Empty)
+            ],
+            workoutExercises:
+            [
+                new WorkoutExerciseBackup(500, 100, 50, 1, null),  // belongs to Workout A (backup Id 100)
+                new WorkoutExerciseBackup(600, 200, 50, 1, null)   // belongs to Workout B (backup Id 200)
+            ],
+            workoutSets:
+            [
+                new WorkoutSetBackup(1000, 500, 1, 100, 5, null, null, true, startedAt1), // belongs to WE 500 (Workout A)
+                new WorkoutSetBackup(1001, 600, 1, 120, 3, null, null, true, startedAt2)  // belongs to WE 600 (Workout B)
+            ]);
+
+        var service = CreateService();
+        var result = await service.ImportFromJsonAsync(json);
+
+        Assert.True(result.Success);
+
+        // Verify WorkoutExercises were inserted with DIFFERENT WorkoutIds
+        var weInsertCalls = _workoutExerciseRepo.ReceivedCalls()
+            .Where(c => c.GetMethodInfo().Name == nameof(IWorkoutExerciseRepository.InsertAsync))
+            .Select(c => c.GetArguments()[0] as WorkoutExercise)
+            .ToList();
+
+        Assert.Equal(2, weInsertCalls.Count);
+        Assert.NotEqual(weInsertCalls[0]!.WorkoutId, weInsertCalls[1]!.WorkoutId);
+
+        // Verify WorkoutSets were inserted with DIFFERENT WorkoutExerciseIds
+        var setInsertCalls = _workoutSetRepo.ReceivedCalls()
+            .Where(c => c.GetMethodInfo().Name == nameof(IWorkoutSetRepository.InsertAsync))
+            .Select(c => c.GetArguments()[0] as WorkoutSet)
+            .ToList();
+
+        Assert.Equal(2, setInsertCalls.Count);
+        Assert.NotEqual(setInsertCalls[0]!.WorkoutExerciseId, setInsertCalls[1]!.WorkoutExerciseId);
+    }
+
+    // ────────────────────────────────────────────────────────────────────────
     // Error handling
     // ────────────────────────────────────────────────────────────────────────
 

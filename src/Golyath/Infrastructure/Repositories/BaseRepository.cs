@@ -37,7 +37,8 @@ public abstract class BaseRepository<TEntity> : IRepository<TEntity>
     public async Task<int> InsertAsync(TEntity entity)
     {
         var db = await GetDbAsync();
-        return await db.InsertAsync(entity);
+        await db.InsertAsync(entity);
+        return entity.Id;
     }
 
     public async Task<int> UpdateAsync(TEntity entity)
