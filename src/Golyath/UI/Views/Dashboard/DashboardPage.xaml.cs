@@ -23,9 +23,4 @@ public partial class DashboardPage : ContentPage
 
         await _viewModel.LoadAsync();
     }
-
-    private async void OnSettingsClicked(object? sender, TappedEventArgs e)
-    {
-        await Shell.Current.GoToAsync("SettingsPage");
-    }
 }

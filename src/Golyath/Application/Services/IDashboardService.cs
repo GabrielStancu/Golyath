@@ -8,4 +8,7 @@ public interface IDashboardService
     Task<IReadOnlyList<WeeklyActivityDay>> GetWeeklyActivityAsync();
     Task<ReadinessInfo> GetReadinessAsync();
     Task<WorkoutSuggestion> GetWorkoutSuggestionAsync();
+    Task<int> GetWeeklyWorkoutCountAsync();
+    Task<double> GetWeeklyVolumeAsync();
+    Task<int> GetWeekStreakAsync();
 }

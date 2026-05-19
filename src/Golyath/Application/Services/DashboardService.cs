@@ -137,4 +137,67 @@ public sealed class DashboardService : IDashboardService
 
         return new WorkoutSuggestion(leastTrained, reason);
     }
+
+    public async Task<int> GetWeeklyWorkoutCountAsync()
+    {
+        var today = DateTime.UtcNow.Date;
+        var dow = (int)today.DayOfWeek;
+        var monday = today.AddDays(-(dow == 0 ? 6 : dow - 1));
+        var sunday = monday.AddDays(7).AddSeconds(-1);
+
+        var workouts = await _workouts.GetCompletedInRangeAsync(monday, sunday);
+        return workouts.Count;
+    }
+
+    public async Task<double> GetWeeklyVolumeAsync()
+    {
+        var today = DateTime.UtcNow.Date;
+        var dow = (int)today.DayOfWeek;
+        var monday = today.AddDays(-(dow == 0 ? 6 : dow - 1));
+        var sunday = monday.AddDays(7).AddSeconds(-1);
+
+        var workouts = await _workouts.GetCompletedInRangeAsync(monday, sunday);
+        double totalVolume = 0;
+
+        foreach (var w in workouts)
+        {
+            var exercises = await _workoutExercises.GetByWorkoutIdAsync(w.Id);
+            foreach (var we in exercises)
+            {
+                var sets = await _workoutSets.GetByWorkoutExerciseIdAsync(we.Id);
+                totalVolume += sets.Where(s => s.IsCompleted).Sum(s => s.Weight * s.Reps);
+            }
+        }
+
+        return totalVolume;
+    }
+
+    public async Task<int> GetWeekStreakAsync()
+    {
+        // Count consecutive weeks (ending with current or last week) that have at least one workout.
+        int streak = 0;
+        var today = DateTime.UtcNow.Date;
+        var dow = (int)today.DayOfWeek;
+        var currentMonday = today.AddDays(-(dow == 0 ? 6 : dow - 1));
+
+        for (int i = 0; i < 52; i++) // max 1 year lookback
+        {
+            var weekStart = currentMonday.AddDays(-7 * i);
+            var weekEnd = weekStart.AddDays(7).AddSeconds(-1);
+            var workouts = await _workouts.GetCompletedInRangeAsync(weekStart, weekEnd);
+
+            if (workouts.Count > 0)
+            {
+                streak++;
+            }
+            else
+            {
+                // If we're on the current week and no workouts yet, skip and check previous weeks
+                if (i == 0) continue;
+                break;
+            }
+        }
+
+        return streak;
+    }
 }
