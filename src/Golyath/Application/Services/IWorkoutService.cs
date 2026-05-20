@@ -5,6 +5,7 @@ namespace Golyath.Application.Services;
 public interface IWorkoutService
 {
     Task<Workout> StartWorkoutAsync(string? name = null);
+    Task<Workout> StartWorkoutFromRoutineAsync(int routineId);
     Task<Workout?> GetActiveWorkoutAsync();
     Task<WorkoutExercise> AddExerciseAsync(int workoutId, int exerciseId);
     Task RemoveExerciseAsync(int workoutExerciseId);

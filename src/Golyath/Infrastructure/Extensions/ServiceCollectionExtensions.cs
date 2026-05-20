@@ -46,6 +46,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ITagRepository, TagRepository>();
         services.AddTransient<IWorkoutTagRepository, WorkoutTagRepository>();
         services.AddTransient<IGoalRepository, GoalRepository>();
+        services.AddTransient<IRoutineRepository, RoutineRepository>();
+        services.AddTransient<IRoutineExerciseRepository, RoutineExerciseRepository>();
 
         // Application services
         services.AddTransient<IUserService, UserService>();
@@ -63,6 +65,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<OnboardingDataService>();
         services.AddTransient<IExerciseSeederService, ExerciseSeederService>();
         services.AddTransient<IDataPortabilityService, DataPortabilityService>();
+        services.AddTransient<IRoutineService, RoutineService>();
 
         // Shell (singleton so the same instance is reused when switching from onboarding)
         services.AddSingleton<AppShell>();
@@ -92,6 +95,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ActiveWorkoutPage>();
         services.AddTransient<ExercisePickerViewModel>();
         services.AddTransient<ExercisePickerPage>();
+        services.AddTransient<RoutineBuilderViewModel>();
+        services.AddTransient<RoutineBuilderPage>();
 
         // Exercise library
         services.AddTransient<ExerciseLibraryViewModel>();

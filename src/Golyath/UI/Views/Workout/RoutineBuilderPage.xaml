@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Workout"
+             x:Class="Golyath.UI.Views.Workout.RoutineBuilderPage"
+             x:DataType="vm:RoutineBuilderViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ── Header ─────────────────────────────────────────────────────── -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Padding="12,14,12,0">
+            <!-- Back arrow: outline style -->
+            <Border Grid.Column="0"
+                    StrokeShape="RoundRectangle 4"
+                    StrokeThickness="1.5"
+                    Stroke="{StaticResource Accent}"
+                    BackgroundColor="Transparent"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    VerticalOptions="Center">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelClicked" />
+                </Border.GestureRecognizers>
+                <Label Text="&#xE5CB;"
+                       FontFamily="MaterialIcons"
+                       FontSize="24"
+                       TextColor="{StaticResource Accent}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- Delete button: red outline (edit mode only) -->
+            <Border Grid.Column="2"
+                    StrokeShape="RoundRectangle 4"
+                    StrokeThickness="1.5"
+                    Stroke="#EF5350"
+                    BackgroundColor="Transparent"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    IsVisible="{Binding IsEditing}"
+                    VerticalOptions="Center">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DeleteRoutineCommand}" />
+                </Border.GestureRecognizers>
+                <Label Text="&#xE872;"
+                       FontFamily="MaterialIcons"
+                       FontSize="20"
+                       TextColor="#EF5350"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+        </Grid>
+
+        <!-- ── Scrollable Content ─────────────────────────────────────────── -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,8,16,16" Spacing="16">
+
+                <!-- Page title -->
+                <Label Text="{Binding PageTitle}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+
+                <!-- Routine Name -->
+                <Border StrokeShape="RoundRectangle 4"
+                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                        Padding="12,10">
+                    <Entry Text="{Binding RoutineName}"
+                           Placeholder="Push Day A"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                           PlaceholderColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                           BackgroundColor="Transparent" />
+                </Border>
+
+                <!-- ── TARGET MUSCLES ──────────────────────────────────────── -->
+                <Label Text="TARGET MUSCLES"
+                       Style="{StaticResource SectionHeader}" />
+
+                <!-- Muscle chips (multi-select, sharp corners) -->
+                <FlexLayout x:Name="MuscleChipsLayout" Wrap="Wrap" JustifyContent="Start" AlignItems="Start"
+                            BindableLayout.ItemsSource="{Binding MuscleChips}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MuscleChipViewModel">
+                            <Border x:Name="ChipBorder"
+                                    StrokeShape="RoundRectangle 4"
+                                    StrokeThickness="1.5"
+                                    Stroke="{StaticResource Accent}"
+                                    Padding="14,7"
+                                    Margin="0,0,8,8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RoutineBuilderViewModel}}, Path=ToggleMuscleCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Label x:Name="ChipLabel"
+                                       Text="{Binding Name}"
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       CharacterSpacing="0.8" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <!-- Muscle summary -->
+                <Label x:Name="MuscleSummaryLabel"
+                       Text="{Binding MuscleSummary}"
+                       FontSize="11"
+                       CharacterSpacing="0.8"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Start"
+                       TextColor="{StaticResource Accent}" />
+
+                <!-- ── EXERCISES ───────────────────────────────────────────── -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="EXERCISES"
+                           Style="{StaticResource SectionHeader}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="BROWSE LIBRARY"
+                           FontSize="11"
+                           CharacterSpacing="0.8"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Accent}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RequestAddExerciseCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <!-- Exercise Cards with steppers -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:RoutineExerciseItemViewModel">
+                            <Border StrokeShape="RoundRectangle 4"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                                    Padding="14,12">
+                                <VerticalStackLayout Spacing="10">
+                                    <!-- Exercise name + reorder/delete -->
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding ExerciseName}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                        <HorizontalStackLayout Grid.Column="1" Spacing="4">
+                                            <Border StrokeShape="RoundRectangle 4"
+                                                    StrokeThickness="1"
+                                                    Stroke="{StaticResource Accent}"
+                                                    BackgroundColor="Transparent"
+                                                    Padding="0" WidthRequest="30" HeightRequest="30">
+                                                <Label Text="▲" FontSize="11" HorizontalOptions="Center" VerticalOptions="Center"
+                                                       TextColor="{StaticResource Accent}" />
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RoutineBuilderViewModel}}, Path=MoveUpCommand}"
+                                                        CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                            </Border>
+                                            <Border StrokeShape="RoundRectangle 4"
+                                                    StrokeThickness="1"
+                                                    Stroke="{StaticResource Accent}"
+                                                    BackgroundColor="Transparent"
+                                                    Padding="0" WidthRequest="30" HeightRequest="30">
+                                                <Label Text="▼" FontSize="11" HorizontalOptions="Center" VerticalOptions="Center"
+                                                       TextColor="{StaticResource Accent}" />
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RoutineBuilderViewModel}}, Path=MoveDownCommand}"
+                                                        CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                            </Border>
+                                            <!-- Delete exercise (red outline) -->
+                                            <Border StrokeShape="RoundRectangle 4"
+                                                    StrokeThickness="1"
+                                                    Stroke="#EF5350"
+                                                    BackgroundColor="Transparent"
+                                                    Padding="0" WidthRequest="30" HeightRequest="30">
+                                                <Label Text="&#xE872;" FontFamily="MaterialIcons"
+                                                       FontSize="14" HorizontalOptions="Center" VerticalOptions="Center"
+                                                       TextColor="#EF5350" />
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RoutineBuilderViewModel}}, Path=RemoveExerciseCommand}"
+                                                        CommandParameter="{Binding .}" />
+                                                </Border.GestureRecognizers>
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+
+                                    <!-- Numeric inputs: SETS · REPS · WEIGHT · REST -->
+                                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                                        <!-- SETS -->
+                                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                            <Label Text="SETS" FontSize="9" CharacterSpacing="1"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                            <Border StrokeShape="RoundRectangle 4"
+                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Padding="4,6">
+                                                <Entry Text="{Binding TargetSets}"
+                                                       Keyboard="Numeric"
+                                                       FontSize="18"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                       BackgroundColor="Transparent" />
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- REPS -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                            <Label Text="REPS" FontSize="9" CharacterSpacing="1"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                            <Border StrokeShape="RoundRectangle 4"
+                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Padding="4,6">
+                                                <Entry Text="{Binding TargetReps}"
+                                                       Keyboard="Numeric"
+                                                       FontSize="18"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                       BackgroundColor="Transparent" />
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- WEIGHT -->
+                                        <VerticalStackLayout Grid.Column="2" Spacing="4">
+                                            <Label Text="WEIGHT" FontSize="9" CharacterSpacing="1"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                            <Border StrokeShape="RoundRectangle 4"
+                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Padding="4,6">
+                                                <Entry Text="{Binding WeightText}"
+                                                       Keyboard="Numeric"
+                                                       Placeholder="—"
+                                                       FontSize="18"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                       PlaceholderColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                                                       BackgroundColor="Transparent" />
+                                            </Border>
+                                        </VerticalStackLayout>
+
+                                        <!-- REST -->
+                                        <VerticalStackLayout Grid.Column="3" Spacing="4">
+                                            <Label Text="REST" FontSize="9" CharacterSpacing="1"
+                                                   HorizontalOptions="Center"
+                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                            <Border StrokeShape="RoundRectangle 4"
+                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Padding="4,6">
+                                                <Entry Text="{Binding RestSeconds}"
+                                                       Keyboard="Numeric"
+                                                       FontSize="18"
+                                                       FontAttributes="Bold"
+                                                       HorizontalTextAlignment="Center"
+                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                       BackgroundColor="Transparent" />
+                                            </Border>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- + ADD EXERCISE button -->
+                <Border StrokeShape="RoundRectangle 4"
+                        StrokeThickness="1.5"
+                        Stroke="{StaticResource Accent}"
+                        BackgroundColor="Transparent"
+                        Padding="0,12"
+                        HorizontalOptions="Fill">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RequestAddExerciseCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label Text="+ ADD EXERCISE"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1"
+                           HorizontalOptions="Center"
+                           TextColor="{StaticResource Accent}" />
+                </Border>
+
+                <!-- Empty state -->
+                <VerticalStackLayout Spacing="4" IsVisible="False"
+                                     x:Name="EmptyState"
+                                     HorizontalOptions="Center" Margin="0,8,0,0">
+                    <Label Text="No exercises added yet"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                    <Label Text="Tap '+ ADD EXERCISE' or 'BROWSE LIBRARY' to get started."
+                           FontSize="12"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                </VerticalStackLayout>
+
+                <BoxView HeightRequest="20" Color="Transparent" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ── SAVE ROUTINE Button ─────────────────────────────────────────── -->
+        <Button Grid.Row="2"
+                Text="SAVE ROUTINE"
+                Command="{Binding SaveCommand}"
+                Style="{StaticResource AccentButton}"
+                Margin="16,8,16,16" />
+
+    </Grid>
+</ContentPage>

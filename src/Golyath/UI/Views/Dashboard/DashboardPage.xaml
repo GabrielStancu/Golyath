@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Dashboard"
              xmlns:controls="clr-namespace:Golyath.UI.Controls"
+             xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
              x:Class="Golyath.UI.Views.Dashboard.DashboardPage"
              x:DataType="vm:DashboardViewModel"
              Shell.NavBarIsVisible="False"
@@ -62,7 +63,7 @@
                                  IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}">
 
                 <!-- ── Hero Card (always dark theme) ───────────────────── -->
-                <Border StrokeShape="RoundRectangle 16"
+                <Border StrokeShape="RoundRectangle 4"
                         StrokeThickness="0"
                         BackgroundColor="#1E1E1E"
                         Padding="0"
@@ -109,7 +110,7 @@
                                     FontAttributes="Bold"
                                     FontSize="13"
                                     CharacterSpacing="0.8"
-                                    CornerRadius="10"
+                                    CornerRadius="4"
                                     HeightRequest="40"
                                     WidthRequest="160"
                                     HorizontalOptions="Start"
@@ -123,7 +124,7 @@
                       ColumnSpacing="10">
                     <!-- This Week pill -->
                     <Border Grid.Column="0"
-                            StrokeShape="RoundRectangle 12"
+                            StrokeShape="RoundRectangle 4"
                             Stroke="Transparent"
                             BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
                             Padding="12,10">
@@ -142,7 +143,7 @@
                     </Border>
                     <!-- Volume pill -->
                     <Border Grid.Column="1"
-                            StrokeShape="RoundRectangle 12"
+                            StrokeShape="RoundRectangle 4"
                             Stroke="Transparent"
                             BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
                             Padding="12,10">
@@ -161,7 +162,7 @@
                     </Border>
                     <!-- Streak pill -->
                     <Border Grid.Column="2"
-                            StrokeShape="RoundRectangle 12"
+                            StrokeShape="RoundRectangle 4"
                             Stroke="Transparent"
                             BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
                             Padding="12,10">
@@ -185,18 +186,32 @@
                 </Grid>
 
                 <!-- ── My Routines Section ─────────────────────────────── -->
-                <Grid ColumnDefinitions="*, Auto" Margin="0,8,0,0">
+                <Grid ColumnDefinitions="*, Auto, Auto" Margin="0,8,0,0">
                     <Label Grid.Column="0"
                            Text="MY ROUTINES"
                            Style="{StaticResource SectionHeader}"
                            VerticalOptions="Center" />
-                    <Border Grid.Column="1"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="{StaticResource Accent}"
+                    <Label Grid.Column="1"
+                           Text="See all ›"
+                           FontSize="12"
+                           TextColor="{StaticResource Accent}"
+                           VerticalOptions="Center"
+                           Margin="0,0,12,0"
+                           IsVisible="{Binding HasRoutines}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SeeAllRoutinesCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Border Grid.Column="2"
+                            StrokeShape="RoundRectangle 4"
                             StrokeThickness="1"
+                            Stroke="{StaticResource Accent}"
                             BackgroundColor="Transparent"
                             Padding="10,4"
                             VerticalOptions="Center">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NewRoutineCommand}" />
+                        </Border.GestureRecognizers>
                         <Label Text="+ NEW"
                                FontSize="11"
                                FontAttributes="Bold"
@@ -205,111 +220,84 @@
                     </Border>
                 </Grid>
 
-                <!-- Placeholder routine cards (hardcoded) -->
-                <!-- Push Day A -->
-                <Border StrokeShape="RoundRectangle 14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                        Padding="14,12">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <BoxView Grid.Column="0"
-                                 WidthRequest="4"
-                                 HeightRequest="36"
-                                 Color="#FFD700"
-                                 VerticalOptions="Center" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Push Day A"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                            <Label Text="6 exercises  ·  ~55 min"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                        </VerticalStackLayout>
-                        <Border Grid.Column="2"
-                                StrokeShape="RoundRectangle 6"
-                                StrokeThickness="0"
-                                BackgroundColor="#33FFD700"
-                                Padding="8,4"
-                                VerticalOptions="Center">
-                            <Label Text="PUSH"
-                                   FontSize="10"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="1"
-                                   TextColor="#FFD700" />
-                        </Border>
-                    </Grid>
-                </Border>
+                <!-- Empty state -->
+                <VerticalStackLayout IsVisible="{Binding HasNoRoutines}"
+                                     Spacing="4"
+                                     HorizontalOptions="Center"
+                                     Margin="0,8,0,0">
+                    <Label Text="No routines yet"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                    <Label Text="Tap '+ NEW' to create your first routine."
+                           FontSize="12"
+                           HorizontalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                </VerticalStackLayout>
 
-                <!-- Pull Day B -->
-                <Border StrokeShape="RoundRectangle 14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                        Padding="14,12">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <BoxView Grid.Column="0"
-                                 WidthRequest="4"
-                                 HeightRequest="36"
-                                 Color="#4CAF50"
-                                 VerticalOptions="Center" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Pull Day B"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                            <Label Text="5 exercises  ·  ~45 min"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                        </VerticalStackLayout>
-                        <Border Grid.Column="2"
-                                StrokeShape="RoundRectangle 6"
-                                StrokeThickness="0"
-                                BackgroundColor="#334CAF50"
-                                Padding="8,4"
-                                VerticalOptions="Center">
-                            <Label Text="PULL"
-                                   FontSize="10"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="1"
-                                   TextColor="#4CAF50" />
-                        </Border>
-                    </Grid>
-                </Border>
-
-                <!-- Leg Day -->
-                <Border StrokeShape="RoundRectangle 14"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                        Padding="14,12">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                        <BoxView Grid.Column="0"
-                                 WidthRequest="4"
-                                 HeightRequest="36"
-                                 Color="#FF7043"
-                                 VerticalOptions="Center" />
-                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                            <Label Text="Leg Day"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                            <Label Text="7 exercises  ·  ~65 min"
-                                   FontSize="12"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                        </VerticalStackLayout>
-                        <Border Grid.Column="2"
-                                StrokeShape="RoundRectangle 6"
-                                StrokeThickness="0"
-                                BackgroundColor="#33FF7043"
-                                Padding="8,4"
-                                VerticalOptions="Center">
-                            <Label Text="LEGS"
-                                   FontSize="10"
-                                   FontAttributes="Bold"
-                                   CharacterSpacing="1"
-                                   TextColor="#FF7043" />
-                        </Border>
-                    </Grid>
-                </Border>
+                <!-- Data-bound routine cards -->
+                <VerticalStackLayout IsVisible="{Binding HasRoutines}"
+                                     Spacing="10"
+                                     BindableLayout.ItemsSource="{Binding Routines}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:RoutineSummaryDto">
+                            <Border StrokeShape="RoundRectangle 4"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                                    Padding="14,12">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=EditRoutineCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <BoxView Grid.Column="0"
+                                             WidthRequest="4"
+                                             HeightRequest="36"
+                                             Color="{Binding CategoryHexColor}"
+                                             VerticalOptions="Center" />
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                        <Label FontSize="12"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding ExerciseLabel}" />
+                                                    <Span Text="  ·  " />
+                                                    <Span Text="{Binding DurationLabel}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    <!-- Play button (outline) → starts the routine -->
+                                    <Border Grid.Column="2"
+                                            StrokeShape="RoundRectangle 4"
+                                            StrokeThickness="1.5"
+                                            Stroke="{StaticResource Accent}"
+                                            BackgroundColor="Transparent"
+                                            WidthRequest="40"
+                                            HeightRequest="40"
+                                            VerticalOptions="Center">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=StartRoutineCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Label Text="▶"
+                                               FontSize="14"
+                                               TextColor="{StaticResource Accent}"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               Margin="2,0,0,0" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
 
                 <!-- Bottom spacer so button doesn't cover last card -->
                 <BoxView HeightRequest="8" Color="Transparent" />

@@ -9,17 +9,23 @@ public sealed class WorkoutService : IWorkoutService
     private readonly IWorkoutExerciseRepository _workoutExerciseRepository;
     private readonly IWorkoutSetRepository _workoutSetRepository;
     private readonly IWorkoutTagRepository _workoutTagRepository;
+    private readonly IRoutineRepository _routineRepository;
+    private readonly IRoutineExerciseRepository _routineExerciseRepository;
 
     public WorkoutService(
         IWorkoutRepository workoutRepository,
         IWorkoutExerciseRepository workoutExerciseRepository,
         IWorkoutSetRepository workoutSetRepository,
-        IWorkoutTagRepository workoutTagRepository)
+        IWorkoutTagRepository workoutTagRepository,
+        IRoutineRepository routineRepository,
+        IRoutineExerciseRepository routineExerciseRepository)
     {
         _workoutRepository = workoutRepository;
         _workoutExerciseRepository = workoutExerciseRepository;
         _workoutSetRepository = workoutSetRepository;
         _workoutTagRepository = workoutTagRepository;
+        _routineRepository = routineRepository;
+        _routineExerciseRepository = routineExerciseRepository;
     }
 
     public async Task<Workout> StartWorkoutAsync(string? name = null)
@@ -31,6 +37,53 @@ public sealed class WorkoutService : IWorkoutService
             CreatedAt = DateTime.UtcNow
         };
         await _workoutRepository.InsertAsync(workout);
+        return workout;
+    }
+
+    public async Task<Workout> StartWorkoutFromRoutineAsync(int routineId)
+    {
+        var routine = await _routineRepository.GetByIdAsync(routineId)
+            ?? throw new InvalidOperationException($"Routine {routineId} not found.");
+
+        var workout = new Workout
+        {
+            Name = routine.Name,
+            RoutineId = routineId,
+            StartedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow
+        };
+        await _workoutRepository.InsertAsync(workout);
+
+        var routineExercises = await _routineExerciseRepository.GetByRoutineIdAsync(routineId);
+
+        foreach (var re in routineExercises)
+        {
+            var we = new WorkoutExercise
+            {
+                WorkoutId = workout.Id,
+                ExerciseId = re.ExerciseId,
+                Order = re.Order
+            };
+            await _workoutExerciseRepository.InsertAsync(we);
+
+            // Auto-fill weight from last completed set for this exercise
+            var lastSet = await GetLastSetForAutofillAsync(re.ExerciseId);
+            double weight = re.TargetWeight ?? lastSet?.Weight ?? 0;
+
+            for (int i = 0; i < re.TargetSets; i++)
+            {
+                var set = new WorkoutSet
+                {
+                    WorkoutExerciseId = we.Id,
+                    SetNumber = i + 1,
+                    Weight = weight,
+                    Reps = re.TargetReps,
+                    IsCompleted = false
+                };
+                await _workoutSetRepository.InsertAsync(set);
+            }
+        }
+
         return workout;
     }
 

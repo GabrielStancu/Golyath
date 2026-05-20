@@ -439,7 +439,7 @@
 
     <!-- ── Card styles ──────────────────────────────────────────────── -->
     <Style x:Key="CardBorder" TargetType="Border">
-        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 4" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}" />
         <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}" />
         <Setter Property="Padding" Value="16" />

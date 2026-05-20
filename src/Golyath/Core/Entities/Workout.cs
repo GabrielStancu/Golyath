@@ -18,5 +18,9 @@ public class Workout : BaseEntity
 
     public string? Notes { get; set; }
 
+    /// <summary>If this workout was started from a routine, the routine's ID.</summary>
+    [Indexed]
+    public int? RoutineId { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

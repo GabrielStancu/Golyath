@@ -16,6 +16,13 @@ public partial class WorkoutTemplatesPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _viewModel.RegisterMessenger();
         await _viewModel.LoadAsync();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _viewModel.UnregisterMessenger();
     }
 }
