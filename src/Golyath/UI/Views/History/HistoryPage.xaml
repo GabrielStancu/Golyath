@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.History"
              xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             xmlns:controls="clr-namespace:Golyath.UI.Controls"
              x:Class="Golyath.UI.Views.History.HistoryPage"
              x:DataType="vm:HistoryViewModel"
              Shell.NavBarIsVisible="False"
@@ -10,264 +11,238 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <!-- ── Header panel with filters ──────────────────────────────────── -->
-        <Border Grid.Row="0"
-                BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                StrokeThickness="0"
-                StrokeShape="RoundRectangle 0,0,20,20"
-                Padding="16,16,16,12">
-            <VerticalStackLayout Spacing="10">
-                <VerticalStackLayout Spacing="2">
-                    <Label Text="History"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                    <Label Text="Your workout log"
-                           FontSize="13"
-                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                </VerticalStackLayout>
+        <!-- â”€â”€ Header: flat on page background â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,16,20,12" Spacing="2">
+            <Label Text="{Binding CurrentMonthLabel}"
+                   FontSize="11"
+                   CharacterSpacing="1.5"
+                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+            <Label Text="History"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+            <!-- Gold accent underline -->
+            <BoxView WidthRequest="40"
+                     HeightRequest="3"
+                     CornerRadius="2"
+                     Color="{StaticResource Accent}"
+                     HorizontalOptions="Start"
+                     Margin="0,2,0,0" />
+        </VerticalStackLayout>
 
-                <!-- Filter controls -->
-                <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
-                    <!-- Period filter -->
-                    <Border Grid.Column="0"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
-                            Padding="14,12">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnPeriodFilterTapped" />
-                        </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Grid.Column="0"
-                                   Text="{Binding SelectedPeriod}"
-                                   FontSize="13"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                   VerticalOptions="Center" />
-                            <Label Grid.Column="1"
-                                   Text="&#xE5CF;"
-                                   FontFamily="MaterialIcons"
-                                   FontSize="18"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                   VerticalOptions="Center" />
-                        </Grid>
-                    </Border>
-
-                    <!-- Tag filter -->
-                    <Border Grid.Column="1"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
-                            Padding="14,12">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnTagFilterTapped" />
-                        </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Grid.Column="0"
-                                   Text="{Binding SelectedTag.Name, TargetNullValue='All tags'}"
-                                   FontSize="13"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                   VerticalOptions="Center" />
-                            <Label Grid.Column="1"
-                                   Text="&#xE5CF;"
-                                   FontFamily="MaterialIcons"
-                                   FontSize="18"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                   VerticalOptions="Center" />
-                        </Grid>
-                    </Border>
-
-                    <!-- Clear/Apply buttons -->
-                    <VerticalStackLayout Grid.Column="2" Spacing="4" VerticalOptions="Center">
-                        <Button Text="Apply"
-                                Command="{Binding ApplyFiltersCommand}"
-                                BackgroundColor="{StaticResource Accent}"
-                                TextColor="{StaticResource AccentText}"
-                                FontSize="12"
-                                Padding="12,6"
-                                CornerRadius="8" />
-                        <Button Text="Clear"
-                                Command="{Binding ClearFiltersCommand}"
-                                IsVisible="{Binding HasActiveFilters}"
-                                BackgroundColor="Transparent"
-                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                FontSize="11"
-                                Padding="4,2" />
-                    </VerticalStackLayout>
-                </Grid>
-            </VerticalStackLayout>
-        </Border>
-
-        <!-- ── Content area ───────────────────────────────────────────────── -->
+        <!-- â”€â”€ Content: CollectionView with header for stats + chart â”€â”€â”€â”€â”€â”€â”€â”€ -->
         <Grid Grid.Row="1">
 
-            <!-- Loading -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
                                Color="{StaticResource Accent}"
                                VerticalOptions="Center"
                                HorizontalOptions="Center" />
 
-            <!-- Workout list -->
             <CollectionView ItemsSource="{Binding Workouts}"
                             IsVisible="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}"
                             SelectionMode="None">
 
+                <!-- â”€â”€ Stats + Chart header (scrolls with list) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <CollectionView.Header>
+                    <VerticalStackLayout Padding="16,0,16,8" Spacing="16">
+
+                        <!-- Monthly stat pills -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Border Grid.Column="0"
+                                    StrokeShape="RoundRectangle 4"
+                                    Stroke="Transparent"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                    Padding="14,12">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding MonthSessionCount}"
+                                           FontSize="28"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Accent}" />
+                                    <Label Text="Sessions this month"
+                                           FontSize="11"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <Border Grid.Column="1"
+                                    StrokeShape="RoundRectangle 4"
+                                    Stroke="Transparent"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                    Padding="14,12">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding MonthVolumeText}"
+                                           FontSize="28"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                    <Label Text="Total volume"
+                                           FontSize="11"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                        <!-- Weekly volume chart -->
+                        <Border StrokeShape="RoundRectangle 4"
+                                Stroke="Transparent"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                Padding="14,12">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="WEEKLY VOLUME (KG)"
+                                           FontSize="9"
+                                           CharacterSpacing="1"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="1"
+                                           Text="4-WEEK TREND"
+                                           FontSize="9"
+                                           CharacterSpacing="0.8"
+                                           TextColor="{StaticResource Accent}"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                                <controls:WeeklyVolumeChart
+                                    Volumes="{Binding WeeklyVolumes}"
+                                    Labels="{Binding WeekLabels}"
+                                    HeightRequest="80" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Section header: RECENT SESSIONS + FILTER -->
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                            <Label Grid.Column="0"
+                                   Text="RECENT SESSIONS"
+                                   Style="{StaticResource SectionHeader}"
+                                   VerticalOptions="Center" />
+                            <Border Grid.Column="1"
+                                    StrokeShape="RoundRectangle 4"
+                                    StrokeThickness="1.5"
+                                    Stroke="{StaticResource Accent}"
+                                    BackgroundColor="Transparent"
+                                    Padding="10,5"
+                                    VerticalOptions="Center">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnFilterTapped" />
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding FilterLabel}"
+                                       FontSize="10"
+                                       FontAttributes="Bold"
+                                       CharacterSpacing="1"
+                                       TextColor="{StaticResource Accent}" />
+                            </Border>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </CollectionView.Header>
+
+                <!-- â”€â”€ Empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
-                                         Spacing="8" Margin="0,80">
+                                         Spacing="8" Margin="0,48">
                         <Label Text="No workouts found"
-                               FontSize="18"
+                               FontSize="16"
                                FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                HorizontalOptions="Center" />
                         <Label Text="Complete a workout to see your history here"
                                FontSize="13"
-                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                               TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"
                                Margin="24,0" />
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
 
+                <!-- â”€â”€ Session rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:WorkoutHistorySummaryDto">
-                        <Grid Padding="12,6">
+                        <SwipeView Margin="16,0,16,10" Threshold="80">
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Execute">
+                                    <SwipeItem
+                                        IconImageSource="{FontImageSource FontFamily=MaterialIcons, Glyph=&#xE872;, Color=White, Size=22}"
+                                        Text="Delete"
+                                        BackgroundColor="#EF5350"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=DeleteWorkoutCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
 
-                            <!-- Red delete background — visible when card slides left -->
-                            <Border StrokeShape="RoundRectangle 16"
-                                    StrokeThickness="0"
-                                    BackgroundColor="#C62828"
-                                    Padding="0,0,20,0"
-                                    Margin="2"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill">
-                                <Label Text="&#xE872;"
-                                       FontFamily="MaterialIcons"
-                                       FontSize="24"
-                                       TextColor="White"
-                                       HorizontalOptions="End"
-                                       VerticalOptions="Center" />
-                            </Border>
-
-                            <SwipeView BackgroundColor="Transparent"
-                                     Threshold="80">
-                                <SwipeView.RightItems>
-                                    <SwipeItems Mode="Execute">
-                                        <SwipeItem IconImageSource="{FontImageSource FontFamily=MaterialIcons, Glyph=&#xE872;, Color=White, Size=24}"
-                                                   BackgroundColor="Transparent"
-                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=DeleteWorkoutCommand}"
-                                                   CommandParameter="{Binding .}" />
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
-
-                            <Border Style="{StaticResource CardBorder}"
-                                    Padding="14,12">
+                            <Border Style="{StaticResource CardBorder}" Padding="14,12">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=OpenWorkoutCommand}"
                                         CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
 
-                                <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="44,3,*" ColumnSpacing="12">
 
-                                    <!-- Title row -->
-                                    <Grid ColumnDefinitions="*,Auto,Auto">
-                                        <Label Grid.Column="0"
+                                    <!-- Date: day + month -->
+                                    <VerticalStackLayout Grid.Column="0"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Spacing="0">
+                                        <Label Text="{Binding DayText}"
+                                               FontSize="26"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                        <Label Text="{Binding MonthText}"
+                                               FontSize="9"
+                                               CharacterSpacing="1"
+                                               HorizontalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                    </VerticalStackLayout>
+
+                                    <!-- Gold vertical divider -->
+                                    <BoxView Grid.Column="1"
+                                             Color="{StaticResource Accent}"
+                                             WidthRequest="3"
+                                             VerticalOptions="Fill" />
+
+                                    <!-- Name + subtitle + PR badge -->
+                                    <Grid Grid.Column="2"
+                                          ColumnDefinitions="*,Auto"
+                                          RowDefinitions="Auto,Auto"
+                                          RowSpacing="2"
+                                          VerticalOptions="Center">
+                                        <Label Grid.Row="0" Grid.Column="0"
                                                Text="{Binding DisplayName}"
                                                FontSize="15"
                                                FontAttributes="Bold"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                               LineBreakMode="TailTruncation" />
-                                        <Label Grid.Column="1"
-                                               Text="{Binding DateFormatted}"
+                                               LineBreakMode="TailTruncation"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                        <!-- PR badge -->
+                                        <Border Grid.Row="0" Grid.Column="1"
+                                                IsVisible="{Binding HasPersonalRecords}"
+                                                StrokeShape="RoundRectangle 4"
+                                                StrokeThickness="0"
+                                                BackgroundColor="{StaticResource Accent}"
+                                                Padding="7,3"
+                                                VerticalOptions="Center"
+                                                Margin="6,0,0,0">
+                                            <Label Text="{Binding PrBadgeText}"
+                                                   FontSize="10"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#111111" />
+                                        </Border>
+                                        <!-- Subtitle -->
+                                        <Label Grid.Row="1" Grid.ColumnSpan="2"
+                                               Text="{Binding SubtitleText}"
                                                FontSize="12"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                               VerticalOptions="Center" />
-                                        <Label Grid.Column="2"
-                                               Text="&#xE872;"
-                                               FontFamily="MaterialIcons"
-                                               FontSize="20"
-                                               TextColor="{AppThemeBinding Light=#CC0000, Dark=#EF5350}"
-                                               VerticalOptions="Center"
-                                               Margin="8,0,0,0">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=DeleteWorkoutCommand}"
-                                                    CommandParameter="{Binding .}" />
-                                            </Label.GestureRecognizers>
-                                        </Label>
+                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                                     </Grid>
 
-                                    <!-- Stats row -->
-                                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
-                                        <VerticalStackLayout Grid.Column="0" Spacing="1">
-                                            <Label Text="{Binding DurationFormatted}"
-                                                   FontSize="14"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{StaticResource Accent}" />
-                                            <Label Text="duration"
-                                                   FontSize="10"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
-                                        </VerticalStackLayout>
-
-                                        <VerticalStackLayout Grid.Column="1" Spacing="1">
-                                            <Label Text="{Binding ExerciseCount}"
-                                                   FontSize="14"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                                            <Label Text="exercises"
-                                                   FontSize="10"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
-                                        </VerticalStackLayout>
-
-                                        <VerticalStackLayout Grid.Column="2" Spacing="1">
-                                            <Label Text="{Binding SetCount}"
-                                                   FontSize="14"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                                            <Label Text="sets"
-                                                   FontSize="10"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
-                                        </VerticalStackLayout>
-
-                                        <VerticalStackLayout Grid.Column="3" Spacing="1">
-                                            <Label Text="{Binding VolumeFormatted}"
-                                                   FontSize="14"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                                            <Label Text="volume"
-                                                   FontSize="10"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
-                                        </VerticalStackLayout>
-                                    </Grid>
-
-                                    <!-- Tags row -->
-                                    <FlexLayout BindableLayout.ItemsSource="{Binding TagNames}"
-                                                IsVisible="{Binding TagNames.Count, Converter={StaticResource IsNotZeroConverter}}"
-                                                Wrap="Wrap"
-                                                Direction="Row"
-                                                AlignItems="Center">
-                                        <BindableLayout.ItemTemplate>
-                                            <DataTemplate x:DataType="x:String">
-                                                <Border StrokeShape="RoundRectangle 6"
-                                                        BackgroundColor="{StaticResource Accent}"
-                                                        Padding="8,3"
-                                                        Margin="0,0,4,4">
-                                                    <Label Text="{Binding .}"
-                                                           FontSize="11"
-                                                           TextColor="{StaticResource AccentText}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </BindableLayout.ItemTemplate>
-                                    </FlexLayout>
-
-                                </VerticalStackLayout>
+                                </Grid>
                             </Border>
-                            </SwipeView>
-                        </Grid>
+                        </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="24" Color="Transparent" />
+                </CollectionView.Footer>
 
             </CollectionView>
         </Grid>

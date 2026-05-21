@@ -75,7 +75,7 @@ public partial class DashboardViewModel : ObservableObject, IRecipient<WorkoutCh
             await Task.WhenAll(countTask, volumeTask, streakTask, suggestionTask, nextRoutineTask, routinesTask);
 
             WeeklyWorkoutCount = countTask.Result.ToString();
-            WeeklyVolume = (volumeTask.Result / 1000.0).ToString("F1");
+            WeeklyVolume = volumeTask.Result.ToString("0");
             StreakCount = streakTask.Result.ToString();
 
             // Hero: show next routine in rotation, fallback to free workout

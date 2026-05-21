@@ -9,7 +9,8 @@ public record WorkoutHistorySummaryDto(
     int ExerciseCount,
     int SetCount,
     double TotalVolumeKg,
-    IReadOnlyList<string> TagNames)
+    IReadOnlyList<string> TagNames,
+    int PersonalRecordCount = 0)
 {
     public string DurationFormatted =>
         DurationSeconds >= 3600
@@ -19,6 +20,12 @@ public record WorkoutHistorySummaryDto(
     public string VolumeFormatted => $"{TotalVolumeKg:0.#} kg";
 
     public string DateFormatted => CompletedAt.ToLocalTime().ToString("MMM d, yyyy");
+
+    public string DayText => CompletedAt.ToLocalTime().Day.ToString();
+    public string MonthText => CompletedAt.ToLocalTime().ToString("MMM").ToUpper();
+    public string SubtitleText => $"{ExerciseCount} ex · {DurationFormatted} · {VolumeFormatted}";
+    public bool HasPersonalRecords => PersonalRecordCount > 0;
+    public string PrBadgeText => $"PR ×{PersonalRecordCount}";
 }
 
 /// <summary>Full breakdown shown on the Workout Detail page.</summary>

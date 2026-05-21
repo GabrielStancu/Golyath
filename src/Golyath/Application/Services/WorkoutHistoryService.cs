@@ -66,6 +66,28 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
         var exercisesByWorkoutId = allExercises.GroupBy(we => we.WorkoutId)
             .ToDictionary(g => g.Key, g => g.ToList());
 
+        // Compute PR counts: process chronologically, track max weight per exercise
+        var maxWeightPerExercise = new Dictionary<int, double>();
+        var prCountByWorkoutId = new Dictionary<int, int>();
+        foreach (var workout in workouts.OrderBy(w => w.CompletedAt))
+        {
+            var wes = exercisesByWorkoutId.GetValueOrDefault(workout.Id, []);
+            int prCount = 0;
+            foreach (var we in wes)
+            {
+                var sets = setsByWeId.GetValueOrDefault(we.Id, []);
+                if (sets.Count == 0) continue;
+                double maxWeightNow = sets.Max(s => s.Weight);
+                maxWeightPerExercise.TryGetValue(we.ExerciseId, out double prevMax);
+                if (maxWeightNow > prevMax)
+                {
+                    prCount++;
+                    maxWeightPerExercise[we.ExerciseId] = maxWeightNow;
+                }
+            }
+            prCountByWorkoutId[workout.Id] = prCount;
+        }
+
         var summaries = new List<WorkoutHistorySummaryDto>(workouts.Count);
         foreach (var workout in workouts)
         {
@@ -86,7 +108,8 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
                 ExerciseCount: wes.Count,
                 SetCount: setCount,
                 TotalVolumeKg: totalVolume,
-                TagNames: tagNames));
+                TagNames: tagNames,
+                PersonalRecordCount: prCountByWorkoutId.GetValueOrDefault(workout.Id, 0)));
         }
 
         return summaries;

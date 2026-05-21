@@ -2,43 +2,45 @@ namespace Golyath.UI.Controls;
 
 public class SelectionPopup : Border
 {
-    private readonly string? _currentValue;
-
     public SelectionPopup(string title, IReadOnlyList<string> options, string? currentValue = null)
     {
-        _currentValue = currentValue;
-
-        var app = Microsoft.Maui.Controls.Application.Current!;
+        var app    = Microsoft.Maui.Controls.Application.Current!;
         var isDark = app.RequestedTheme == AppTheme.Dark;
-        var accentColor = (Color)app.Resources["Accent"];
 
-        // Card styling
-        StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 20 };
-        Stroke = isDark ? Color.FromArgb("#333333") : Color.FromArgb("#E0E0E0");
-        StrokeThickness = 1;
-        BackgroundColor = isDark ? Color.FromArgb("#1A1A1A") : Color.FromArgb("#FFFFFF");
-        Padding = 0;
-        WidthRequest = 320;
-        MaximumHeightRequest = 400;
+        var accent    = (Color)app.Resources["Accent"];
+        var surface   = (Color)app.Resources[isDark ? "CardSurfaceDark"  : "CardSurfaceLight"];
+        var border    = (Color)app.Resources[isDark ? "CardBorderDark"   : "CardBorderLight"];
+        var textPrim  = (Color)app.Resources[isDark ? "TextPrimaryDark"  : "TextPrimaryLight"];
+        var textMuted = (Color)app.Resources[isDark ? "TextMutedDark"    : "TextMutedLight"];
+
+        // ── Card shell ───────────────────────────────────────────────────────
+        StrokeShape      = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 4 };
+        Stroke           = border;
+        StrokeThickness  = 1;
+        BackgroundColor  = surface;
+        Padding          = 0;
+        WidthRequest     = 320;
+        MaximumHeightRequest = 480;
         HorizontalOptions = LayoutOptions.Center;
-        VerticalOptions = LayoutOptions.Center;
+        VerticalOptions   = LayoutOptions.Center;
 
-        // Title bar
+        // ── Title row ────────────────────────────────────────────────────────
         var titleLabel = new Label
         {
-            Text = title,
-            FontSize = 17,
-            FontAttributes = FontAttributes.Bold,
-            TextColor = isDark ? Colors.White : Color.FromArgb("#111111"),
-            VerticalOptions = LayoutOptions.Center,
+            Text             = title.ToUpperInvariant(),
+            FontSize         = 10,
+            CharacterSpacing = 1.2,
+            FontAttributes   = FontAttributes.Bold,
+            TextColor        = textMuted,
+            VerticalOptions  = LayoutOptions.Center,
         };
 
         var closeIcon = new Label
         {
-            Text = "\uE5CD",
-            FontFamily = "MaterialIcons",
-            FontSize = 22,
-            TextColor = isDark ? Color.FromArgb("#666666") : Color.FromArgb("#888888"),
+            Text            = "\uE5CD",
+            FontFamily      = "MaterialIcons",
+            FontSize        = 20,
+            TextColor       = textMuted,
             VerticalOptions = LayoutOptions.Center,
         };
         var closeTap = new TapGestureRecognizer();
@@ -48,43 +50,60 @@ public class SelectionPopup : Border
         var titleGrid = new Grid
         {
             ColumnDefinitions = [new ColumnDefinition(GridLength.Star), new ColumnDefinition(GridLength.Auto)],
-            Padding = new Thickness(20, 18, 16, 14),
+            Padding = new Thickness(16, 14, 12, 12),
         };
         titleGrid.Add(titleLabel, 0);
         titleGrid.Add(closeIcon, 1);
 
-        // Divider
-        var divider = new BoxView
-        {
-            HeightRequest = 1,
-            Color = isDark ? Color.FromArgb("#2E2E2E") : Color.FromArgb("#E0E0E0"),
-        };
+        // ── Divider ──────────────────────────────────────────────────────────
+        var divider = new BoxView { HeightRequest = 1, Color = border };
 
-        // Options
+        // ── Option rows ──────────────────────────────────────────────────────
         var optionsLayout = new VerticalStackLayout { Spacing = 0, Padding = new Thickness(8, 6, 8, 8) };
+
         foreach (var option in options)
         {
-            var isSelected = string.Equals(option, _currentValue, StringComparison.OrdinalIgnoreCase);
+            var isSelected = string.Equals(option, currentValue, StringComparison.OrdinalIgnoreCase);
+
+            var row = new Grid
+            {
+                ColumnDefinitions = [new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Star)],
+                ColumnSpacing = 10,
+                Padding = new Thickness(12, 11),
+            };
+
+            // Check glyph — visible only for selected item
+            var check = new Label
+            {
+                Text            = "\uE876",
+                FontFamily      = "MaterialIcons",
+                FontSize        = 16,
+                TextColor       = accent,
+                WidthRequest    = 20,
+                IsVisible       = isSelected,
+                VerticalOptions = LayoutOptions.Center,
+            };
 
             var label = new Label
             {
-                Text = option,
-                FontSize = 15,
-                Padding = new Thickness(14, 13),
-                TextColor = isSelected ? accentColor : (isDark ? Colors.White : Color.FromArgb("#111111")),
-                FontAttributes = isSelected ? FontAttributes.Bold : FontAttributes.None,
+                Text            = option,
+                FontSize        = 15,
+                TextColor       = isSelected ? accent : textPrim,
+                FontAttributes  = isSelected ? FontAttributes.Bold : FontAttributes.None,
+                VerticalOptions = LayoutOptions.Center,
             };
+
+            row.Add(check, 0);
+            row.Add(label, 1);
 
             var optionBorder = new Border
             {
-                StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 10 },
-                Stroke = Colors.Transparent,
-                BackgroundColor = isSelected
-                    ? (isDark ? Color.FromArgb("#2A2410") : Color.FromArgb("#FFF8E1"))
-                    : Colors.Transparent,
-                Padding = 0,
-                Margin = new Thickness(0, 1),
-                Content = label,
+                StrokeShape     = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 4 },
+                Stroke          = Colors.Transparent,
+                BackgroundColor = isSelected ? accent.WithAlpha(0.12f) : Colors.Transparent,
+                Padding         = 0,
+                Margin          = new Thickness(0, 1),
+                Content         = row,
             };
 
             var tap = new TapGestureRecognizer();
@@ -94,7 +113,7 @@ public class SelectionPopup : Border
             optionsLayout.Children.Add(optionBorder);
         }
 
-        var scrollView = new ScrollView { MaximumHeightRequest = 300, Content = optionsLayout };
+        var scrollView = new ScrollView { MaximumHeightRequest = 360, Content = optionsLayout };
 
         var stack = new VerticalStackLayout { Spacing = 0 };
         stack.Children.Add(titleGrid);

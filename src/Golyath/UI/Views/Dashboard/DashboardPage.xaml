@@ -128,12 +128,20 @@
                             Stroke="Transparent"
                             BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
                             Padding="12,10">
-                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                            <Label Text="{Binding WeeklyWorkoutCount}"
-                                   FontSize="22"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                        <VerticalStackLayout Spacing="1" HorizontalOptions="Center">
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                                <Label Text="{Binding WeeklyWorkoutCount}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="End"
+                                       TextColor="{StaticResource Accent}" />
+                                <Label Text="SESSIONS"
+                                       FontSize="9"
+                                       CharacterSpacing="0.8"
+                                       VerticalOptions="End"
+                                       Margin="0,0,0,4"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                            </HorizontalStackLayout>
                             <Label Text="THIS WEEK"
                                    FontSize="9"
                                    CharacterSpacing="0.8"
@@ -147,13 +155,21 @@
                             Stroke="Transparent"
                             BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
                             Padding="12,10">
-                        <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                            <Label Text="{Binding WeeklyVolume}"
-                                   FontSize="22"
-                                   FontAttributes="Bold"
-                                   HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                            <Label Text="VOLUME"
+                        <VerticalStackLayout Spacing="1" HorizontalOptions="Center">
+                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                                <Label Text="{Binding WeeklyVolume}"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="End"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                <Label Text="KG"
+                                       FontSize="9"
+                                       CharacterSpacing="0.8"
+                                       VerticalOptions="End"
+                                       Margin="0,0,0,4"
+                                       TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                            </HorizontalStackLayout>
+                            <Label Text="THIS WEEK"
                                    FontSize="9"
                                    CharacterSpacing="0.8"
                                    HorizontalOptions="Center"

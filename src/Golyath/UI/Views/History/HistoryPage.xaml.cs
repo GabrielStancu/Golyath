@@ -17,29 +17,22 @@ public partial class HistoryPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // Page fade-in transition
         this.Opacity = 0;
         _ = this.FadeTo(1, 300, Easing.CubicOut);
-
         await _viewModel.LoadAsync();
     }
 
-    private async void OnPeriodFilterTapped(object? sender, TappedEventArgs e)
+    private async void OnFilterTapped(object? sender, TappedEventArgs e)
     {
-        var popup = new SelectionPopup("Period", HistoryViewModel.PeriodOptions, _viewModel.SelectedPeriod);
-        var result = await popup.ShowAsync(this);
-        if (result is string selected)
-            _viewModel.SelectedPeriod = selected;
-    }
+        var popup = new SelectionPopup(
+            "Filter by period",
+            HistoryViewModel.PeriodOptions,
+            _viewModel.SelectedPeriod);
 
-    private async void OnTagFilterTapped(object? sender, TappedEventArgs e)
-    {
-        var names = new List<string> { "All tags" };
-        names.AddRange(_viewModel.AvailableTags.Select(t => t.Name));
-        var popup = new SelectionPopup("Tag", names, _viewModel.SelectedTag?.Name ?? "All tags");
         var result = await popup.ShowAsync(this);
-        if (result is string selected)
-            _viewModel.SelectedTag = selected == "All tags" ? null : _viewModel.AvailableTags.FirstOrDefault(t => t.Name == selected);
+        if (result is not string selected) return;
+
+        _viewModel.SelectedPeriod = selected;
+        _viewModel.ApplyFilterCommand.Execute(null);
     }
 }
