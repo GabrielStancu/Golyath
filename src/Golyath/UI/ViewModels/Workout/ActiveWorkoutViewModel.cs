@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -20,35 +21,48 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     private IDispatcherTimer? _workoutTimer;
     private IDispatcherTimer? _restTimer;
     private int _elapsedSeconds;
+    private int _defaultRestSeconds;
 
     public ObservableCollection<WorkoutExerciseViewModel> Exercises { get; } = [];
     public ObservableCollection<TagChipViewModel> WorkoutTags { get; } = [];
 
-    [ObservableProperty]
-    private string _workoutTitle = "New Workout";
+    [ObservableProperty] private string _workoutTitle = "New Workout";
+    [ObservableProperty] private string _elapsedTime = "00:00";
+    [ObservableProperty] private bool _isRestTimerVisible;
+    [ObservableProperty] private string _restTimeDisplay = "01:30";
+    [ObservableProperty] private int _restSecondsRemaining;
+    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private string _workoutNotes = string.Empty;
 
-    [ObservableProperty]
-    private string _elapsedTime = "00:00";
+    // Active focus
+    [ObservableProperty] private WorkoutExerciseViewModel? _focusedExercise;
+    [ObservableProperty] private WorkoutSetViewModel? _focusedSet;
 
-    [ObservableProperty]
-    private bool _isRestTimerVisible;
+    // Effort curve — volume per completed set, oldest first
+    [ObservableProperty] private double[] _effortPoints = [];
 
-    [ObservableProperty]
-    private string _restTimeDisplay = "01:30";
+    // ── Progress ──────────────────────────────────────────────────────────────
+    public int CompletedSetCount => Exercises.Sum(e => e.Sets.Count(s => s.IsCompleted));
+    public int TotalSetCount => Exercises.Sum(e => e.Sets.Count);
+    public double ProgressFraction =>
+        TotalSetCount > 0 ? (double)CompletedSetCount / TotalSetCount : 0;
+    public string ProgressText => TotalSetCount == 0
+        ? "No sets yet"
+        : $"{CompletedSetCount} of {TotalSetCount} done";
 
-    [ObservableProperty]
-    private int _restSecondsRemaining;
-
-    [ObservableProperty]
-    private bool _isBusy;
-
-    [ObservableProperty]
-    private string _workoutNotes = string.Empty;
+    // ── Rest timer progress (1 → 0 as countdown ticks) ───────────────────────
+    public double RestProgressFraction => _defaultRestSeconds > 0
+        ? (double)Math.Max(0, RestSecondsRemaining) / _defaultRestSeconds
+        : 0;
 
     public event EventHandler? WorkoutCompleted;
     public event EventHandler? AddExerciseRequested;
 
-    public ActiveWorkoutViewModel(IWorkoutService workoutService, IExerciseRepository exerciseRepository, ITagService tagService, ISettingsService settingsService)
+    public ActiveWorkoutViewModel(
+        IWorkoutService workoutService,
+        IExerciseRepository exerciseRepository,
+        ITagService tagService,
+        ISettingsService settingsService)
     {
         _workoutService = workoutService;
         _exerciseRepository = exerciseRepository;
@@ -59,8 +73,8 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     partial void OnWorkoutNotesChanged(string value)
     {
         if (_workout is null) return;
-        var notes = string.IsNullOrWhiteSpace(value) ? null : value;
-        _ = _workoutService.UpdateWorkoutNotesAsync(_workout.Id, notes);
+        _ = _workoutService.UpdateWorkoutNotesAsync(_workout.Id,
+            string.IsNullOrWhiteSpace(value) ? null : value);
     }
 
     public void RegisterMessenger()
@@ -75,9 +89,12 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
     public async void Receive(ExercisePickedMessage message) =>
         await AddExerciseAsync(message.Value);
 
+    // ── Initialise ────────────────────────────────────────────────────────────
+
     public async Task InitializeAsync()
     {
         IsBusy = true;
+        _defaultRestSeconds = _settingsService.GetDefaultRestSeconds();
         try
         {
             var active = await _workoutService.GetActiveWorkoutAsync();
@@ -120,8 +137,31 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
             var exerciseVm = CreateExerciseViewModel(we, exercise);
             var sets = await _workoutService.GetSetsForExerciseAsync(we.Id);
             exerciseVm.LoadSets(sets);
+
+            var prevSets = await _workoutService.GetPreviousSessionSetsAsync(exercise.Id);
+            exerciseVm.SetPreviousSets(prevSets);
+
             Exercises.Add(exerciseVm);
         }
+        NotifyProgressChanged();
+        AutoFocusFirst();
+    }
+
+    private void AutoFocusFirst()
+    {
+        foreach (var ex in Exercises)
+        {
+            var first = ex.Sets.FirstOrDefault(s => !s.IsCompleted);
+            if (first is not null) { SetFocus(ex, first); return; }
+        }
+    }
+
+    private void SetFocus(WorkoutExerciseViewModel exercise, WorkoutSetViewModel set)
+    {
+        FocusedExercise?.ClearFocus();
+        FocusedExercise = exercise;
+        FocusedSet = set;
+        exercise.FocusSet(set);
     }
 
     private WorkoutExerciseViewModel CreateExerciseViewModel(WorkoutExercise we, Exercise exercise)
@@ -129,8 +169,96 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         var vm = new WorkoutExerciseViewModel(we, exercise, _workoutService);
         vm.SetCompleted += OnSetCompleted;
         vm.RemoveRequested += OnRemoveExercise;
+        vm.SetFocusRequested += OnSetFocusRequested;
         return vm;
     }
+
+    private void OnSetFocusRequested(
+        object? sender,
+        (WorkoutExerciseViewModel Exercise, WorkoutSetViewModel Set) args)
+    {
+        var exercise = args.Exercise;
+        var targetSet = args.Set;
+
+        // Block focus on a set if any preceding set in the same exercise is still incomplete
+        var sets = exercise.Sets;
+        var idx = sets.IndexOf(targetSet);
+        if (idx > 0 && !sets.Take(idx).All(s => s.IsCompleted))
+            return;
+
+        SetFocus(exercise, targetSet);
+    }
+
+    // ── Primary CTA ───────────────────────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task LogAndContinue()
+    {
+        // If nothing is focused yet, try to find the first incomplete set
+        if (FocusedSet is null || FocusedSet.IsCompleted)
+            AutoFocusFirst();
+
+        if (FocusedSet is null || FocusedSet.IsCompleted) return;
+
+        // Capture volume for effort curve before completing
+        if (double.TryParse(FocusedSet.WeightText, NumberStyles.Any,
+                CultureInfo.InvariantCulture, out var w)
+            && int.TryParse(FocusedSet.RepsText, out var r))
+        {
+            EffortPoints = [.. EffortPoints, w * r];
+        }
+
+        await FocusedSet.CompleteAsync();
+        NotifyProgressChanged();
+
+        // Advance focus to next incomplete set in the same exercise
+        if (FocusedExercise is not null)
+        {
+            var next = FocusedExercise.Sets.FirstOrDefault(s => !s.IsCompleted);
+            if (next is not null)
+                SetFocus(FocusedExercise, next);
+        }
+    }
+
+    // ── End workout ───────────────────────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task EndWorkout()
+    {
+        if (_workout is null) return;
+
+        var popup = new EndWorkoutSheet(WorkoutNotes, WorkoutTags, AddTagAsync);
+        var result = await popup.ShowAsync();
+        if (result is not EndWorkoutResult endResult) return;
+
+        if (endResult.Action == "finish")
+        {
+            WorkoutNotes = endResult.Notes;
+            StopTimers();
+            await _workoutService.CompleteWorkoutAsync(_workout.Id);
+            WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(_workout.Id));
+            _workout = null;
+            WorkoutCompleted?.Invoke(this, EventArgs.Empty);
+        }
+        else if (endResult.Action == "discard")
+        {
+            StopTimers();
+            await _workoutService.AbandonWorkoutAsync(_workout.Id);
+            WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(_workout.Id));
+            _workout = null;
+            WorkoutCompleted?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private void NotifyProgressChanged()
+    {
+        OnPropertyChanged(nameof(CompletedSetCount));
+        OnPropertyChanged(nameof(TotalSetCount));
+        OnPropertyChanged(nameof(ProgressFraction));
+        OnPropertyChanged(nameof(ProgressText));
+    }
+
+    // ── Add exercise ──────────────────────────────────────────────────────────
 
     public async Task AddExerciseAsync(Exercise exercise)
     {
@@ -146,13 +274,18 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         var firstSet = await _workoutService.AddSetAsync(we.Id, weight, reps);
         exerciseVm.LoadSets([firstSet]);
 
+        var prevSets = await _workoutService.GetPreviousSessionSetsAsync(exercise.Id);
+        exerciseVm.SetPreviousSets(prevSets);
+
         Exercises.Add(exerciseVm);
+        NotifyProgressChanged();
+        SetFocus(exerciseVm, exerciseVm.Sets[0]);
     }
 
     [RelayCommand]
     private void RequestAddExercise() => AddExerciseRequested?.Invoke(this, EventArgs.Empty);
 
-    // ─── Tags ─────────────────────────────────────────────────────────────────
+    // ── Tags ──────────────────────────────────────────────────────────────────
 
     private async Task LoadTagsAsync()
     {
@@ -163,8 +296,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
             WorkoutTags.Add(new TagChipViewModel(tag, RemoveTagAsync));
     }
 
-    [RelayCommand]
-    private async Task AddTag()
+    public async Task AddTagAsync()
     {
         if (_workout is null) return;
 
@@ -188,7 +320,6 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
             tagName = selected;
         }
 
-        // Skip if already attached
         if (WorkoutTags.Any(c => c.Name.Equals(tagName, StringComparison.OrdinalIgnoreCase)))
             return;
 
@@ -204,37 +335,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         WorkoutTags.Remove(chip);
     }
 
-    [RelayCommand]
-    private async Task CompleteWorkout()
-    {
-        if (_workout is null) return;
-
-        var popup = new ConfirmPopup("Finish Workout", "Save and finish this workout?", "Finish", "Cancel");
-        var result = await popup.ShowAsync();
-        if (result is not true) return;
-
-        StopTimers();
-        await _workoutService.CompleteWorkoutAsync(_workout.Id);
-        WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(_workout.Id));
-        _workout = null;
-        WorkoutCompleted?.Invoke(this, EventArgs.Empty);
-    }
-
-    [RelayCommand]
-    private async Task AbandonWorkout()
-    {
-        if (_workout is null) return;
-
-        var popup = new ConfirmPopup("Discard Workout", "Discard this workout? All logged data will be lost.", "Discard", "Cancel", isDestructive: true);
-        var result = await popup.ShowAsync();
-        if (result is not true) return;
-
-        StopTimers();
-        await _workoutService.AbandonWorkoutAsync(_workout.Id);
-        WeakReferenceMessenger.Default.Send(new WorkoutChangedMessage(_workout.Id));
-        _workout = null;
-        WorkoutCompleted?.Invoke(this, EventArgs.Empty);
-    }
+    // ── Rest timer ────────────────────────────────────────────────────────────
 
     [RelayCommand]
     private void SkipRest()
@@ -243,25 +344,31 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         IsRestTimerVisible = false;
     }
 
-    private void OnSetCompleted(object? sender, WorkoutSetViewModel _) =>
-        StartRestTimer(_settingsService.GetDefaultRestSeconds());
+    private void OnSetCompleted(object? sender, WorkoutSetViewModel _)
+    {
+        NotifyProgressChanged();
+        StartRestTimer(_defaultRestSeconds);
+    }
+
+    // ── Remove exercise ───────────────────────────────────────────────────────
 
     private async void OnRemoveExercise(object? sender, WorkoutExerciseViewModel vm)
     {
         var popup = new ConfirmPopup(
             "Remove Exercise",
-            $"Remove {vm.ExerciseName} and all its sets from this workout?",
-            "Remove",
-            "Cancel",
-            isDestructive: true);
+            $"Remove {vm.ExerciseName} and all its sets?",
+            "Remove", "Cancel", isDestructive: true);
         var result = await popup.ShowAsync();
         if (result is not true) return;
 
         await _workoutService.RemoveExerciseAsync(vm.WorkoutExerciseId);
+        if (FocusedExercise == vm) { FocusedExercise = null; FocusedSet = null; }
         Exercises.Remove(vm);
+        NotifyProgressChanged();
+        AutoFocusFirst();
     }
 
-    // ─── Workout elapsed timer ────────────────────────────────────────────────
+    // ── Workout elapsed timer ─────────────────────────────────────────────────
 
     private void StartWorkoutTimer()
     {
@@ -278,14 +385,16 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         _workoutTimer.Start();
     }
 
-    // ─── Rest timer ───────────────────────────────────────────────────────────
+    // ── Rest countdown ────────────────────────────────────────────────────────
 
     private void StartRestTimer(int seconds)
     {
         StopRestTimer();
-        RestSecondsRemaining = seconds;
+        _defaultRestSeconds = seconds > 0 ? seconds : 90;
+        RestSecondsRemaining = _defaultRestSeconds;
         UpdateRestDisplay();
         IsRestTimerVisible = true;
+        OnPropertyChanged(nameof(RestProgressFraction));
 
         _restTimer = Microsoft.Maui.Controls.Application.Current!.Dispatcher.CreateTimer();
         _restTimer.Interval = TimeSpan.FromSeconds(1);
@@ -293,6 +402,7 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         {
             RestSecondsRemaining--;
             UpdateRestDisplay();
+            OnPropertyChanged(nameof(RestProgressFraction));
             if (RestSecondsRemaining <= 0)
             {
                 StopRestTimer();
@@ -320,3 +430,4 @@ public partial class ActiveWorkoutViewModel : ObservableObject, IRecipient<Exerc
         RestTimeDisplay = ts.ToString(@"mm\:ss");
     }
 }
+

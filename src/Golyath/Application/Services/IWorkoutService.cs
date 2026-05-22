@@ -23,4 +23,5 @@ public interface IWorkoutService
     Task<IReadOnlyList<WorkoutExercise>> GetWorkoutExercisesAsync(int workoutId);
     Task<IReadOnlyList<WorkoutSet>> GetSetsForExerciseAsync(int workoutExerciseId);
     Task<WorkoutSet?> GetLastSetForAutofillAsync(int exerciseId);
+    Task<IReadOnlyList<WorkoutSet>> GetPreviousSessionSetsAsync(int exerciseId);
 }

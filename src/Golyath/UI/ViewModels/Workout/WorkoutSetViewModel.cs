@@ -14,14 +14,14 @@ public partial class WorkoutSetViewModel : ObservableObject
 
     public static readonly IReadOnlyList<string> TempoOptions =
     [
-        "2-0-2-0",   // Standard
-        "3-1-2-0",   // Controlled
-        "3-0-1-0",   // Explosive concentric
-        "4-0-1-0",   // Slow eccentric
-        "4-1-1-0",   // Time under tension
-        "5-0-1-0",   // Heavy negative
-        "2-1-2-1",   // Pause reps
-        "1-0-1-0",   // Fast / Power
+        "2-0-2-0",
+        "3-1-2-0",
+        "3-0-1-0",
+        "4-0-1-0",
+        "4-1-1-0",
+        "5-0-1-0",
+        "2-1-2-1",
+        "1-0-1-0",
         "None",
     ];
 
@@ -29,7 +29,6 @@ public partial class WorkoutSetViewModel : ObservableObject
     {
         _set = set;
         _workoutService = workoutService;
-
         _weightText = set.Weight.ToString("F1", CultureInfo.InvariantCulture);
         _repsText = set.Reps.ToString();
         _tempoText = set.Tempo ?? string.Empty;
@@ -41,27 +40,28 @@ public partial class WorkoutSetViewModel : ObservableObject
     public int WorkoutExerciseId => _set.WorkoutExerciseId;
     public int SetNumber => _set.SetNumber;
 
-    [ObservableProperty]
-    private string _weightText;
-
-    [ObservableProperty]
-    private string _repsText;
+    [ObservableProperty] private string _weightText;
+    [ObservableProperty] private string _repsText;
+    [ObservableProperty] private string _tempoText;
+    [ObservableProperty] private string _notesText;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanComplete))]
     private bool _isCompleted;
 
-    [ObservableProperty]
-    private string _tempoText;
+    // Focus state — controlled by WorkoutExerciseViewModel
+    [ObservableProperty] private bool _isActive;
 
-    [ObservableProperty]
-    private string _notesText;
+    // Previous session data — set by parent after loading history
+    [ObservableProperty] private string _prevDisplay = "—";
 
     public bool CanComplete => !IsCompleted;
 
     public event EventHandler<WorkoutSetViewModel>? SetCompleted;
     public event EventHandler<WorkoutSetViewModel>? DuplicateRequested;
     public event EventHandler<WorkoutSetViewModel>? RemoveRequested;
+    public event EventHandler<WorkoutSetViewModel>? FocusRequested;
+    public event EventHandler<double>?              WeightChanged;
 
     partial void OnTempoTextChanged(string value)
     {
@@ -83,6 +83,7 @@ public partial class WorkoutSetViewModel : ObservableObject
         {
             _set.Weight = w;
             _ = _workoutService.UpdateSetAsync(_set);
+            WeightChanged?.Invoke(this, w);
         }
     }
 
@@ -95,34 +96,26 @@ public partial class WorkoutSetViewModel : ObservableObject
         }
     }
 
-    [RelayCommand(CanExecute = nameof(CanComplete))]
-    private async Task CompleteSet()
+    // Public so ActiveWorkoutViewModel can await it from LogAndContinueCommand
+    public async Task CompleteAsync()
     {
+        if (IsCompleted) return;
         _set = await _workoutService.CompleteSetAsync(_set.Id);
         IsCompleted = true;
         SetCompleted?.Invoke(this, this);
     }
+
+    [RelayCommand(CanExecute = nameof(CanComplete))]
+    private Task CompleteSet() => CompleteAsync();
+
+    [RelayCommand]
+    private void Focus() => FocusRequested?.Invoke(this, this);
 
     [RelayCommand]
     private void Duplicate() => DuplicateRequested?.Invoke(this, this);
 
     [RelayCommand]
     private void Remove() => RemoveRequested?.Invoke(this, this);
-
-    [RelayCommand]
-    private void IncrementWeight()
-    {
-        var current = double.TryParse(WeightText, NumberStyles.Any, CultureInfo.InvariantCulture, out var w) ? w : 0;
-        WeightText = Math.Round(current + 2.5, 2).ToString("F1", CultureInfo.InvariantCulture);
-    }
-
-    [RelayCommand]
-    private void DecrementWeight()
-    {
-        var current = double.TryParse(WeightText, NumberStyles.Any, CultureInfo.InvariantCulture, out var w) ? w : 0;
-        if (current >= 2.5)
-            WeightText = Math.Round(current - 2.5, 2).ToString("F1", CultureInfo.InvariantCulture);
-    }
 
     [RelayCommand]
     private async Task SelectTempo()

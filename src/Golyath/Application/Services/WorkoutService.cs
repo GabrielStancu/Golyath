@@ -236,4 +236,28 @@ public sealed class WorkoutService : IWorkoutService
 
     public Task<WorkoutSet?> GetLastSetForAutofillAsync(int exerciseId) =>
         _workoutSetRepository.GetLastCompletedSetForExerciseAsync(exerciseId);
+
+    public async Task<IReadOnlyList<WorkoutSet>> GetPreviousSessionSetsAsync(int exerciseId)
+    {
+        // Find all workout-exercise entries for this exercise
+        var allWEs = await _workoutExerciseRepository.GetByExerciseIdAsync(exerciseId);
+        if (allWEs.Count == 0) return [];
+
+        // Get completed workouts from the past year
+        var from = DateTime.UtcNow.AddYears(-1);
+        var completed = await _workoutRepository.GetCompletedInRangeAsync(from, DateTime.UtcNow);
+        if (completed.Count == 0) return [];
+
+        // Map workout id → completion date for fast lookup
+        var completedMap = completed.ToDictionary(w => w.Id, w => w.CompletedAt);
+
+        // Find the most recent completed workout that contains this exercise
+        var best = allWEs
+            .Where(we => completedMap.ContainsKey(we.WorkoutId))
+            .OrderByDescending(we => completedMap[we.WorkoutId])
+            .FirstOrDefault();
+
+        if (best is null) return [];
+        return await _workoutSetRepository.GetByWorkoutExerciseIdAsync(best.Id);
+    }
 }
