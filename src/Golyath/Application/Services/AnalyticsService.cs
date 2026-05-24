@@ -150,6 +150,127 @@ public sealed class AnalyticsService : IAnalyticsService
             .ToList();
     }
 
+    // ── Muscle balance (5 fixed groups, relative to max) ─────────────────────
+
+    private static readonly HashSet<MuscleGroup> LegMuscles =
+        [MuscleGroup.Quads, MuscleGroup.Hamstrings, MuscleGroup.Glutes, MuscleGroup.Calves];
+
+    public async Task<IReadOnlyList<MuscleBalanceItem>> GetMuscleBalanceAsync(DateTime from)
+    {
+        var setCounts = new Dictionary<string, int>
+        {
+            ["Chest"] = 0, ["Back"] = 0, ["Legs"] = 0, ["Shoulders"] = 0, ["Biceps"] = 0, ["Triceps"] = 0, ["Core"] = 0
+        };
+
+        var workouts = await _workouts.GetCompletedInRangeAsync(from, DateTime.UtcNow);
+        foreach (var workout in workouts)
+        {
+            var workoutExercises = await _workoutExercises.GetByWorkoutIdAsync(workout.Id);
+            foreach (var we in workoutExercises)
+            {
+                var exercise = await _exercises.GetByIdAsync(we.ExerciseId);
+                if (exercise is null) continue;
+
+                var sets = await _workoutSets.GetByWorkoutExerciseIdAsync(we.Id);
+                int completed = sets.Count(s => s.IsCompleted);
+                if (completed == 0) continue;
+
+                string? key = exercise.PrimaryMuscle switch
+                {
+                    MuscleGroup.Chest => "Chest",
+                    MuscleGroup.Back => "Back",
+                    MuscleGroup.Shoulders => "Shoulders",
+                    MuscleGroup.Biceps or MuscleGroup.Forearms => "Biceps",
+                    MuscleGroup.Triceps => "Triceps",
+                    MuscleGroup.Abs => "Core",
+                    var m when LegMuscles.Contains(m) => "Legs",
+                    _ => null
+                };
+                if (key is not null) setCounts[key] += completed;
+            }
+        }
+
+        int max = setCounts.Values.DefaultIfEmpty(0).Max();
+        if (max == 0)
+            return [
+                new("Chest", 0), new("Back", 0), new("Legs", 0),
+                new("Shoulders", 0), new("Biceps", 0), new("Triceps", 0), new("Core", 0)
+            ];
+
+        return [
+            new("Chest",     (double)setCounts["Chest"]     / max),
+            new("Back",      (double)setCounts["Back"]      / max),
+            new("Legs",      (double)setCounts["Legs"]      / max),
+            new("Shoulders", (double)setCounts["Shoulders"] / max),
+            new("Biceps",    (double)setCounts["Biceps"]    / max),
+            new("Triceps",   (double)setCounts["Triceps"]   / max),
+            new("Core",      (double)setCounts["Core"]      / max),
+        ];
+    }
+
+    // ── Recovery score ───────────────────────────────────────────────────────
+
+    public async Task<int> GetRecoveryScoreAsync()
+    {
+        var now = DateTime.UtcNow;
+        var recent = await _workouts.GetCompletedInRangeAsync(now.AddDays(-14), now);
+
+        if (recent.Count == 0) return 100;
+
+        var trainingDates = recent
+            .Where(w => w.CompletedAt.HasValue)
+            .Select(w => w.CompletedAt!.Value.ToLocalTime().Date)
+            .ToHashSet();
+
+        // Count consecutive training days going backwards from today
+        int consecutive = 0;
+        var day = DateTime.Now.Date;
+        while (trainingDates.Contains(day) && consecutive <= 14)
+        {
+            consecutive++;
+            day = day.AddDays(-1);
+        }
+
+        int score = Math.Max(15, 100 - consecutive * 15);
+
+        // Partial recovery bonus for rest days since last workout
+        var last = recent.OrderByDescending(w => w.CompletedAt).First();
+        int restDays = (int)(now - last.CompletedAt!.Value).TotalDays;
+        if (restDays >= 1) score = Math.Min(100, score + restDays * 10);
+
+        return Math.Clamp(score, 15, 100);
+    }
+
+    // ── Intensity score ──────────────────────────────────────────────────────
+
+    public async Task<int> GetIntensityScoreAsync(DateTime from)
+    {
+        var now = DateTime.UtcNow;
+        var workouts = await _workouts.GetCompletedInRangeAsync(from, now);
+        if (workouts.Count == 0) return 0;
+
+        int totalSets = 0;
+        foreach (var workout in workouts)
+        {
+            var wes = await _workoutExercises.GetByWorkoutIdAsync(workout.Id);
+            foreach (var we in wes)
+            {
+                var sets = await _workoutSets.GetByWorkoutExerciseIdAsync(we.Id);
+                totalSets += sets.Count(s => s.IsCompleted);
+            }
+        }
+
+        double avgSets = (double)totalSets / workouts.Count;
+        double periodDays = Math.Max(1, (now - from).TotalDays);
+        double sessionsPerWeek = workouts.Count / (periodDays / 7.0);
+
+        double volumeScore  = Math.Min(1.0, avgSets / 16.0);   // 16 sets/session = max
+        double freqScore    = Math.Min(1.0, sessionsPerWeek / 5.0); // 5/week = max
+        double combined     = volumeScore * 0.65 + freqScore * 0.35;
+
+        return (int)Math.Clamp(combined * 100, 0, 100);
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────────────
 
     private static DateTime GetMonday(DateTime date)

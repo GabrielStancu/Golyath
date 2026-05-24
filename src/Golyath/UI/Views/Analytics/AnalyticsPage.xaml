@@ -3,274 +3,294 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Analytics"
              xmlns:controls="clr-namespace:Golyath.UI.Controls"
+             xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
              x:Class="Golyath.UI.Views.Analytics.AnalyticsPage"
              x:DataType="vm:AnalyticsViewModel"
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
-    <Grid RowDefinitions="Auto,*">
+    <ScrollView>
+        <VerticalStackLayout Spacing="12" Padding="16,16,16,24">
 
-        <!-- ── Header panel with filters & metric tabs ───────────────────── -->
-        <Border Grid.Row="0"
-                BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
-                StrokeThickness="0"
-                StrokeShape="RoundRectangle 0,0,20,20"
-                Padding="16,16,16,12">
-            <VerticalStackLayout Spacing="10">
-                <VerticalStackLayout Spacing="2">
-                    <Label Text="Analytics"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                    <Label Text="Track your progress"
-                           FontSize="13"
-                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                </VerticalStackLayout>
+            <!-- ── Header ──────────────────────────────────────────────── -->
+            <VerticalStackLayout Spacing="2">
+                <Label Text="{Binding PeriodLabel}"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1.2"
+                       TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                <Label Text="Progress"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+            </VerticalStackLayout>
 
-                <!-- Period filter -->
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                    <Label Grid.Column="0"
-                           Text="Period:"
-                           FontSize="13"
-                           VerticalOptions="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                    <Border Grid.Column="1"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+            <!-- ── Period pills ───────────────────────────────────────── -->
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                        BackgroundColor="{Binding Period4WBg}"
+                        Padding="0,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="4W" />
+                    </Border.GestureRecognizers>
+                    <Label Text="4W" HorizontalOptions="Center"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{Binding Period4WText}" />
+                </Border>
+
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                        BackgroundColor="{Binding Period3MBg}"
+                        Padding="0,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="3M" />
+                    </Border.GestureRecognizers>
+                    <Label Text="3M" HorizontalOptions="Center"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{Binding Period3MText}" />
+                </Border>
+
+                <Border Grid.Column="2"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                        BackgroundColor="{Binding Period6MBg}"
+                        Padding="0,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="6M" />
+                    </Border.GestureRecognizers>
+                    <Label Text="6M" HorizontalOptions="Center"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{Binding Period6MText}" />
+                </Border>
+
+                <Border Grid.Column="3"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
+                        BackgroundColor="{Binding PeriodAllBg}"
+                        Padding="0,8">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPeriodCommand}" CommandParameter="ALL" />
+                    </Border.GestureRecognizers>
+                    <Label Text="ALL" HorizontalOptions="Center"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{Binding PeriodAllText}" />
+                </Border>
+            </Grid>
+
+            <!-- ── 1RM Trend ───────────────────────────────────────────── -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="1RM TREND" Style="{StaticResource SectionHeader}" />
+
+                    <!-- Exercise picker -->
+                    <Border StrokeShape="RoundRectangle 8"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
                             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
-                            Padding="14,12">
+                            Padding="12,10">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnPeriodFilterTapped" />
+                            <TapGestureRecognizer Tapped="OnExercisePickerTapped" />
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
-                                   Text="{Binding SelectedPeriod}"
-                                   FontSize="13"
+                                   Text="{Binding StrengthExerciseName}"
+                                   FontSize="14"
                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                    VerticalOptions="Center" />
                             <Label Grid.Column="1"
                                    Text="&#xE5CF;"
                                    FontFamily="MaterialIcons"
-                                   FontSize="18"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                   FontSize="20"
+                                   TextColor="#FFD700"
                                    VerticalOptions="Center" />
                         </Grid>
                     </Border>
-                </Grid>
 
-                <!-- Metric tab bar -->
-                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
-                    <Border Grid.Column="0"
-                            BackgroundColor="{Binding StrengthTabBg}"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="Transparent">
-                        <Button Text="Strength"
-                                Command="{Binding SelectMetricCommand}"
-                                CommandParameter="0"
-                                BackgroundColor="Transparent"
-                                TextColor="{Binding StrengthTabText}"
-                                FontSize="13"
-                                Padding="0,8" />
-                    </Border>
+                    <controls:AnimatedLineChart Points="{Binding StrengthPoints}"
+                                               IsVisible="{Binding HasStrengthData}"
+                                               HeightRequest="160"
+                                               HorizontalOptions="Fill" />
 
-                    <Border Grid.Column="1"
-                            BackgroundColor="{Binding VolumeTabBg}"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="Transparent">
-                        <Button Text="Volume"
-                                Command="{Binding SelectMetricCommand}"
-                                CommandParameter="1"
-                                BackgroundColor="Transparent"
-                                TextColor="{Binding VolumeTabText}"
-                                FontSize="13"
-                                Padding="0,8" />
-                    </Border>
+                    <Label Text="No data for the selected exercise / period."
+                           IsVisible="{Binding HasStrengthData, Converter={StaticResource InvertBoolConverter}}"
+                           HorizontalOptions="Center"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                </VerticalStackLayout>
+            </Border>
 
-                    <Border Grid.Column="2"
-                            BackgroundColor="{Binding MusclesTabBg}"
-                            StrokeShape="RoundRectangle 8"
-                            Stroke="Transparent">
-                        <Button Text="Muscles"
-                                Command="{Binding SelectMetricCommand}"
-                                CommandParameter="2"
-                                BackgroundColor="Transparent"
-                                TextColor="{Binding MusclesTabText}"
-                                FontSize="13"
-                                Padding="0,8" />
-                    </Border>
-                </Grid>
-            </VerticalStackLayout>
-        </Border>
+            <!-- ── Muscle Balance ──────────────────────────────────────── -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="MUSCLE BALANCE" Style="{StaticResource SectionHeader}" />
 
-        <!-- ── Chart content ─────────────────────────────────────────────── -->
-        <Grid Grid.Row="1">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
 
-            <!-- Loading -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="{StaticResource Accent}"
-                               VerticalOptions="Center"
+                        <!-- Human figure -->
+                        <controls:BodyMapView Grid.Column="0"
+                                             MuscleWeights="{Binding MuscleWeights}"
+                                             IsFrontView="True"
+                                             HeightRequest="180"
+                                             WidthRequest="90"
+                                             VerticalOptions="Center"
+                                             HorizontalOptions="Center" />
+
+                        <!-- 5 muscle bars -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                            <BindableLayout.ItemsSource>
+                                <Binding Path="MuscleBalance" />
+                            </BindableLayout.ItemsSource>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="dto:MuscleBalanceItem">
+                                    <VerticalStackLayout Spacing="3">
+                                        <Label Text="{Binding Label}"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               CharacterSpacing="0.5"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                        <ProgressBar Progress="{Binding Fraction}"
+                                                     ProgressColor="#FFD700"
+                                                     BackgroundColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark=#2A2A2A}"
+                                                     HeightRequest="6" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Gauges row ──────────────────────────────────────────── -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+
+                <!-- Recovery -->
+                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="12">
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="RECOVERY" Style="{StaticResource SectionHeader}"
                                HorizontalOptions="Center" />
+                        <Grid>
+                            <controls:RadialGauge Value="{Binding RecoveryGaugeValue}"
+                                                  GaugeColor="{Binding RecoveryGaugeColor}"
+                                                  IsSemiCircle="True"
+                                                  StrokeWidth="12"
+                                                  HeightRequest="90"
+                                                  WidthRequest="140"
+                                                  HorizontalOptions="Center" />
+                            <Label HorizontalOptions="Center"
+                                   VerticalOptions="End"
+                                   Margin="0,0,0,8"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding RecoveryScore}" />
+                                        <Span Text="%" FontSize="12" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
 
-            <!-- ── Strength progression ───────────────────────────────────── -->
-            <ScrollView IsVisible="{Binding IsStrengthVisible}">
-                <VerticalStackLayout Padding="16" Spacing="12">
+                <!-- Intensity -->
+                <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="12">
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="INTENSITY" Style="{StaticResource SectionHeader}"
+                               HorizontalOptions="Center" />
+                        <Grid>
+                            <controls:RadialGauge Value="{Binding IntensityGaugeValue}"
+                                                  GaugeColor="{Binding IntensityGaugeColor}"
+                                                  IsSemiCircle="True"
+                                                  StrokeWidth="12"
+                                                  HeightRequest="90"
+                                                  WidthRequest="140"
+                                                  HorizontalOptions="Center" />
+                            <Label HorizontalOptions="Center"
+                                   VerticalOptions="End"
+                                   Margin="0,0,0,8"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding IntensityScore}" />
+                                        <Span Text="%" FontSize="12" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
 
-                    <!-- Exercise picker -->
-                    <Border Style="{StaticResource CardBorder}">
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="EXERCISE"
-                                   Style="{StaticResource SectionHeader}" />
-                            <Border StrokeShape="RoundRectangle 10"
-                                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                                    BackgroundColor="Transparent"
-                                    Padding="12,10">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnExercisePickerTapped" />
-                                </Border.GestureRecognizers>
-                                <Grid ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Text="{Binding SelectedExercise.Name, TargetNullValue='Select exercise'}"
-                                           FontSize="14"
-                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                           VerticalOptions="Center" />
-                                    <Label Grid.Column="1"
-                                           Text="&#xE5CF;"
-                                           FontFamily="MaterialIcons"
-                                           FontSize="18"
-                                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                           VerticalOptions="Center" />
+            </Grid>
+
+            <!-- ── All Insights ────────────────────────────────────────── -->
+            <Label Text="INSIGHTS"
+                   Style="{StaticResource SectionHeader}"
+                   IsVisible="{Binding HasInsights}" />
+
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding HasInsights}">
+                <BindableLayout.ItemsSource>
+                    <Binding Path="AllInsights" />
+                </BindableLayout.ItemsSource>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="dto:TrainingSuggestion">
+                        <Border Style="{StaticResource CardBorder}" Padding="0">
+                            <Grid ColumnDefinitions="4,*">
+                                <!-- Severity color bar -->
+                                <BoxView Grid.Column="0"
+                                         Color="{Binding PriorityColor}"
+                                         CornerRadius="4,0,4,0" />
+                                <Grid Grid.Column="1"
+                                      ColumnDefinitions="*,Auto"
+                                      Padding="12,10">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="{Binding Title}"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                        <Label Text="{Binding Detail}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="1"
+                                            StrokeShape="RoundRectangle 10"
+                                            StrokeThickness="1"
+                                            Stroke="{Binding PriorityColor}"
+                                            BackgroundColor="Transparent"
+                                            Padding="6,2"
+                                            VerticalOptions="Start">
+                                        <Label Text="{Binding PriorityLabel}"
+                                               FontSize="9"
+                                               FontAttributes="Bold"
+                                               CharacterSpacing="0.5"
+                                               TextColor="{Binding PriorityColor}" />
+                                    </Border>
                                 </Grid>
-                            </Border>
-                        </VerticalStackLayout>
-                    </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
 
-                    <!-- Chart card -->
-                    <Border Style="{StaticResource CardBorder}">
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="STRENGTH PROGRESSION"
-                                   Style="{StaticResource SectionHeader}" />
-                            <Label Text="{Binding StrengthExerciseName}"
-                                   FontSize="15"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                            <controls:AnimatedLineChart Points="{Binding StrengthPoints}"
-                                                        HeightRequest="220" />
-                        </VerticalStackLayout>
-                    </Border>
+            <!-- Empty state -->
+            <Label Text="No insights yet — keep training!"
+                   IsVisible="{Binding HasInsights, Converter={StaticResource InvertBoolConverter}}"
+                   HorizontalOptions="Center"
+                   FontSize="14"
+                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                   Margin="0,16" />
 
-                    <Label IsVisible="{Binding HasStrengthData, Converter={StaticResource InvertBoolConverter}}"
-                           Text="Log more sessions to see your strength curve here."
-                           Style="{StaticResource CardSubtitle}"
-                           HorizontalTextAlignment="Center"
-                           Margin="0,8" />
+        </VerticalStackLayout>
+    </ScrollView>
 
-                    <!-- Smart suggestions link -->
-                    <Border Style="{StaticResource CardBorder}" Padding="12">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSuggestionsTapped" />
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                            <Label Text="View Smart Suggestions →"
-                                   FontSize="14"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource Accent}"
-                                   VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Border>
-
-                </VerticalStackLayout>
-            </ScrollView>
-
-            <!-- ── Volume trend ───────────────────────────────────────────── -->
-            <ScrollView IsVisible="{Binding IsVolumeVisible}">
-                <VerticalStackLayout Padding="16" Spacing="12">
-
-                    <Border Style="{StaticResource CardBorder}">
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="WEEKLY TRAINING VOLUME"
-                                   Style="{StaticResource SectionHeader}" />
-                            <Label Text="Total weight moved per week (kg × reps)"
-                                   Style="{StaticResource CardSubtitle}" />
-                            <controls:VolumeBarChart Points="{Binding VolumePoints}"
-                                                     HeightRequest="220" />
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <Label IsVisible="{Binding HasVolumeData, Converter={StaticResource InvertBoolConverter}}"
-                           Text="Complete workouts to see your weekly volume trend here."
-                           Style="{StaticResource CardSubtitle}"
-                           HorizontalTextAlignment="Center"
-                           Margin="0,8" />
-
-                    <!-- Smart suggestions link -->
-                    <Border Style="{StaticResource CardBorder}" Padding="12">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSuggestionsTapped" />
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                            <Label Text="View Smart Suggestions →"
-                                   FontSize="14"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource Accent}"
-                                   VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Border>
-
-                </VerticalStackLayout>
-            </ScrollView>
-
-            <!-- ── Muscle distribution ────────────────────────────────────── -->
-            <ScrollView IsVisible="{Binding IsMusclesVisible}">
-                <VerticalStackLayout Padding="16" Spacing="12">
-
-                    <!-- Donut chart overview -->
-                    <Border Style="{StaticResource CardBorder}">
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="MUSCLE GROUP DISTRIBUTION"
-                                   Style="{StaticResource SectionHeader}" />
-                            <Label Text="Completed sets by primary muscle"
-                                   Style="{StaticResource CardSubtitle}" />
-                            <controls:DonutChart Segments="{Binding MuscleDistribution, Converter={StaticResource MuscleGroupToDonutConverter}}"
-                                                  HeightRequest="200"
-                                                  Margin="0,8" />
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Detailed bar breakdown -->
-                    <Border Style="{StaticResource CardBorder}">
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="DETAILED BREAKDOWN"
-                                   Style="{StaticResource SectionHeader}" />
-                            <controls:HorizontalBarChart Items="{Binding MuscleDistribution}"
-                                                         HeightRequest="{Binding MuscleChartHeight}" />
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <Label IsVisible="{Binding HasMuscleData, Converter={StaticResource InvertBoolConverter}}"
-                           Text="Log workouts to see which muscle groups you train most."
-                           Style="{StaticResource CardSubtitle}"
-                           HorizontalTextAlignment="Center"
-                           Margin="0,8" />
-
-                    <!-- Smart suggestions link -->
-                    <Border Style="{StaticResource CardBorder}" Padding="12">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSuggestionsTapped" />
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                            <Label Text="View Smart Suggestions →"
-                                   FontSize="14"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource Accent}"
-                                   VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Border>
-
-                </VerticalStackLayout>
-            </ScrollView>
-
-        </Grid>
-
-    </Grid>
 </ContentPage>

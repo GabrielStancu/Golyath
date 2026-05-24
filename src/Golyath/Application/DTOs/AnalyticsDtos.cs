@@ -14,3 +14,6 @@ public record MuscleGroupVolume(string MuscleGroup, int SetCount, double Fractio
 
 /// <summary>Lightweight exercise reference used in the analytics exercise picker.</summary>
 public record ExerciseOption(int Id, string Name);
+
+/// <summary>One of the 5 fixed muscle balance groups with its relative fraction (0–1, where 1 = most trained).</summary>
+public record MuscleBalanceItem(string Label, double Fraction);

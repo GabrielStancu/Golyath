@@ -8,7 +8,6 @@
     xmlns:workout="clr-namespace:Golyath.UI.Views.Workout"
     xmlns:history="clr-namespace:Golyath.UI.Views.History"
     xmlns:analytics="clr-namespace:Golyath.UI.Views.Analytics"
-    xmlns:suggestions="clr-namespace:Golyath.UI.Views.Suggestions"
     Title="Golyath"
     FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False"
@@ -53,16 +52,6 @@
             Route="AnalyticsPage">
             <ShellContent.Icon>
                 <FontImageSource Glyph="&#xE26B;" FontFamily="MaterialIcons" Size="24"
-                                 Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
-            </ShellContent.Icon>
-        </ShellContent>
-
-        <ShellContent
-            Title="TIPS"
-            ContentTemplate="{DataTemplate suggestions:SuggestionsPage}"
-            Route="SuggestionsTab">
-            <ShellContent.Icon>
-                <FontImageSource Glyph="&#xE90F;" FontFamily="MaterialIcons" Size="24"
                                  Color="{AppThemeBinding Light=#888888, Dark=#888888}" />
             </ShellContent.Icon>
         </ShellContent>

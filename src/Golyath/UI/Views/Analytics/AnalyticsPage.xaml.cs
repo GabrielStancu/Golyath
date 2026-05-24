@@ -18,24 +18,10 @@ public partial class AnalyticsPage : ContentPage
     {
         base.OnAppearing();
 
-        // Page fade-in transition
         this.Opacity = 0;
         _ = this.FadeTo(1, 300, Easing.CubicOut);
 
         await _vm.LoadAsync();
-    }
-
-    private async void OnSuggestionsTapped(object? sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("SuggestionsPage");
-    }
-
-    private async void OnPeriodFilterTapped(object? sender, TappedEventArgs e)
-    {
-        var popup = new SelectionPopup("Period", AnalyticsViewModel.PeriodOptions, _vm.SelectedPeriod);
-        var result = await popup.ShowAsync(this);
-        if (result is string selected)
-            _vm.SelectedPeriod = selected;
     }
 
     private async void OnExercisePickerTapped(object? sender, TappedEventArgs e)
@@ -50,3 +36,4 @@ public partial class AnalyticsPage : ContentPage
             _vm.SelectedExercise = _vm.ExerciseOptions.FirstOrDefault(ex => ex.Name == selected);
     }
 }
+

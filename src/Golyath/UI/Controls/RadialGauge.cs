@@ -69,6 +69,17 @@ public class RadialGauge : GraphicsView
         set => SetValue(AnimationDurationProperty, value);
     }
 
+    // ── Semi-circle / speedometer mode ───────────────────────────────────────
+    public static readonly BindableProperty IsSemiCircleProperty = BindableProperty.Create(
+        nameof(IsSemiCircle), typeof(bool), typeof(RadialGauge), false,
+        propertyChanged: Refresh<bool>((g, v) => g._drawable.IsSemiCircle = v));
+
+    public bool IsSemiCircle
+    {
+        get => (bool)GetValue(IsSemiCircleProperty);
+        set => SetValue(IsSemiCircleProperty, value);
+    }
+
     public RadialGauge()
     {
         Drawable = _drawable;
@@ -140,6 +151,7 @@ public class RadialGauge : GraphicsView
         public Color GaugeColor { get; set; } = Color.FromArgb("#FFD700");
         public float StrokeWidth { get; set; } = 18f;
         public bool IsDark { get; set; }
+        public bool IsSemiCircle { get; set; }
 
         public void Draw(ICanvas canvas, RectF rect)
         {
@@ -147,18 +159,32 @@ public class RadialGauge : GraphicsView
 
             float sw = StrokeWidth;
             float cx = rect.Width / 2f;
+            float clamped = (float)Math.Clamp(DisplayValue, 0.0, 1.0);
+
+            var trackColor = IsDark
+                ? Color.FromRgba(136, 136, 136, 51)
+                : Color.FromRgba(200, 200, 200, 77);
+
+            if (IsSemiCircle)
+            {
+                DrawSemiCircle(canvas, rect, cx, sw, clamped, trackColor);
+            }
+            else
+            {
+                DrawFullCircle(canvas, rect, cx, sw, clamped, trackColor);
+            }
+        }
+
+        // ── Full 360° gauge ──────────────────────────────────────────────────
+        private void DrawFullCircle(ICanvas canvas, RectF rect, float cx, float sw, float clamped, Color trackColor)
+        {
             float cy = rect.Height / 2f;
-            float radius = Math.Min(cx, cy) - sw - 6f; // 6px extra margin for glow & ticks
+            float radius = Math.Min(cx, cy) - sw - 6f;
             if (radius < 10f) return;
 
             float left = cx - radius;
             float top = cy - radius;
             float diameter = radius * 2f;
-
-            // ── Track colors based on theme ──────────────────────────────────
-            var trackColor = IsDark
-                ? Color.FromRgba(136, 136, 136, 51)   // rgba(136,136,136,0.2)
-                : Color.FromRgba(200, 200, 200, 77);  // rgba(200,200,200,0.3)
 
             // ── Background track (full 360°) ─────────────────────────────────
             canvas.StrokeColor = trackColor;
@@ -183,7 +209,6 @@ public class RadialGauge : GraphicsView
             }
 
             // ── Value arc ────────────────────────────────────────────────────
-            float clamped = (float)Math.Clamp(DisplayValue, 0.0, 1.0);
             if (clamped > 0.005f)
             {
                 // Arc from 12 o'clock clockwise.
@@ -211,6 +236,60 @@ public class RadialGauge : GraphicsView
                 float glowR2 = sw * 0.55f;
                 canvas.FillColor = GaugeColor.WithAlpha(0.3f);
                 canvas.FillCircle(glowX, glowY, glowR2);
+            }
+        }
+
+        // ── Semi-circle gauge (9 o'clock → 3 o'clock) ───────────────────
+        //
+        // MAUI DrawArc angles: 0°=3 o'clock, CCW. clockwise=false → visual CW.
+        //   180° = 9 o'clock  (start)
+        //     0° = 3 o'clock  (end at 100%)
+        //   270° = 12 o'clock (midpoint)
+        // Glow: leadAngleRad = (-180 + sweepDeg) * π/180
+        private void DrawSemiCircle(ICanvas canvas, RectF rect, float cx, float sw, float clamped, Color trackColor)
+        {
+            // Circle centre sits at the bottom of the visible area
+            float cy = rect.Height - sw * 0.5f - 2f;
+            float radius = Math.Min(cx - sw - 4f, cy - sw - 4f);
+            if (radius < 10f) return;
+
+            float left = cx - radius;
+            float top = cy - radius;
+            float diameter = radius * 2f;
+
+            // 9 o'clock → 3 o'clock, 180° sweep through 12 o'clock (top = arch ∩)
+            // clockwise=true = visual CW sweep = DECREASING MAUI angle: 180→90→0 = 9→12→3
+            const float trackStart = 180f;
+            const float totalSweep = 180f;
+            float trackEnd = trackStart - totalSweep; // = 0° (3 o'clock)
+
+            // Background track
+            canvas.StrokeColor = trackColor;
+            canvas.StrokeSize = sw;
+            canvas.StrokeLineCap = LineCap.Round;
+            canvas.DrawArc(left, top, diameter, diameter, trackStart, trackEnd, true, false);
+
+            // Value arc
+            if (clamped > 0.005f)
+            {
+                float valueSweepDeg = clamped * totalSweep;
+                float valueEnd = trackStart - valueSweepDeg; // decreasing toward 0° (3 o'clock)
+
+                canvas.StrokeColor = GaugeColor;
+                canvas.StrokeSize = sw;
+                canvas.StrokeLineCap = LineCap.Round;
+                canvas.DrawArc(left, top, diameter, diameter, trackStart, valueEnd, true, false);
+
+                // Glow at leading edge
+                double leadAngleRad = (-180.0 + valueSweepDeg) * Math.PI / 180.0;
+                float glowX = cx + (float)(radius * Math.Cos(leadAngleRad));
+                float glowY = cy + (float)(radius * Math.Sin(leadAngleRad));
+
+                canvas.FillColor = GaugeColor.WithAlpha(0.15f);
+                canvas.FillCircle(glowX, glowY, sw * 0.9f);
+
+                canvas.FillColor = GaugeColor.WithAlpha(0.3f);
+                canvas.FillCircle(glowX, glowY, sw * 0.55f);
             }
         }
     }

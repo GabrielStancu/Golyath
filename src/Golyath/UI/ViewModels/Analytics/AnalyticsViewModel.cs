@@ -8,40 +8,41 @@ namespace Golyath.UI.ViewModels.Analytics;
 public partial class AnalyticsViewModel : ObservableObject
 {
     private readonly IAnalyticsService _analytics;
+    private readonly ISuggestionsService _suggestions;
 
-    private static readonly Color AccentColor   = Color.FromArgb("#FFD700");
-    private static readonly Color AccentText    = Color.FromArgb("#111111");
-    private static readonly Color DimColor      = Color.FromArgb("#888888");
-    private static readonly Color TransparentC  = Colors.Transparent;
+    private static readonly Color AccentColor  = Color.FromArgb("#FFD700");
+    private static readonly Color AccentText   = Color.FromArgb("#111111");
+    private static readonly Color DimColor     = Color.FromArgb("#888888");
+    private static readonly Color TransparentC = Colors.Transparent;
 
     // ── Loading ──────────────────────────────────────────────────────────────
 
     [ObservableProperty] private bool _isBusy;
 
-    // ── Active metric tab ────────────────────────────────────────────────────
+    // ── Period filter ─────────────────────────────────────────────────────────
 
-    [ObservableProperty] private int _selectedMetricIndex;   // 0=Strength 1=Volume 2=Muscles
+    public static readonly string[] Periods = ["4W", "3M", "6M", "ALL"];
 
-    public bool IsStrengthVisible => SelectedMetricIndex == 0;
-    public bool IsVolumeVisible   => SelectedMetricIndex == 1;
-    public bool IsMusclesVisible  => SelectedMetricIndex == 2;
+    [ObservableProperty] private string _selectedPeriod = "4W";
 
-    // Tab accent colors surfaced for XAML binding
-    public Color StrengthTabBg   => SelectedMetricIndex == 0 ? AccentColor : TransparentC;
-    public Color VolumeTabBg     => SelectedMetricIndex == 1 ? AccentColor : TransparentC;
-    public Color MusclesTabBg    => SelectedMetricIndex == 2 ? AccentColor : TransparentC;
-    public Color StrengthTabText => SelectedMetricIndex == 0 ? AccentText  : DimColor;
-    public Color VolumeTabText   => SelectedMetricIndex == 1 ? AccentText  : DimColor;
-    public Color MusclesTabText  => SelectedMetricIndex == 2 ? AccentText  : DimColor;
+    public string PeriodLabel => SelectedPeriod switch
+    {
+        "4W"  => "LAST 4 WEEKS",
+        "3M"  => "LAST 3 MONTHS",
+        "6M"  => "LAST 6 MONTHS",
+        _     => "ALL TIME"
+    };
 
-    // ── Period filter ────────────────────────────────────────────────────────
+    public Color Period4WBg    => SelectedPeriod == "4W"  ? AccentColor : TransparentC;
+    public Color Period3MBg    => SelectedPeriod == "3M"  ? AccentColor : TransparentC;
+    public Color Period6MBg    => SelectedPeriod == "6M"  ? AccentColor : TransparentC;
+    public Color PeriodAllBg   => SelectedPeriod == "ALL" ? AccentColor : TransparentC;
+    public Color Period4WText  => SelectedPeriod == "4W"  ? AccentText  : DimColor;
+    public Color Period3MText  => SelectedPeriod == "3M"  ? AccentText  : DimColor;
+    public Color Period6MText  => SelectedPeriod == "6M"  ? AccentText  : DimColor;
+    public Color PeriodAllText => SelectedPeriod == "ALL" ? AccentText  : DimColor;
 
-    public static readonly string[] PeriodOptions =
-        ["4 Weeks", "3 Months", "6 Months", "All Time"];
-
-    [ObservableProperty] private string _selectedPeriod = PeriodOptions[0];
-
-    // ── Strength tab ─────────────────────────────────────────────────────────
+    // ── 1RM Trend chart ───────────────────────────────────────────────────────
 
     [ObservableProperty] private IReadOnlyList<ExerciseOption> _exerciseOptions = [];
     [ObservableProperty] private ExerciseOption? _selectedExercise;
@@ -49,27 +50,58 @@ public partial class AnalyticsViewModel : ObservableObject
     [ObservableProperty] private string _strengthExerciseName = string.Empty;
     [ObservableProperty] private bool _hasStrengthData;
 
-    // ── Volume tab ───────────────────────────────────────────────────────────
+    // ── Muscle balance ────────────────────────────────────────────────────────
 
-    [ObservableProperty] private IReadOnlyList<VolumePoint> _volumePoints = [];
-    [ObservableProperty] private bool _hasVolumeData;
+    [ObservableProperty] private IReadOnlyList<MuscleBalanceItem> _muscleBalance = [];
+    [ObservableProperty] private IReadOnlyDictionary<string, double> _muscleWeights
+        = new Dictionary<string, double>();
+    [ObservableProperty] private bool _isFrontView = true;
 
-    // ── Muscles tab ──────────────────────────────────────────────────────────
+    // ── Gauges ────────────────────────────────────────────────────────────────
 
-    [ObservableProperty] private IReadOnlyList<MuscleGroupVolume> _muscleDistribution = [];
-    [ObservableProperty] private bool _hasMuscleData;
+    [ObservableProperty] private int _recoveryScore;
+    [ObservableProperty] private int _intensityScore;
 
-    /// <summary>Dynamic height so the horizontal bar chart grows with the number of muscle groups.</summary>
-    public double MuscleChartHeight => Math.Max(120, MuscleDistribution.Count * 30 + 12);
+    public double RecoveryGaugeValue  => RecoveryScore  / 100.0;
+    public double IntensityGaugeValue => IntensityScore / 100.0;
 
-    // ── Construction ─────────────────────────────────────────────────────────
+    public Color RecoveryGaugeColor => AccentColor;  // always gold
 
-    public AnalyticsViewModel(IAnalyticsService analytics)
+    public Color IntensityGaugeColor => IntensityScore switch
     {
-        _analytics = analytics;
+        > 85 => Color.FromArgb("#FF4444"),   // red  – overtraining risk
+        > 70 => Color.FromArgb("#FFA500"),   // amber – high
+        _    => Color.FromArgb("#44CC88")    // green – healthy
+    };
+
+    // ── Main Finding ──────────────────────────────────────────────────────────
+
+    [ObservableProperty] private TrainingSuggestion? _mainFinding;
+
+    public bool HasMainFinding => MainFinding is not null;
+
+    public string? MainFindingCta => MainFinding?.Type switch
+    {
+        SuggestionType.MuscleImbalance    => "ADD PULL SESSION ›",
+        SuggestionType.UndertrainedMuscle => "TRAIN NOW ›",
+        _                                 => null
+    };
+    public bool HasMainFindingCta => MainFindingCta is not null;
+
+    // ── All insights ──────────────────────────────────────────────────────────
+
+    [ObservableProperty] private IReadOnlyList<TrainingSuggestion> _allInsights = [];
+    public bool HasInsights => AllInsights.Count > 0;
+
+    // ── Construction ──────────────────────────────────────────────────────────
+
+    public AnalyticsViewModel(IAnalyticsService analytics, ISuggestionsService suggestions)
+    {
+        _analytics   = analytics;
+        _suggestions = suggestions;
     }
 
-    // ── Lifecycle ────────────────────────────────────────────────────────────
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     public async Task LoadAsync()
     {
@@ -82,7 +114,7 @@ public partial class AnalyticsViewModel : ObservableObject
             if (SelectedExercise is null && exercises.Count > 0)
                 SelectedExercise = exercises[0];
 
-            await RefreshChartsAsync();
+            await RefreshAllAsync();
         }
         finally
         {
@@ -90,91 +122,105 @@ public partial class AnalyticsViewModel : ObservableObject
         }
     }
 
-    // ── Commands ─────────────────────────────────────────────────────────────
+    // ── Commands ──────────────────────────────────────────────────────────────
 
     [RelayCommand]
-    private async Task SelectMetricAsync(string metricIndex)
+    private async Task SelectPeriodAsync(string period)
     {
-        if (int.TryParse(metricIndex, out int idx))
-            SelectedMetricIndex = idx;
-
-        OnPropertyChanged(nameof(IsStrengthVisible));
-        OnPropertyChanged(nameof(IsVolumeVisible));
-        OnPropertyChanged(nameof(IsMusclesVisible));
-
-        await RefreshChartsAsync();
-    }
-
-    [RelayCommand]
-    private async Task ApplyPeriodAsync()
-    {
-        await RefreshChartsAsync();
+        SelectedPeriod = period;
+        await RefreshAllAsync();
     }
 
     [RelayCommand]
     private async Task SelectExerciseAsync()
     {
-        if (SelectedMetricIndex == 0)
-            await LoadStrengthAsync();
+        await LoadStrengthAsync();
     }
 
-    // ── Partial property changed hooks ───────────────────────────────────────
-
-    partial void OnSelectedMetricIndexChanged(int value)
+    [RelayCommand]
+    private void ToggleFigureView()
     {
-        OnPropertyChanged(nameof(IsStrengthVisible));
-        OnPropertyChanged(nameof(IsVolumeVisible));
-        OnPropertyChanged(nameof(IsMusclesVisible));
-        OnPropertyChanged(nameof(StrengthTabBg));
-        OnPropertyChanged(nameof(VolumeTabBg));
-        OnPropertyChanged(nameof(MusclesTabBg));
-        OnPropertyChanged(nameof(StrengthTabText));
-        OnPropertyChanged(nameof(VolumeTabText));
-        OnPropertyChanged(nameof(MusclesTabText));
+        IsFrontView = !IsFrontView;
     }
 
-    partial void OnMuscleDistributionChanged(IReadOnlyList<MuscleGroupVolume> value)
+    [RelayCommand]
+    private async Task NavigateToTrainAsync()
     {
-        OnPropertyChanged(nameof(MuscleChartHeight));
+        await Shell.Current.GoToAsync("//WorkoutTemplatesPage");
+    }
+
+    // ── Partial property-changed hooks ────────────────────────────────────────
+
+    partial void OnSelectedPeriodChanged(string value)
+    {
+        OnPropertyChanged(nameof(PeriodLabel));
+        OnPropertyChanged(nameof(Period4WBg));
+        OnPropertyChanged(nameof(Period3MBg));
+        OnPropertyChanged(nameof(Period6MBg));
+        OnPropertyChanged(nameof(PeriodAllBg));
+        OnPropertyChanged(nameof(Period4WText));
+        OnPropertyChanged(nameof(Period3MText));
+        OnPropertyChanged(nameof(Period6MText));
+        OnPropertyChanged(nameof(PeriodAllText));
     }
 
     partial void OnSelectedExerciseChanged(ExerciseOption? value)
     {
-        if (value is not null && SelectedMetricIndex == 0)
-        {
-            // Fire-and-forget; the UI is already unblocked by IsBusy
+        if (value is not null)
             _ = LoadStrengthAsync();
-        }
     }
 
-    partial void OnSelectedPeriodChanged(string value)
+    partial void OnRecoveryScoreChanged(int value)
     {
-        _ = RefreshChartsAsync();
+        OnPropertyChanged(nameof(RecoveryGaugeValue));
+    }
+
+    partial void OnIntensityScoreChanged(int value)
+    {
+        OnPropertyChanged(nameof(IntensityGaugeValue));
+        OnPropertyChanged(nameof(IntensityGaugeColor));
+    }
+
+    partial void OnMainFindingChanged(TrainingSuggestion? value)
+    {
+        OnPropertyChanged(nameof(HasMainFinding));
+        OnPropertyChanged(nameof(MainFindingCta));
+        OnPropertyChanged(nameof(HasMainFindingCta));
+    }
+
+    partial void OnAllInsightsChanged(IReadOnlyList<TrainingSuggestion> value)
+    {
+        OnPropertyChanged(nameof(HasInsights));
+    }
+
+    partial void OnMuscleBalanceChanged(IReadOnlyList<MuscleBalanceItem> value)
+    {
+        var dict = value.ToDictionary(m => m.Label, m => m.Fraction);
+        // Derive a combined "Arms" weight for the body map figure
+        double biceps  = dict.GetValueOrDefault("Biceps");
+        double triceps = dict.GetValueOrDefault("Triceps");
+        dict["Arms"] = Math.Max(biceps, triceps);
+        MuscleWeights = dict;
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
 
-    private DateTime FromDate()
+    private DateTime FromDate() => SelectedPeriod switch
     {
-        var now = DateTime.UtcNow;
-        return SelectedPeriod switch
-        {
-            "4 Weeks"   => now.AddDays(-28),
-            "3 Months"  => now.AddDays(-90),
-            "6 Months"  => now.AddDays(-180),
-            _           => DateTime.MinValue   // All Time
-        };
-    }
+        "4W"  => DateTime.UtcNow.AddDays(-28),
+        "3M"  => DateTime.UtcNow.AddDays(-90),
+        "6M"  => DateTime.UtcNow.AddDays(-180),
+        _     => DateTime.MinValue
+    };
 
-    private async Task RefreshChartsAsync()
+    private async Task RefreshAllAsync()
     {
         var from = FromDate();
-        switch (SelectedMetricIndex)
-        {
-            case 0: await LoadStrengthAsync(from); break;
-            case 1: await LoadVolumeAsync(from);   break;
-            case 2: await LoadMusclesAsync(from);  break;
-        }
+        await Task.WhenAll(
+            LoadStrengthAsync(from),
+            LoadMuscleBalanceAsync(from),
+            LoadGaugesAsync(from),
+            LoadInsightsAsync());
     }
 
     private async Task LoadStrengthAsync(DateTime? from = null)
@@ -182,8 +228,7 @@ public partial class AnalyticsViewModel : ObservableObject
         if (SelectedExercise is null) return;
 
         var result = await _analytics.GetStrengthProgressionAsync(
-            SelectedExercise.Id,
-            from ?? FromDate());
+            SelectedExercise.Id, from ?? FromDate());
 
         if (result is null) return;
 
@@ -192,17 +237,28 @@ public partial class AnalyticsViewModel : ObservableObject
         HasStrengthData      = result.Points.Count > 0;
     }
 
-    private async Task LoadVolumeAsync(DateTime? from = null)
+    private async Task LoadMuscleBalanceAsync(DateTime from)
     {
-        var points  = await _analytics.GetWeeklyVolumeAsync(from ?? FromDate());
-        VolumePoints  = points;
-        HasVolumeData = points.Count > 0;
+        MuscleBalance = await _analytics.GetMuscleBalanceAsync(from);
     }
 
-    private async Task LoadMusclesAsync(DateTime? from = null)
+    private async Task LoadGaugesAsync(DateTime from)
     {
-        var dist      = await _analytics.GetMuscleGroupDistributionAsync(from ?? FromDate());
-        MuscleDistribution = dist;
-        HasMuscleData      = dist.Count > 0;
+        var recoveryTask  = _analytics.GetRecoveryScoreAsync();
+        var intensityTask = _analytics.GetIntensityScoreAsync(from);
+
+        await Task.WhenAll(recoveryTask, intensityTask);
+
+        RecoveryScore  = recoveryTask.Result;
+        IntensityScore = intensityTask.Result;
+    }
+
+    private async Task LoadInsightsAsync()
+    {
+        var suggestions = await _suggestions.GetSuggestionsAsync();
+        AllInsights = suggestions;
+        MainFinding = suggestions
+            .OrderByDescending(s => (int)s.Priority)
+            .FirstOrDefault();
     }
 }
