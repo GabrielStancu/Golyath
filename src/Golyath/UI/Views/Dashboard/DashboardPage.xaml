@@ -7,9 +7,10 @@
              x:Class="Golyath.UI.Views.Dashboard.DashboardPage"
              x:DataType="vm:DashboardViewModel"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*">
 
         <!-- ── Header: Greeting + Avatar (flat on page background) ────────── -->
         <Grid Grid.Row="0"
@@ -315,18 +316,16 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
 
-                <!-- Bottom spacer so button doesn't cover last card -->
-                <BoxView HeightRequest="8" Color="Transparent" />
+                <!-- Bottom spacer so last card clears the floating nav bar -->
+                <BoxView HeightRequest="96" Color="Transparent" />
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- ── Start Free Workout Button ──────────────────────────────────── -->
-        <Button Grid.Row="2"
-                Text="START FREE WORKOUT"
-                Command="{Binding StartWorkoutCommand}"
-                Style="{StaticResource AccentButton}"
-                Margin="16,8,16,16" />
+        <!-- ── Custom bottom nav bar (overlays content at bottom) ──────── -->
+        <controls:BottomNavBar Grid.Row="1"
+                               ActiveTab="home"
+                               VerticalOptions="End" />
 
     </Grid>
 </ContentPage>

@@ -11,6 +11,7 @@
     Title="Golyath"
     FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False"
     Shell.TabBarBackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1A1A1A}"
     Shell.TabBarTitleColor="#FFD700"
     Shell.TabBarUnselectedColor="#888888">

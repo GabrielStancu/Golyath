@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Golyath.UI.Controls.BottomNavBar"
+             IsClippedToBounds="False">
+
+    <!--
+        Layout: 94px total (34 transparent overflow + 60 nav bar)
+        FAB = 64x64 (radius 32). VerticalOptions=Start places the FAB at 0-64px,
+        so 34px in the transparent zone and 30px inside the bar.
+        The notched GraphicsView (NavBg) curves around the FAB overlap.
+    -->
+    <Grid RowDefinitions="34,60"
+          ColumnDefinitions="*,*,80,*,*"
+          IsClippedToBounds="False">
+
+        <!-- Notched bar background (Row 1, full width) -->
+        <GraphicsView Grid.Row="1" Grid.ColumnSpan="5"
+                      x:Name="NavBg" />
+
+        <!-- HOME tab (Col 0, Row 1) -->
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnHomeTabTapped" />
+            </Grid.GestureRecognizers>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="2">
+                <Label x:Name="HomeIcon"
+                       Text="&#xE88A;"
+                       FontFamily="MaterialIcons"
+                       FontSize="22"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+                <Label x:Name="HomeLabel"
+                       Text="HOME"
+                       FontSize="8"
+                       CharacterSpacing="0.6"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- TRAIN tab (Col 1, Row 1) -->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTrainTabTapped" />
+            </Grid.GestureRecognizers>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="2">
+                <Label x:Name="TrainIcon"
+                       Text="&#xEA9B;"
+                       FontFamily="MaterialIcons"
+                       FontSize="22"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+                <Label x:Name="TrainLabel"
+                       Text="TRAIN"
+                       FontSize="8"
+                       CharacterSpacing="0.6"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Centre col (Row 1, Col 2): WORKOUT label sits below the notch -->
+        <Label Grid.Row="1" Grid.Column="2"
+               Text="WORKOUT"
+               FontSize="7"
+               CharacterSpacing="0.8"
+               FontAttributes="Bold"
+               TextColor="#FFD700"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="0,0,0,10"
+               InputTransparent="True" />
+
+        <!-- HISTORY tab (Col 3, Row 1) -->
+        <Grid Grid.Row="1" Grid.Column="3">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnHistoryTabTapped" />
+            </Grid.GestureRecognizers>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="2">
+                <Label x:Name="HistoryIcon"
+                       Text="&#xE889;"
+                       FontFamily="MaterialIcons"
+                       FontSize="22"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+                <Label x:Name="HistoryLabel"
+                       Text="HISTORY"
+                       FontSize="8"
+                       CharacterSpacing="0.6"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- PROGRESS tab (Col 4, Row 1) -->
+        <Grid Grid.Row="1" Grid.Column="4">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnProgressTabTapped" />
+            </Grid.GestureRecognizers>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="2">
+                <Label x:Name="ProgressIcon"
+                       Text="&#xE26B;"
+                       FontFamily="MaterialIcons"
+                       FontSize="22"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+                <Label x:Name="ProgressLabel"
+                       Text="PROGRESS"
+                       FontSize="8"
+                       CharacterSpacing="0.6"
+                       HorizontalOptions="Center"
+                       TextColor="#888888" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!--
+            FAB: spans Row 0+1, Col 2.
+            64px tall, VerticalOptions=Start: 34px in transparent zone + 30px in bar.
+            The notch in NavBg curves around this 30px overlap.
+        -->
+        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                HorizontalOptions="Center"
+                VerticalOptions="Start"
+                WidthRequest="64"
+                HeightRequest="64"
+                StrokeShape="RoundRectangle 32"
+                StrokeThickness="0"
+                BackgroundColor="#FFD700"
+                ZIndex="10">
+            <Border.Shadow>
+                <Shadow Brush="#FFD700" Offset="0,4" Radius="16" Opacity="0.50" />
+            </Border.Shadow>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnFabTapped" />
+            </Border.GestureRecognizers>
+            <!-- Dumbbell / fitness_center icon -->
+            <Label Text="&#xEB43;"
+                   FontFamily="MaterialIcons"
+                   FontSize="30"
+                   TextColor="#111111"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+        </Border>
+
+    </Grid>
+</ContentView>

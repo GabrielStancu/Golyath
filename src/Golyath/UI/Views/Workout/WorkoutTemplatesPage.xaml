@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Workout"
              xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             xmlns:controls="clr-namespace:Golyath.UI.Controls"
              x:Class="Golyath.UI.Views.Workout.WorkoutTemplatesPage"
              x:DataType="vm:WorkoutTemplatesViewModel"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*">
 
         <!-- ── Header ───────────────────────────────────────────────────── -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="16,16,16,12">
@@ -153,18 +155,16 @@
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
 
-                    <BoxView HeightRequest="80" Color="Transparent" />
+                    <BoxView HeightRequest="96" Color="Transparent" />
 
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
 
-        <!-- ── Start Free Workout Button ───────────────────────────────── -->
-        <Button Grid.Row="2"
-                Text="START FREE WORKOUT"
-                Command="{Binding StartFreeWorkoutCommand}"
-                Style="{StaticResource AccentButton}"
-                Margin="16,8,16,16" />
+        <!-- ── Custom bottom nav bar (overlays content at bottom) ──────── -->
+        <controls:BottomNavBar Grid.Row="1"
+                               ActiveTab="train"
+                               VerticalOptions="End" />
 
     </Grid>
 </ContentPage>

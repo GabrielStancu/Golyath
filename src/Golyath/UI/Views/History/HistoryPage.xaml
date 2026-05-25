@@ -7,6 +7,7 @@
              x:Class="Golyath.UI.Views.History.HistoryPage"
              x:DataType="vm:HistoryViewModel"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
     <Grid RowDefinitions="Auto,*">
@@ -241,11 +242,17 @@
                 </CollectionView.ItemTemplate>
 
                 <CollectionView.Footer>
-                    <BoxView HeightRequest="24" Color="Transparent" />
+                    <BoxView HeightRequest="96" Color="Transparent" />
                 </CollectionView.Footer>
 
             </CollectionView>
         </Grid>
+
+        <!-- ── Custom bottom nav bar (overlays content at bottom) ──────── -->
+        <controls:BottomNavBar Grid.Row="1"
+                               ActiveTab="history"
+                               VerticalOptions="End" />
+
     </Grid>
 
 </ContentPage>
