@@ -10,11 +10,16 @@ public partial class EditProfileViewModel : ObservableObject
 {
     private readonly IUserService _userService;
     private readonly IThemeService _themeService;
+    private readonly IDataPortabilityService _dataPortabilityService;
 
-    public EditProfileViewModel(IUserService userService, IThemeService themeService)
+    public EditProfileViewModel(
+        IUserService userService,
+        IThemeService themeService,
+        IDataPortabilityService dataPortabilityService)
     {
         _userService = userService;
         _themeService = themeService;
+        _dataPortabilityService = dataPortabilityService;
     }
 
     public event EventHandler? SaveCompleted;
@@ -121,6 +126,116 @@ public partial class EditProfileViewModel : ObservableObject
             FitnessGoal.FatLoss     => "Fat Loss",
             _                       => "Balanced"
         };
+    }
+
+    // ─── Data portability ─────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasDataStatus))]
+    private string _dataStatusMessage = string.Empty;
+
+    public bool HasDataStatus => !string.IsNullOrEmpty(DataStatusMessage);
+
+    [RelayCommand(CanExecute = nameof(IsNotBusy))]
+    private async Task ExportDataAsync()
+    {
+        IsBusy = true;
+        DataStatusMessage = string.Empty;
+        ExportDataCommand.NotifyCanExecuteChanged();
+        ImportDataCommand.NotifyCanExecuteChanged();
+        try
+        {
+            var json = await _dataPortabilityService.ExportToJsonAsync();
+            var fileName = $"golyath-backup-{DateTime.Now:yyyy-MM-dd}.json";
+
+#if ANDROID
+            var bytes = System.Text.Encoding.UTF8.GetBytes(json);
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Q)
+            {
+                var values = new Android.Content.ContentValues();
+                values.Put(Android.Provider.MediaStore.IMediaColumns.DisplayName, fileName);
+                values.Put(Android.Provider.MediaStore.IMediaColumns.MimeType, "application/json");
+                values.Put(Android.Provider.MediaStore.IMediaColumns.RelativePath,
+                    Android.OS.Environment.DirectoryDownloads);
+                var resolver = Android.App.Application.Context.ContentResolver!;
+                var uri = resolver.Insert(Android.Provider.MediaStore.Downloads.ExternalContentUri!, values)
+                    ?? throw new InvalidOperationException("MediaStore failed to create the download entry.");
+                using var os = resolver.OpenOutputStream(uri)
+                    ?? throw new InvalidOperationException("Could not open output stream for download.");
+                await os.WriteAsync(bytes);
+                DataStatusMessage = $"Backup saved to Downloads/{fileName}";
+            }
+            else
+            {
+                var downloadsDir = Android.OS.Environment
+                    .GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)!
+                    .AbsolutePath;
+                var filePath = Path.Combine(downloadsDir, fileName);
+                await File.WriteAllBytesAsync(filePath, bytes);
+                DataStatusMessage = $"Backup saved to Downloads/{fileName}";
+            }
+#else
+            var tempPath = Path.Combine(FileSystem.CacheDirectory, fileName);
+            await File.WriteAllTextAsync(tempPath, json);
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = "Save Golyath Backup",
+                File = new ShareFile(tempPath, "application/json"),
+            });
+            DataStatusMessage = "Backup export initiated.";
+#endif
+        }
+        catch (Exception ex)
+        {
+            DataStatusMessage = $"Export failed: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+            ExportDataCommand.NotifyCanExecuteChanged();
+            ImportDataCommand.NotifyCanExecuteChanged();
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(IsNotBusy))]
+    private async Task ImportDataAsync()
+    {
+        var fileResult = await FilePicker.Default.PickAsync(new PickOptions
+        {
+            PickerTitle = "Select Golyath backup",
+            FileTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            {
+                { DevicePlatform.WinUI, [".json"] },
+                { DevicePlatform.Android, ["*/*"] },
+                { DevicePlatform.iOS, ["public.json", "public.text"] },
+                { DevicePlatform.MacCatalyst, ["public.json", "public.text"] }
+            })
+        });
+
+        if (fileResult is null) return;
+
+        IsBusy = true;
+        DataStatusMessage = string.Empty;
+        ExportDataCommand.NotifyCanExecuteChanged();
+        ImportDataCommand.NotifyCanExecuteChanged();
+        try
+        {
+            using var stream = await fileResult.OpenReadAsync();
+            var result = await _dataPortabilityService.ImportFromStreamAsync(stream);
+            DataStatusMessage = result.Success
+                ? $"Import complete. {result.ItemsImported} items added."
+                : $"Import failed: {result.Message}";
+        }
+        catch (Exception ex)
+        {
+            DataStatusMessage = $"Import failed: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+            ExportDataCommand.NotifyCanExecuteChanged();
+            ImportDataCommand.NotifyCanExecuteChanged();
+        }
     }
 
     [RelayCommand]
