@@ -8,13 +8,13 @@
              x:DataType="vm:ExercisePickerViewModel"
              Title="Add Exercise"
              Shell.NavBarIsVisible="False"
-             BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
+             BackgroundColor="{StaticResource AppDarkBg}">
 
     <Grid RowDefinitions="Auto,*">
 
         <!-- ── Header panel with search & filters ─────────────────────────── -->
         <Border Grid.Row="0"
-                BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                BackgroundColor="{StaticResource CardSurfaceDark}"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 0,0,20,20"
                 Padding="16,16,16,12">
@@ -24,7 +24,7 @@
                            Text="&#xE5CB;"
                            FontFamily="MaterialIcons"
                            FontSize="28"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark=White}"
+                           TextColor="White"
                            VerticalOptions="Center">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackClicked" />
@@ -35,18 +35,18 @@
                            FontSize="22"
                            FontAttributes="Bold"
                            VerticalOptions="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                           TextColor="White" />
                 </Grid>
 
                 <!-- Search bar -->
                 <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                        Stroke="{StaticResource AppDarkBorder}"
+                        BackgroundColor="{StaticResource AppDarkBg}"
                         Padding="4,0">
                     <SearchBar Text="{Binding SearchQuery}"
                                Placeholder="Search exercises…"
-                               PlaceholderColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark=#666666}"
-                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark=White}"
+                               PlaceholderColor="#666666"
+                               TextColor="White"
                                BackgroundColor="Transparent"
                                CancelButtonColor="{StaticResource Accent}" />
                 </Border>
@@ -55,8 +55,8 @@
                 <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
                     <Border Grid.Column="0"
                             StrokeShape="RoundRectangle 12"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                            Stroke="{StaticResource AppDarkBorder}"
+                            BackgroundColor="{StaticResource AppDarkBg}"
                             Padding="14,12">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnMuscleFilterTapped" />
@@ -64,22 +64,22 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
                                    Text="{Binding SelectedMuscleGroup}"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark=White}"
+                                   TextColor="White"
                                    FontSize="14"
                                    VerticalOptions="Center" />
                             <Label Grid.Column="1"
                                    Text="&#xE5CF;"
                                    FontFamily="MaterialIcons"
                                    FontSize="18"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark=#888888}"
+                                   TextColor="#888888"
                                    VerticalOptions="Center" />
                         </Grid>
                     </Border>
 
                     <Border Grid.Column="1"
                             StrokeShape="RoundRectangle 12"
-                            Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                            Stroke="{StaticResource AppDarkBorder}"
+                            BackgroundColor="{StaticResource AppDarkBg}"
                             Padding="14,12">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnEquipmentFilterTapped" />
@@ -87,14 +87,14 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <Label Grid.Column="0"
                                    Text="{Binding SelectedEquipment}"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark=White}"
+                                   TextColor="White"
                                    FontSize="14"
                                    VerticalOptions="Center" />
                             <Label Grid.Column="1"
                                    Text="&#xE5CF;"
                                    FontFamily="MaterialIcons"
                                    FontSize="18"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark=#888888}"
+                                   TextColor="#888888"
                                    VerticalOptions="Center" />
                         </Grid>
                     </Border>
@@ -103,7 +103,7 @@
                             Text="&#xE5CD;"
                             FontFamily="MaterialIcons"
                             BackgroundColor="Transparent"
-                            TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark=#888888}"
+                            TextColor="#888888"
                             FontSize="15"
                             Padding="8,4"
                             VerticalOptions="Center"

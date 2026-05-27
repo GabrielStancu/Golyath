@@ -141,13 +141,13 @@
                                        CharacterSpacing="0.8"
                                        VerticalOptions="End"
                                        Margin="0,0,0,4"
-                                       TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                       TextColor="{StaticResource TextMutedDark}" />
                             </HorizontalStackLayout>
                             <Label Text="THIS WEEK"
                                    FontSize="9"
                                    CharacterSpacing="0.8"
                                    HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                   TextColor="{StaticResource TextMutedDark}" />
                         </VerticalStackLayout>
                     </Border>
                     <!-- Volume pill -->
@@ -162,19 +162,19 @@
                                        FontSize="22"
                                        FontAttributes="Bold"
                                        VerticalOptions="End"
-                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                       TextColor="{StaticResource TextPrimaryDark}" />
                                 <Label Text="KG"
                                        FontSize="9"
                                        CharacterSpacing="0.8"
                                        VerticalOptions="End"
                                        Margin="0,0,0,4"
-                                       TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                       TextColor="{StaticResource TextMutedDark}" />
                             </HorizontalStackLayout>
                             <Label Text="THIS WEEK"
                                    FontSize="9"
                                    CharacterSpacing="0.8"
                                    HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                   TextColor="{StaticResource TextMutedDark}" />
                         </VerticalStackLayout>
                     </Border>
                     <!-- Streak pill -->
@@ -188,7 +188,7 @@
                                 <Label Text="{Binding StreakCount}"
                                        FontSize="22"
                                        FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                       TextColor="{StaticResource TextPrimaryDark}" />
                                 <Label Text="🔥"
                                        FontSize="18"
                                        VerticalOptions="Center" />
@@ -197,7 +197,7 @@
                                    FontSize="9"
                                    CharacterSpacing="0.8"
                                    HorizontalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                   TextColor="{StaticResource TextMutedDark}" />
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
@@ -277,9 +277,9 @@
                                         <Label Text="{Binding Name}"
                                                FontSize="16"
                                                FontAttributes="Bold"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                               TextColor="{StaticResource TextPrimaryDark}" />
                                         <Label FontSize="12"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}">
+                                               TextColor="{StaticResource TextSecondaryDark}">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding ExerciseLabel}" />

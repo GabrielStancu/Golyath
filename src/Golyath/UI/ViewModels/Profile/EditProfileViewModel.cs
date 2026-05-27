@@ -40,6 +40,7 @@ public partial class EditProfileViewModel : ObservableObject
     [ObservableProperty] private string _selectedGenderDisplay = "Prefer not to say";
     [ObservableProperty] private string _selectedGoalDisplay = "Balanced";
     [ObservableProperty] private bool _isDarkMode;
+    private bool _isInitializing;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSaveMessage))]
     private string? _saveMessage;
@@ -85,6 +86,7 @@ public partial class EditProfileViewModel : ObservableObject
 
     partial void OnIsDarkModeChanged(bool value)
     {
+        if (_isInitializing) return;
         _themeService.ApplyTheme(value ? AppTheme.Dark : AppTheme.Light);
     }
 
@@ -96,36 +98,48 @@ public partial class EditProfileViewModel : ObservableObject
 
     public async Task InitializeAsync()
     {
-        var user = await _userService.GetCurrentUserAsync();
-        if (user is null) return;
-
-        Nickname = user.Nickname;
-        Birthday = user.Birthday;
-        IsImperialUnit = user.PreferredUnit == WeightUnit.Lb;
-        IsDarkMode = _themeService.GetPreferredTheme() == AppTheme.Dark;
-
-        var ci = System.Globalization.CultureInfo.InvariantCulture;
-
-        // Set display values (conversion already handled by OnIsImperialUnitChanged side-effect)
-        // Set raw metric values first; the property change will convert if needed
-        HeightInput = user.HeightCm.ToString("F1", ci);
-        WeightInput = user.WeightKg.ToString("F2", ci);
-
-        SelectedGenderDisplay = user.Gender switch
+        _isInitializing = true;
+        try
         {
-            Gender.Male   => "Male",
-            Gender.Female => "Female",
-            Gender.Other  => "Other",
-            _             => "Prefer not to say"
-        };
+            var user = await _userService.GetCurrentUserAsync();
+            if (user is null) return;
 
-        SelectedGoalDisplay = user.FitnessGoal switch
+            Nickname = user.Nickname;
+            Birthday = user.Birthday;
+            IsImperialUnit = user.PreferredUnit == WeightUnit.Lb;
+
+            var preferred = _themeService.GetPreferredTheme();
+            IsDarkMode = preferred == AppTheme.Dark
+                || (preferred == AppTheme.Unspecified
+                    && Microsoft.Maui.Controls.Application.Current?.RequestedTheme == AppTheme.Dark);
+
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+
+            // Set display values (conversion already handled by OnIsImperialUnitChanged side-effect)
+            // Set raw metric values first; the property change will convert if needed
+            HeightInput = user.HeightCm.ToString("F1", ci);
+            WeightInput = user.WeightKg.ToString("F2", ci);
+
+            SelectedGenderDisplay = user.Gender switch
+            {
+                Gender.Male   => "Male",
+                Gender.Female => "Female",
+                Gender.Other  => "Other",
+                _             => "Prefer not to say"
+            };
+
+            SelectedGoalDisplay = user.FitnessGoal switch
+            {
+                FitnessGoal.Strength    => "Strength",
+                FitnessGoal.Hypertrophy => "Hypertrophy",
+                FitnessGoal.FatLoss     => "Fat Loss",
+                _                       => "Balanced"
+            };
+        }
+        finally
         {
-            FitnessGoal.Strength    => "Strength",
-            FitnessGoal.Hypertrophy => "Hypertrophy",
-            FitnessGoal.FatLoss     => "Fat Loss",
-            _                       => "Balanced"
-        };
+            _isInitializing = false;
+        }
     }
 
     // ─── Data portability ─────────────────────────────────────────────────

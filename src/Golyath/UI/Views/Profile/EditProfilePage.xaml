@@ -17,7 +17,7 @@
                     Padding="14,4" Margin="0,0,0,20">
                 <Entry Text="{Binding Nickname}"
                        FontSize="16" ReturnType="Next"
-                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                       TextColor="White" />
             </Border>
 
             <!-- Birthday -->
@@ -31,7 +31,7 @@
                             MaximumDate="{Binding MaxBirthday}"
                             MinimumDate="1920-01-01"
                             FontSize="16" HeightRequest="48"
-                            TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                            TextColor="White" />
             </Border>
 
             <!-- Units -->
@@ -47,8 +47,8 @@
                             <Setter Property="TextColor" Value="{StaticResource AccentText}" />
                         </DataTrigger>
                         <DataTrigger TargetType="Button" Binding="{Binding IsMetricSelected}" Value="False">
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}" />
-                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                            <Setter Property="BackgroundColor" Value="#2A2A2A" />
+                            <Setter Property="TextColor" Value="#AAAAAA" />
                         </DataTrigger>
                     </Button.Triggers>
                 </Button>
@@ -61,8 +61,8 @@
                             <Setter Property="TextColor" Value="{StaticResource AccentText}" />
                         </DataTrigger>
                         <DataTrigger TargetType="Button" Binding="{Binding IsImperialUnit}" Value="False">
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EEEEEE, Dark=#2A2A2A}" />
-                            <Setter Property="TextColor" Value="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                            <Setter Property="BackgroundColor" Value="#2A2A2A" />
+                            <Setter Property="TextColor" Value="#AAAAAA" />
                         </DataTrigger>
                     </Button.Triggers>
                 </Button>
@@ -77,7 +77,7 @@
                     Padding="14,4" Margin="0,0,0,20">
                 <Entry Text="{Binding HeightInput}" Keyboard="Numeric"
                        FontSize="16" ReturnType="Next" HeightRequest="48"
-                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                       TextColor="White" />
             </Border>
 
             <!-- Weight -->
@@ -89,7 +89,7 @@
                     Padding="14,4" Margin="0,0,0,20">
                 <Entry Text="{Binding WeightInput}" Keyboard="Numeric"
                        FontSize="16" ReturnType="Done" HeightRequest="48"
-                       TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                       TextColor="White" />
             </Border>
 
             <!-- Gender -->
@@ -106,7 +106,7 @@
                     <Label Grid.Column="0"
                            Text="{Binding SelectedGenderDisplay}"
                            FontSize="16"
-                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           TextColor="White"
                            VerticalOptions="Center" />
                     <Label Grid.Column="1"
                            Text="&#xE5CF;"
@@ -131,7 +131,7 @@
                     <Label Grid.Column="0"
                            Text="{Binding SelectedGoalDisplay}"
                            FontSize="16"
-                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           TextColor="White"
                            VerticalOptions="Center" />
                     <Label Grid.Column="1"
                            Text="&#xE5CF;"
@@ -160,11 +160,11 @@
                 <VerticalStackLayout Padding="16" Spacing="10">
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="&#xE2C3;" FontFamily="MaterialIcons" FontSize="22"
-                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                               TextColor="White"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
                             <Label Text="Export Data" FontSize="16" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                                   TextColor="White" />
                             <Label Text="Save a backup of all your workouts and data"
                                    FontSize="13" TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
                         </VerticalStackLayout>
@@ -189,11 +189,11 @@
                 <VerticalStackLayout Padding="16" Spacing="10">
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="&#xE2C4;" FontFamily="MaterialIcons" FontSize="22"
-                               TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                               TextColor="White"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
                             <Label Text="Import Data" FontSize="16" FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                                   TextColor="White" />
                             <Label Text="Restore from a previous backup file"
                                    FontSize="13" TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
                         </VerticalStackLayout>

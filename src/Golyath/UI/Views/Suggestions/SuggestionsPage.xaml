@@ -34,16 +34,16 @@
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            VerticalOptions="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                           TextColor="{StaticResource TextPrimaryDark}" />
                 </Border>
                 <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                     <Label Text="Smart Suggestions"
                            FontSize="22"
                            FontAttributes="Bold"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                           TextColor="{StaticResource TextPrimaryDark}" />
                     <Label Text="Personalised recommendations based on your training data"
                            FontSize="13"
-                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                           TextColor="{StaticResource TextSecondaryDark}" />
                 </VerticalStackLayout>
             </Grid>
         </Border>
@@ -114,7 +114,7 @@
                                                    Text="{Binding Title}"
                                                    FontSize="15"
                                                    FontAttributes="Bold"
-                                                   TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                                                   TextColor="White"
                                                    LineBreakMode="WordWrap" />
 
                                             <Border Grid.Column="1"
@@ -136,7 +136,7 @@
                                         <Label Text="{Binding Detail}"
                                                FontSize="13"
                                                LineBreakMode="WordWrap"
-                                               TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                               TextColor="#AAAAAA" />
 
                                     </VerticalStackLayout>
                                 </Grid>

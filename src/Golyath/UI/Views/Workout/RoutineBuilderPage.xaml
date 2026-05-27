@@ -65,14 +65,14 @@
 
                 <!-- Routine Name -->
                 <Border StrokeShape="RoundRectangle 4"
-                        Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                        Stroke="{StaticResource CardBorderDark}"
+                        BackgroundColor="{StaticResource CardSurfaceDark}"
                         Padding="12,10">
                     <Entry Text="{Binding RoutineName}"
                            Placeholder="Push Day A"
                            FontSize="16"
-                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                           PlaceholderColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                           TextColor="{StaticResource TextPrimaryDark}"
+                           PlaceholderColor="{StaticResource TextMutedDark}"
                            BackgroundColor="Transparent" />
                 </Border>
 
@@ -150,7 +150,7 @@
                                                FontSize="16"
                                                FontAttributes="Bold"
                                                VerticalOptions="Center"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                               TextColor="{StaticResource TextPrimaryDark}" />
                                         <HorizontalStackLayout Grid.Column="1" Spacing="4">
                                             <Border StrokeShape="RoundRectangle 4"
                                                     StrokeThickness="1"
@@ -202,17 +202,17 @@
                                         <VerticalStackLayout Grid.Column="0" Spacing="4">
                                             <Label Text="SETS" FontSize="9" CharacterSpacing="1"
                                                    HorizontalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                                   TextColor="{StaticResource TextMutedDark}" />
                                             <Border StrokeShape="RoundRectangle 4"
-                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Stroke="{StaticResource CardBorderDark}"
+                                                    BackgroundColor="{StaticResource AppDarkBg}"
                                                     Padding="4,6">
                                                 <Entry Text="{Binding TargetSets}"
                                                        Keyboard="Numeric"
                                                        FontSize="18"
                                                        FontAttributes="Bold"
                                                        HorizontalTextAlignment="Center"
-                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                       TextColor="{StaticResource TextPrimaryDark}"
                                                        BackgroundColor="Transparent" />
                                             </Border>
                                         </VerticalStackLayout>
@@ -221,17 +221,17 @@
                                         <VerticalStackLayout Grid.Column="1" Spacing="4">
                                             <Label Text="REPS" FontSize="9" CharacterSpacing="1"
                                                    HorizontalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                                   TextColor="{StaticResource TextMutedDark}" />
                                             <Border StrokeShape="RoundRectangle 4"
-                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Stroke="{StaticResource CardBorderDark}"
+                                                    BackgroundColor="{StaticResource AppDarkBg}"
                                                     Padding="4,6">
                                                 <Entry Text="{Binding TargetReps}"
                                                        Keyboard="Numeric"
                                                        FontSize="18"
                                                        FontAttributes="Bold"
                                                        HorizontalTextAlignment="Center"
-                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                       TextColor="{StaticResource TextPrimaryDark}"
                                                        BackgroundColor="Transparent" />
                                             </Border>
                                         </VerticalStackLayout>
@@ -240,10 +240,10 @@
                                         <VerticalStackLayout Grid.Column="2" Spacing="4">
                                             <Label Text="WEIGHT" FontSize="9" CharacterSpacing="1"
                                                    HorizontalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                                   TextColor="{StaticResource TextMutedDark}" />
                                             <Border StrokeShape="RoundRectangle 4"
-                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Stroke="{StaticResource CardBorderDark}"
+                                                    BackgroundColor="{StaticResource AppDarkBg}"
                                                     Padding="4,6">
                                                 <Entry Text="{Binding WeightText}"
                                                        Keyboard="Numeric"
@@ -251,8 +251,8 @@
                                                        FontSize="18"
                                                        FontAttributes="Bold"
                                                        HorizontalTextAlignment="Center"
-                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
-                                                       PlaceholderColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                                                       TextColor="{StaticResource TextPrimaryDark}"
+                                                       PlaceholderColor="{StaticResource TextMutedDark}"
                                                        BackgroundColor="Transparent" />
                                             </Border>
                                         </VerticalStackLayout>
@@ -261,17 +261,17 @@
                                         <VerticalStackLayout Grid.Column="3" Spacing="4">
                                             <Label Text="REST" FontSize="9" CharacterSpacing="1"
                                                    HorizontalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                                   TextColor="{StaticResource TextMutedDark}" />
                                             <Border StrokeShape="RoundRectangle 4"
-                                                    Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                                                    BackgroundColor="{AppThemeBinding Light={StaticResource CardSurfaceLight}, Dark={StaticResource CardSurfaceDark}}"
+                                                    Stroke="{StaticResource CardBorderDark}"
+                                                    BackgroundColor="{StaticResource AppDarkBg}"
                                                     Padding="4,6">
                                                 <Entry Text="{Binding RestSeconds}"
                                                        Keyboard="Numeric"
                                                        FontSize="18"
                                                        FontAttributes="Bold"
                                                        HorizontalTextAlignment="Center"
-                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                       TextColor="{StaticResource TextPrimaryDark}"
                                                        BackgroundColor="Transparent" />
                                             </Border>
                                         </VerticalStackLayout>

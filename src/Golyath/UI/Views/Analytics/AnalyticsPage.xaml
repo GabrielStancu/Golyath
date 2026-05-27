@@ -95,8 +95,8 @@
                     <!-- Exercise picker -->
                     <Border StrokeShape="RoundRectangle 8"
                             StrokeThickness="1"
-                            Stroke="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark={StaticResource CardBorderDark}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
+                            Stroke="{StaticResource CardBorderDark}"
+                            BackgroundColor="{StaticResource AppDarkBg}"
                             Padding="12,10">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnExercisePickerTapped" />
@@ -105,7 +105,7 @@
                             <Label Grid.Column="0"
                                    Text="{Binding StrengthExerciseName}"
                                    FontSize="14"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                   TextColor="{StaticResource TextPrimaryDark}"
                                    VerticalOptions="Center" />
                             <Label Grid.Column="1"
                                    Text="&#xE5CF;"
@@ -125,7 +125,7 @@
                            IsVisible="{Binding HasStrengthData, Converter={StaticResource InvertBoolConverter}}"
                            HorizontalOptions="Center"
                            FontSize="13"
-                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                           TextColor="{StaticResource TextMutedDark}" />
                 </VerticalStackLayout>
             </Border>
 
@@ -157,10 +157,10 @@
                                                FontSize="11"
                                                FontAttributes="Bold"
                                                CharacterSpacing="0.5"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                               TextColor="{StaticResource TextSecondaryDark}" />
                                         <ProgressBar Progress="{Binding Fraction}"
                                                      ProgressColor="#FFD700"
-                                                     BackgroundColor="{AppThemeBinding Light={StaticResource CardBorderLight}, Dark=#2A2A2A}"
+                                                     BackgroundColor="#2A2A2A"
                                                      HeightRequest="6" />
                                     </VerticalStackLayout>
                                 </DataTemplate>
@@ -192,7 +192,7 @@
                                    Margin="0,0,0,8"
                                    FontSize="20"
                                    FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}">
+                                   TextColor="{StaticResource TextPrimaryDark}">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding RecoveryScore}" />
@@ -222,7 +222,7 @@
                                    Margin="0,0,0,8"
                                    FontSize="20"
                                    FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}">
+                                   TextColor="{StaticResource TextPrimaryDark}">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding IntensityScore}" />
@@ -260,10 +260,10 @@
                                         <Label Text="{Binding Title}"
                                                FontSize="14"
                                                FontAttributes="Bold"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                               TextColor="{StaticResource TextPrimaryDark}" />
                                         <Label Text="{Binding Detail}"
                                                FontSize="12"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                               TextColor="{StaticResource TextSecondaryDark}" />
                                     </VerticalStackLayout>
                                     <Border Grid.Column="1"
                                             StrokeShape="RoundRectangle 10"
@@ -290,7 +290,7 @@
                    IsVisible="{Binding HasInsights, Converter={StaticResource InvertBoolConverter}}"
                    HorizontalOptions="Center"
                    FontSize="14"
-                   TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                   TextColor="{StaticResource TextMutedDark}"
                    Margin="0,16" />
 
         </VerticalStackLayout>

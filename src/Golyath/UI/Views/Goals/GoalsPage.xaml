@@ -142,7 +142,7 @@
                                                    FontSize="15"
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                                                   TextColor="White" />
                                             <ImageButton Grid.Column="2"
                                                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GoalsViewModel}}, Path=DeleteGoalCommand}"
                                                          CommandParameter="{Binding .}"
@@ -155,12 +155,11 @@
                                                     <FontImageSource Glyph="&#xE872;"
                                                                     FontFamily="MaterialIcons"
                                                                     Size="20"
-                                                                    Color="{AppThemeBinding Light=#555555, Dark=#999999}" />
+                                                                Color="#999999" />
                                                 </ImageButton.Source>
                                             </ImageButton>
                                         </Grid>
 
-                                        <!-- Exercise name (strength goals only) -->
                                         <Label Text="{Binding ExerciseName}"
                                                IsVisible="{Binding ExerciseName, Converter={StaticResource IsNotNullConverter}}"
                                                FontSize="12"
@@ -170,7 +169,7 @@
                                         <!-- Progress bar -->
                                         <ProgressBar Progress="{Binding ProgressRatio}"
                                                      ProgressColor="{StaticResource Accent}"
-                                                     BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#2A2A2A}"
+                                                     BackgroundColor="#2A2A2A"
                                                      HeightRequest="6" />
 
                                         <!-- Progress text + target date row -->
@@ -178,7 +177,7 @@
                                             <Label Grid.Column="0"
                                                    Text="{Binding ProgressText}"
                                                    FontSize="13"
-                                                   TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                                   TextColor="#AAAAAA" />
                                             <Label Grid.Column="1"
                                                    IsVisible="{Binding TargetDate, Converter={StaticResource IsNotNullConverter}}"
                                                    FontSize="12"
@@ -195,7 +194,7 @@
                                         <!-- How progress is tracked -->
                                         <Label Text="{Binding ProgressHint}"
                                                FontSize="11"
-                                               TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}"
+                                               TextColor="#AAAAAA"
                                                FontAttributes="Italic" />
 
                                         <!-- Manual complete button -->
@@ -258,7 +257,7 @@
                                                    FontAttributes="Bold"
                                                    VerticalOptions="Center"
                                                    TextDecorations="Strikethrough"
-                                                   TextColor="{AppThemeBinding Light=#888888, Dark=#666666}" />
+                                                   TextColor="#888888" />
                                             <Label Grid.Column="2"
                                                    Text="&#xE5CA;"
                                                    FontFamily="MaterialIcons"
@@ -278,7 +277,7 @@
                                                     <FontImageSource Glyph="&#xE872;"
                                                                     FontFamily="MaterialIcons"
                                                                     Size="20"
-                                                                    Color="{AppThemeBinding Light=#555555, Dark=#999999}" />
+                                                                Color="#999999" />
                                                 </ImageButton.Source>
                                             </ImageButton>
                                         </Grid>
@@ -286,8 +285,7 @@
                                         <!-- Progress text -->
                                         <Label Text="{Binding ProgressText}"
                                                FontSize="12"
-                                               TextColor="{AppThemeBinding Light=#888888, Dark=#666666}" />
-
+                                               TextColor="#888888" />
                                     </VerticalStackLayout>
                                 </Border>
                             </DataTemplate>
@@ -354,12 +352,12 @@
                                                FontSize="15"
                                                FontAttributes="Bold"
                                                VerticalOptions="Center"
-                                               TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
+                                               TextColor="White" />
                                         <Label Grid.Column="1"
                                                Text="{Binding AchievedAt, StringFormat='{0:MMM d, yyyy}'}"
                                                FontSize="11"
                                                VerticalOptions="Center"
-                                               TextColor="{AppThemeBinding Light=#AAAAAA, Dark=#555555}" />
+                                               TextColor="#AAAAAA" />
                                     </Grid>
 
                                     <!-- Stat chips row -->
@@ -369,14 +367,14 @@
                                         <Border Grid.Column="0"
                                                 StrokeShape="RoundRectangle 10"
                                                 Stroke="Transparent"
-                                                BackgroundColor="{AppThemeBinding Light=#FFF8E1, Dark=#2A2410}"
+                                                BackgroundColor="#2A2410"
                                                 Padding="10,8">
                                             <VerticalStackLayout Spacing="2">
                                                 <Label Text="MAX WEIGHT"
                                                        FontSize="9"
                                                        FontAttributes="Bold"
                                                        CharacterSpacing="0.6"
-                                                       TextColor="{AppThemeBinding Light=#B8860B, Dark=#FFD700}"
+                                                       TextColor="#FFD700"
                                                        HorizontalOptions="Center" />
                                                 <Label FontSize="17"
                                                        FontAttributes="Bold"
@@ -396,18 +394,18 @@
                                         <Border Grid.Column="1"
                                                 StrokeShape="RoundRectangle 10"
                                                 Stroke="Transparent"
-                                                BackgroundColor="{AppThemeBinding Light=#F3F0FF, Dark=#1E1B2E}"
+                                                BackgroundColor="#1E1B2E"
                                                 Padding="10,8">
                                             <VerticalStackLayout Spacing="2">
                                                 <Label Text="MAX REPS"
                                                        FontSize="9"
                                                        FontAttributes="Bold"
                                                        CharacterSpacing="0.6"
-                                                       TextColor="{AppThemeBinding Light=#7B68EE, Dark=#9B8EFF}"
+                                                       TextColor="#9B8EFF"
                                                        HorizontalOptions="Center" />
                                                 <Label FontSize="17"
                                                        FontAttributes="Bold"
-                                                       TextColor="{AppThemeBinding Light=#7B68EE, Dark=#9B8EFF}"
+                                                       TextColor="#9B8EFF"
                                                        HorizontalOptions="Center">
                                                     <Label.FormattedText>
                                                         <FormattedString>
@@ -423,18 +421,18 @@
                                         <Border Grid.Column="2"
                                                 StrokeShape="RoundRectangle 10"
                                                 Stroke="Transparent"
-                                                BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#152015}"
+                                                BackgroundColor="#152015"
                                                 Padding="10,8">
                                             <VerticalStackLayout Spacing="2">
                                                 <Label Text="EST. 1RM"
                                                        FontSize="9"
                                                        FontAttributes="Bold"
                                                        CharacterSpacing="0.6"
-                                                       TextColor="{AppThemeBinding Light=#388E3C, Dark=#66BB6A}"
+                                                       TextColor="#66BB6A"
                                                        HorizontalOptions="Center" />
                                                 <Label FontSize="17"
                                                        FontAttributes="Bold"
-                                                       TextColor="{AppThemeBinding Light=#388E3C, Dark=#66BB6A}"
+                                                       TextColor="#66BB6A"
                                                        HorizontalOptions="Center">
                                                     <Label.FormattedText>
                                                         <FormattedString>

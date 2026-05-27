@@ -117,14 +117,14 @@
                                                 <Label Text="{Binding Name}"
                                                        FontSize="15"
                                                        FontAttributes="Bold"
-                                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                                       TextColor="{StaticResource TextPrimaryDark}" />
                                                 <HorizontalStackLayout Spacing="12">
                                                     <Label Text="{Binding ExerciseLabel}"
                                                            FontSize="12"
-                                                           TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                                           TextColor="{StaticResource TextSecondaryDark}" />
                                                     <Label Text="{Binding DurationLabel}"
                                                            FontSize="12"
-                                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                                           TextColor="{StaticResource TextMutedDark}" />
                                                 </HorizontalStackLayout>
                                             </VerticalStackLayout>
                                             <!-- Play button (outline) → starts workout -->

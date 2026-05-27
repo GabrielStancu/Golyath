@@ -62,7 +62,7 @@
                                            TextColor="{StaticResource Accent}" />
                                     <Label Text="Sessions this month"
                                            FontSize="11"
-                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                           TextColor="{StaticResource TextMutedDark}" />
                                 </VerticalStackLayout>
                             </Border>
                             <Border Grid.Column="1"
@@ -74,10 +74,10 @@
                                     <Label Text="{Binding MonthVolumeText}"
                                            FontSize="28"
                                            FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                           TextColor="{StaticResource TextPrimaryDark}" />
                                     <Label Text="Total volume"
                                            FontSize="11"
-                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                           TextColor="{StaticResource TextMutedDark}" />
                                 </VerticalStackLayout>
                             </Border>
                         </Grid>
@@ -93,7 +93,7 @@
                                            Text="WEEKLY VOLUME (KG)"
                                            FontSize="9"
                                            CharacterSpacing="1"
-                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
+                                           TextColor="{StaticResource TextMutedDark}"
                                            VerticalOptions="Center" />
                                     <Label Grid.Column="1"
                                            Text="4-WEEK TREND"
@@ -188,12 +188,12 @@
                                                FontSize="26"
                                                FontAttributes="Bold"
                                                HorizontalOptions="Center"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                               TextColor="{StaticResource TextPrimaryDark}" />
                                         <Label Text="{Binding MonthText}"
                                                FontSize="9"
                                                CharacterSpacing="1"
                                                HorizontalOptions="Center"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
+                                               TextColor="{StaticResource TextMutedDark}" />
                                     </VerticalStackLayout>
 
                                     <!-- Gold vertical divider -->
@@ -213,7 +213,7 @@
                                                FontSize="15"
                                                FontAttributes="Bold"
                                                LineBreakMode="TailTruncation"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                               TextColor="{StaticResource TextPrimaryDark}" />
                                         <!-- PR badge -->
                                         <Border Grid.Row="0" Grid.Column="1"
                                                 IsVisible="{Binding HasPersonalRecords}"
@@ -232,7 +232,7 @@
                                         <Label Grid.Row="1" Grid.ColumnSpan="2"
                                                Text="{Binding SubtitleText}"
                                                FontSize="12"
-                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                               TextColor="{StaticResource TextSecondaryDark}" />
                                     </Grid>
 
                                 </Grid>
