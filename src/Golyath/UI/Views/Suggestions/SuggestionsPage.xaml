@@ -101,6 +101,7 @@
                                     <!-- Icon -->
                                     <Label Grid.Column="0"
                                            Text="{Binding Icon}"
+                                           FontFamily="MaterialIcons"
                                            FontSize="32"
                                            VerticalOptions="Start"
                                            Margin="0,2,0,0" />

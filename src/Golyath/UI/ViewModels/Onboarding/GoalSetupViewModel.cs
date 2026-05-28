@@ -22,10 +22,10 @@ public partial class GoalSetupViewModel : ObservableObject
 
     public IReadOnlyList<GoalItem> Goals { get; } =
     [
-        new(FitnessGoal.Strength,    "Strength",    "Build raw power and lift heavier",         "💪"),
-        new(FitnessGoal.Hypertrophy, "Hypertrophy", "Maximize muscle size and definition",      "🏋️"),
-        new(FitnessGoal.FatLoss,     "Fat Loss",    "Burn fat while preserving muscle",          "🔥"),
-        new(FitnessGoal.Balanced,    "Balanced",    "All-around fitness and health",             "⚖️"),
+        new(FitnessGoal.Strength,    "Strength",    "Build raw power and lift heavier",         "\uEA4A"),
+        new(FitnessGoal.Hypertrophy, "Hypertrophy", "Maximize muscle size and definition",      "\uEA4A"),
+        new(FitnessGoal.FatLoss,     "Fat Loss",    "Burn fat while preserving muscle",          "\uE80E"),
+        new(FitnessGoal.Balanced,    "Balanced",    "All-around fitness and health",             "\uE8D5"),
     ];
 
     [ObservableProperty]

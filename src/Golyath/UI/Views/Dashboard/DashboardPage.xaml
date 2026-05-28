@@ -189,8 +189,10 @@
                                        FontSize="22"
                                        FontAttributes="Bold"
                                        TextColor="{StaticResource TextPrimaryDark}" />
-                                <Label Text="🔥"
-                                       FontSize="18"
+                                <Label Text="&#xE80E;"
+                                       FontFamily="MaterialIcons"
+                                       TextColor="#E53935"
+                                       FontSize="20"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
                             <Label Text="STREAK"

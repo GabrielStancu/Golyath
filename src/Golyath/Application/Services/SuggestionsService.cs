@@ -119,7 +119,7 @@ public sealed class SuggestionsService : ISuggestionsService
                 SuggestionPriority.High,
                 "Consider a Deload Week",
                 $"You completed {last7Days.Count} workouts in the last 7 days. High frequency without rest increases injury risk. Try a lighter week with reduced volume.",
-                "🛑"));
+                "\uE002"));
             return suggestions; // One deload suggestion is enough
         }
 
@@ -145,7 +145,7 @@ public sealed class SuggestionsService : ISuggestionsService
                     SuggestionPriority.Medium,
                     "Volume Has Been Rising for 3+ Weeks",
                     $"Your training volume has increased every week for the last {DeloadConsecutiveWeeksThreshold} weeks. A planned deload will help your body recover and prevent overtraining.",
-                    "📉"));
+                    "\uE8E4"));
             }
         }
 
@@ -207,7 +207,7 @@ public sealed class SuggestionsService : ISuggestionsService
                 SuggestionPriority.Medium,
                 $"Plateau Detected: {exercise.Name}",
                 $"Your last {PlateauSessionThreshold} sessions all used {firstWeight:0.#} kg × {firstReps} reps. Try adding 2.5 kg or 1–2 extra reps to break through.",
-                "📊"));
+                "\uE26B"));
         }
 
         return suggestions;
@@ -257,7 +257,7 @@ public sealed class SuggestionsService : ISuggestionsService
                 SuggestionPriority.Medium,
                 "Push-Heavy Imbalance",
                 $"Over the last 4 weeks you logged {pushSets} push sets vs {pullSets} pull sets ({pushToPull:0.#}:1 ratio). Add more rows, pull-downs, or face pulls to balance your training.",
-                "⚖️"));
+                "\uE915"));
         }
         else if (pullToPush >= ImbalanceRatioThreshold)
         {
@@ -266,7 +266,7 @@ public sealed class SuggestionsService : ISuggestionsService
                 SuggestionPriority.Medium,
                 "Pull-Heavy Imbalance",
                 $"Over the last 4 weeks you logged {pullSets} pull sets vs {pushSets} push sets ({pullToPush:0.#}:1 ratio). Add more presses or flyes to balance your training.",
-                "⚖️"));
+                "\uE915"));
         }
 
         return suggestions;
@@ -306,7 +306,7 @@ public sealed class SuggestionsService : ISuggestionsService
                     SuggestionPriority.Low,
                     $"{muscle} Not Trained in 4 Weeks",
                     $"You haven't logged any {muscle.ToString().ToLower()} exercises in the last 4 weeks. Consider adding a {muscle.ToString().ToLower()} movement to maintain balanced development.",
-                    "💡"));
+                    "\uE90F"));
             }
         }
 
