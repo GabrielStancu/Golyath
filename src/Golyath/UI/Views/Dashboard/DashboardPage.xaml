@@ -12,28 +12,24 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <!-- ── Header: Greeting + Avatar (flat on page background) ────────── -->
-        <Grid Grid.Row="0"
-              ColumnDefinitions="*, Auto"
-              Padding="20,16,16,8">
-
-            <ActivityIndicator IsRunning="{Binding IsLoading}"
-                               IsVisible="{Binding IsLoading}"
-                               Color="{StaticResource Accent}"
-                               HorizontalOptions="Start"
-                               VerticalOptions="Center" />
-
-            <!-- Greeting (hidden while loading) -->
-            <VerticalStackLayout Grid.Column="0" Spacing="0" VerticalOptions="Center"
-                                 IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}">
+        <!-- ── Header: same style as History ──────────────────────────────── -->
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="20,16,16,12">
+            <VerticalStackLayout Grid.Column="0" Spacing="2">
                 <Label Text="{Binding GreetingLine}"
-                       FontSize="12"
+                       FontSize="11"
                        CharacterSpacing="1.5"
                        TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
                 <Label Text="{Binding UserName}"
                        FontSize="28"
                        FontAttributes="Bold"
                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                <!-- Gold accent underline -->
+                <BoxView WidthRequest="40"
+                         HeightRequest="3"
+                         CornerRadius="2"
+                         Color="{StaticResource Accent}"
+                         HorizontalOptions="Start"
+                         Margin="0,2,0,0" />
             </VerticalStackLayout>
 
             <!-- Avatar circle (tap → profile) -->
@@ -44,8 +40,7 @@
                     BackgroundColor="{StaticResource Accent}"
                     WidthRequest="44"
                     HeightRequest="44"
-                    VerticalOptions="Center"
-                    IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}">
+                    VerticalOptions="Center">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding OpenProfileCommand}" />
                 </Border.GestureRecognizers>
@@ -59,9 +54,14 @@
         </Grid>
 
         <!-- ── Scrollable content ─────────────────────────────────────────── -->
-        <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="16,8,16,16" Spacing="16"
-                                 IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}">
+        <Grid Grid.Row="1">
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="{StaticResource Accent}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
+            <ScrollView IsVisible="{Binding IsLoading, Converter={StaticResource InvertBoolConverter}}">
+            <VerticalStackLayout Padding="16,8,16,16" Spacing="16">
 
                 <!-- ── Hero Card (always dark theme) ───────────────────── -->
                 <Border StrokeShape="RoundRectangle 4"
@@ -77,14 +77,14 @@
                             LineThickness="1"
                             InputTransparent="True" />
 
-                        <!-- Large decorative letter stamp -->
-                        <Label Text="{Binding UserInitial}"
-                               FontSize="140"
-                               FontAttributes="Bold"
-                               TextColor="#22FFD700"
+                        <!-- Large decorative icon stamp -->
+                        <Label Text="&#xEB43;"
+                               FontFamily="MaterialIcons"
+                               FontSize="130"
+                               TextColor="#1AFFD700"
                                HorizontalOptions="End"
                                VerticalOptions="Center"
-                               Margin="0,0,16,0"
+                               Margin="0,0,8,0"
                                InputTransparent="True" />
 
                         <!-- Card content -->
@@ -323,6 +323,7 @@
 
             </VerticalStackLayout>
         </ScrollView>
+        </Grid>
 
         <!-- ── Custom bottom nav bar (overlays content at bottom) ──────── -->
         <controls:BottomNavBar Grid.Row="1"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Workout"
@@ -11,9 +11,9 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- ══════════════════════════════════════════════════════════════════ -->
-        <!-- Row 0 · Header (always dark)                                      -->
-        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <!-- Row 0 Â· Header (always dark)                                      -->
+        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <Grid Grid.Row="0"
               BackgroundColor="{StaticResource AppDarkBg}"
               Padding="16,14,16,0"
@@ -65,7 +65,7 @@
                                FontSize="34"
                                FontAttributes="Bold"
                                TextColor="{StaticResource Accent}"
-                               FontFamily="OpenSansRegular"
+                               FontFamily="InterRegular"
                                VerticalOptions="Center" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
@@ -84,7 +84,7 @@
                 </VerticalStackLayout>
             </Grid>
 
-            <!-- Progress bar row: label · bar · count -->
+            <!-- Progress bar row: label Â· bar Â· count -->
             <Grid Grid.Row="2"
                   ColumnDefinitions="Auto,*,Auto"
                   ColumnSpacing="10"
@@ -110,9 +110,9 @@
             </Grid>
         </Grid>
 
-        <!-- ══════════════════════════════════════════════════════════════════ -->
-        <!-- Row 1 · Exercise list                                             -->
-        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <!-- Row 1 Â· Exercise list                                             -->
+        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="16,12,16,24" Spacing="12">
 
@@ -123,7 +123,7 @@
                                    HorizontalOptions="Center"
                                    Margin="0,32" />
 
-                <!-- ── Exercise cards ─────────────────────────────────────── -->
+                <!-- â”€â”€ Exercise cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Exercises}" Spacing="12">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="vm:WorkoutExerciseViewModel">
@@ -171,7 +171,7 @@
                                         </Label>
                                     </Grid>
 
-                                    <!-- Column headers: KG · REPS · TEMPO · PREV · ✓ -->
+                                    <!-- Column headers: KG Â· REPS Â· TEMPO Â· PREV Â· âś“ -->
                                     <Grid ColumnDefinitions="*,56,70,60,36"
                                           ColumnSpacing="6"
                                           Padding="0,0,0,2">
@@ -204,7 +204,7 @@
                                                HorizontalOptions="Center" />
                                     </Grid>
 
-                                    <!-- ── Set rows ─────────────────────────── -->
+                                    <!-- â”€â”€ Set rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
                                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sets}"
                                                          Spacing="5">
                                         <BindableLayout.ItemTemplate>
@@ -464,9 +464,9 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- ══════════════════════════════════════════════════════════════════ -->
-        <!-- Row 2 · Bottom bar (rest timer + LOG CTA)                        -->
-        <!-- ══════════════════════════════════════════════════════════════════ -->
+        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <!-- Row 2 Â· Bottom bar (rest timer + LOG CTA)                        -->
+        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <Grid Grid.Row="2"
               BackgroundColor="{StaticResource AppDarkBg}"
               RowDefinitions="Auto,Auto">

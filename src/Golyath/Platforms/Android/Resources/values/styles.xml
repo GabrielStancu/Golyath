@@ -4,7 +4,8 @@
         <item name="android:colorBackground">@android:color/white</item>
         <item name="android:statusBarColor">#FFD700</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">#FFD700</item>
+        <item name="android:navigationBarColor">#111111</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:textCursorDrawable">@drawable/cursor_drawable</item>
         <item name="colorControlActivated">#FFD700</item>

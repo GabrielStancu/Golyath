@@ -135,7 +135,7 @@
                 <TapGestureRecognizer Tapped="OnFabTapped" />
             </Border.GestureRecognizers>
             <!-- Dumbbell / fitness_center icon -->
-            <Label Text="&#xEB43;"
+            <Label Text="&#xE145;"
                    FontFamily="MaterialIcons"
                    FontSize="30"
                    TextColor="#111111"

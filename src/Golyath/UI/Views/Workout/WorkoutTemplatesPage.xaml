@@ -12,16 +12,24 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <!-- ── Header ───────────────────────────────────────────────────── -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="16,16,16,12">
+        <!-- ── Header: same style as History ──────────────────────────────── -->
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Padding="20,16,16,12">
             <VerticalStackLayout Grid.Column="0" Spacing="2">
+                <Label Text="YOUR ROUTINES"
+                       FontSize="11"
+                       CharacterSpacing="1.5"
+                       TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
                 <Label Text="Train"
-                       FontSize="22"
+                       FontSize="28"
                        FontAttributes="Bold"
                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                <Label Text="Your routines"
-                       FontSize="13"
-                       TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                <!-- Gold accent underline -->
+                <BoxView WidthRequest="40"
+                         HeightRequest="3"
+                         CornerRadius="2"
+                         Color="{StaticResource Accent}"
+                         HorizontalOptions="Start"
+                         Margin="0,2,0,0" />
             </VerticalStackLayout>
             <Border Grid.Column="1"
                     StrokeShape="RoundRectangle 4"
@@ -30,7 +38,7 @@
                     BackgroundColor="Transparent"
                     WidthRequest="40"
                     HeightRequest="40"
-                    VerticalOptions="Start">
+                    VerticalOptions="Center">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NewRoutineCommand}" />
                 </Border.GestureRecognizers>
