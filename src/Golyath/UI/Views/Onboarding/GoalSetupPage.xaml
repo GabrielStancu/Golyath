@@ -4,7 +4,7 @@
              xmlns:enums="clr-namespace:Golyath.Core.Enums;assembly=Golyath"
              x:Class="Golyath.UI.Views.Onboarding.GoalSetupPage"
              x:Name="GoalPage"
-             Title=""
+             NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
     <Grid RowDefinitions="Auto,*,Auto" Padding="28,16">
@@ -164,7 +164,7 @@
                                Color="{StaticResource Accent}"
                                HorizontalOptions="Center"
                                Margin="0,0,0,8" />
-            <Button Text="Let's Go! →"
+            <Button Text="Let's Go!"
                     Command="{Binding CompleteCommand}"
                     IsEnabled="{Binding IsNotBusy}"
                     BackgroundColor="{StaticResource Accent}"

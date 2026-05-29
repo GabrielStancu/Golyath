@@ -1,5 +1,6 @@
 ﻿using Golyath.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Platform;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 
@@ -38,6 +39,90 @@ public static class MauiProgram
                         handler.PlatformView.TextCursorDrawable = cursorDrawable;
                     }
                     handler.PlatformView.SetHighlightColor(caretColor);
+                });
+
+                // Remove underline from DatePicker; show a runtime-themed dialog so dark/light
+                // mode is resolved at tap-time (values-night/ is skipped because UiMode is in
+                // ConfigurationChanges and the activity is never recreated on theme switch).
+                DatePickerHandler.Mapper.AppendToMapping("DatePickerCustomization", (handler, view) =>
+                {
+                    handler.PlatformView.SetBackground(
+                        new Android.Graphics.Drawables.ColorDrawable(Android.Graphics.Color.Transparent));
+
+                    Android.App.DatePickerDialog? activeDialog = null;
+
+                    handler.PlatformView.ShowPicker = () =>
+                    {
+                        try { activeDialog?.Dismiss(); } catch { }
+                        activeDialog = null;
+
+                        var datePicker = handler.VirtualView;
+                        if (datePicker == null) return;
+
+                        var isDark = App.Current?.RequestedTheme == AppTheme.Dark;
+                        var themeResId = isDark
+                            ? Resource.Style.GolyathDatePickerDialogDark
+                            : Resource.Style.GolyathDatePickerDialog;
+
+                        var date = datePicker.Date;
+                        activeDialog = new Android.App.DatePickerDialog(
+                            handler.PlatformView.Context,
+                            themeResId,
+                            (Android.App.DatePickerDialog.IOnDateSetListener?)null,
+                            date.Year,
+                            date.Month - 1,   // Android month is 0-indexed
+                            date.Day);
+
+                        activeDialog.DateSet += (_, args) =>
+                        {
+                            datePicker.Date = new DateTime(args.Year, args.Month + 1, args.DayOfMonth);
+                        };
+
+                        if (datePicker.MinimumDate != DateTime.MinValue)
+                            activeDialog.DatePicker.MinDate = (long)(datePicker.MinimumDate.ToUniversalTime()
+                                - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+
+                        if (datePicker.MaximumDate != DateTime.MaxValue)
+                            activeDialog.DatePicker.MaxDate = (long)(datePicker.MaximumDate.ToUniversalTime()
+                                - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+                        // android:textColorPrimary makes calendar numbers white but also
+                        // turns the header date white. Fix the header programmatically
+                        // before Show() so there is no flicker.
+                        if (isDark)
+                        {
+                            void DarkenViews(Android.Views.ViewGroup vg)
+                            {
+                                var dark = Android.Graphics.Color.ParseColor("#111111");
+                                for (int i = 0; i < vg.ChildCount; i++)
+                                {
+                                    if (vg.GetChildAt(i) is Android.Widget.TextView tv)
+                                        tv.SetTextColor(dark);
+                                    else if (vg.GetChildAt(i) is Android.Views.ViewGroup inner)
+                                        DarkenViews(inner);
+                                }
+                            }
+                            // The header is the first child of the DatePicker widget.
+                            var dp = activeDialog.DatePicker;
+                            if (dp.ChildCount > 0 && dp.GetChildAt(0) is Android.Views.ViewGroup headerGroup)
+                                DarkenViews(headerGroup);
+                        }
+                        activeDialog.Show();
+
+                        // Theme attributes don't reach DatePickerDialog buttons —
+                        // set the OK / Cancel text colour programmatically.
+                        if (isDark)
+                        {
+                            var gold = Android.Graphics.Color.ParseColor("#FFD700");
+                            activeDialog.GetButton(-1)?.SetTextColor(gold); // BUTTON_POSITIVE
+                            activeDialog.GetButton(-2)?.SetTextColor(gold); // BUTTON_NEGATIVE
+                        }
+                    };
+
+                    handler.PlatformView.HidePicker = () =>
+                    {
+                        try { activeDialog?.Dismiss(); } catch { }
+                        activeDialog = null;
+                    };
                 });
 
                 // Remove underline from Picker controls

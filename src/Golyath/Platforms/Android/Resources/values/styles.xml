@@ -2,9 +2,13 @@
 <resources>
     <style name="Maui.MainTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:colorBackground">@android:color/white</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">#FFD700</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#FFD700</item>
         <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_drawable</item>
+        <item name="colorControlActivated">#FFD700</item>
+        <item name="android:datePickerDialogTheme">@style/GolyathDatePickerDialog</item>
     </style>
 
     <style name="Maui.SplashTheme" parent="Maui.MainTheme">
@@ -13,7 +17,31 @@
 
     <style name="Maui.MainTheme.NoActionBar" parent="Maui.MainTheme" />
 
-    <!-- Override dialog theme to avoid dialogCornerRadius issues -->
+    <!-- DatePicker dialog — gold accent, light background, dark text (light mode) -->
+    <style name="GolyathDatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">#FFD700</item>
+        <item name="colorOnPrimary">#111111</item>
+        <item name="colorAccent">#FFD700</item>
+        <item name="android:textColorPrimary">#111111</item>
+        <item name="android:textColorSecondary">#555555</item>
+    </style>
+
+    <!-- Gold DatePicker dialog — dark mode (dark surface, white text, gold accent) -->
+    <style name="GolyathDatePickerDialogDark" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">#FFD700</item>
+        <item name="colorOnPrimary">#111111</item>
+        <item name="colorAccent">#FFD700</item>
+        <item name="android:windowBackground">@drawable/dark_dialog_background</item>
+        <item name="android:colorBackground">#1E1E1E</item>
+        <!-- White calendar day numbers on dark background -->
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#AAAAAA</item>
+        <item name="colorControlHighlight">#33FFD700</item>
+    </style>
+
+    <!-- Gold overlay for all other dialogs (AlertDialog etc.) -->
     <style name="ThemeOverlay.MaterialComponents.Dialog" parent="@style/ThemeOverlay.MaterialComponents.Dialog">
+        <item name="colorPrimary">#FFD700</item>
+        <item name="colorOnPrimary">#111111</item>
     </style>
 </resources>

@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Golyath.UI.Views.Onboarding.ProfileSetupPage"
-             Title=""
+             NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
     <ScrollView>
@@ -155,7 +155,7 @@
                    Margin="0,0,0,12" />
 
             <!-- Continue button -->
-            <Button Text="Continue →"
+            <Button Text="Continue"
                     Command="{Binding ContinueCommand}"
                     BackgroundColor="{StaticResource Accent}"
                     TextColor="{StaticResource AccentText}"

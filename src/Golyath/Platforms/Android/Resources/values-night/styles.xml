@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- DatePicker dialog — gold accent, dark background, white text (dark mode) -->
+    <style name="GolyathDatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">#FFD700</item>
+        <item name="colorOnPrimary">#111111</item>
+        <item name="colorAccent">#FFD700</item>
+        <item name="colorSurface">#1E1E1E</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="android:colorBackground">#1E1E1E</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#AAAAAA</item>
+    </style>
+
+    <!-- Gold overlay for other dialogs (AlertDialog etc.) in dark mode -->
+    <style name="ThemeOverlay.MaterialComponents.Dialog" parent="@style/ThemeOverlay.MaterialComponents.Dialog">
+        <item name="colorPrimary">#FFD700</item>
+        <item name="colorOnPrimary">#111111</item>
+    </style>
+
+</resources>

@@ -31,7 +31,7 @@
                             MaximumDate="{Binding MaxBirthday}"
                             MinimumDate="1920-01-01"
                             FontSize="16" HeightRequest="48"
-                            TextColor="White" />
+                            TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
             </Border>
 
             <!-- Units -->
