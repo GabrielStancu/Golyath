@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Suggestions"
              xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Suggestions.SuggestionsPage"
              x:DataType="vm:SuggestionsViewModel"
-             Title="Suggestions"
+             Title="{Binding [Suggestions_Title], Source={x:Static loc:LocalizationManager.Instance}}"
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
@@ -37,11 +38,11 @@
                            TextColor="{StaticResource TextPrimaryDark}" />
                 </Border>
                 <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                    <Label Text="Smart Suggestions"
+                    <Label Text="{Binding [Suggestions_Title], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="22"
                            FontAttributes="Bold"
                            TextColor="{StaticResource TextPrimaryDark}" />
-                    <Label Text="Personalised recommendations based on your training data"
+                    <Label Text="{Binding [Suggestions_Subtitle], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="13"
                            TextColor="{StaticResource TextSecondaryDark}" />
                 </VerticalStackLayout>
@@ -72,12 +73,12 @@
                            FontFamily="MaterialIcons"
                            FontSize="56"
                            HorizontalOptions="Center" />
-                    <Label Text="No Suggestions Right Now"
+                    <Label Text="{Binding [Suggestions_Empty], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="18"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
                            TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
-                    <Label Text="Keep training! Suggestions will appear once you have enough data to analyse."
+                    <Label Text="{Binding [Suggestions_EmptyHint], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="14"
                            HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"

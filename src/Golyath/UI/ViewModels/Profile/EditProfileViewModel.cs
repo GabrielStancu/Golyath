@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Golyath.Application.Localization;
 using Golyath.Application.Services;
 using Golyath.Core.Enums;
 using Golyath.Core.Utilities;
@@ -20,6 +21,13 @@ public partial class EditProfileViewModel : ObservableObject
         _userService = userService;
         _themeService = themeService;
         _dataPortabilityService = dataPortabilityService;
+
+        // When language changes live, refresh unit labels
+        LocalizationManager.Instance.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == "Item[]")
+                RefreshUnitLabels();
+        };
     }
 
     public event EventHandler? SaveCompleted;
@@ -31,8 +39,8 @@ public partial class EditProfileViewModel : ObservableObject
 
     [ObservableProperty] private string _heightInput = string.Empty;
     [ObservableProperty] private string _weightInput = string.Empty;
-    [ObservableProperty] private string _heightLabel = "Height (cm)";
-    [ObservableProperty] private string _weightLabel = "Weight (kg)";
+    [ObservableProperty] private string _heightLabel = LocalizationManager.Instance["Profile_HeightLabel_Cm"];
+    [ObservableProperty] private string _weightLabel = LocalizationManager.Instance["Profile_WeightLabel_Kg"];
     [ObservableProperty] private bool _isImperialUnit;
 
     public bool IsMetricSelected => !IsImperialUnit;
@@ -40,6 +48,14 @@ public partial class EditProfileViewModel : ObservableObject
     [ObservableProperty] private string _selectedGenderDisplay = "Prefer not to say";
     [ObservableProperty] private string _selectedGoalDisplay = "Balanced";
     [ObservableProperty] private bool _isDarkMode;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedLanguageFlag))]
+    [NotifyPropertyChangedFor(nameof(SelectedLanguageName))]
+    private AppLanguage _selectedLanguage = AppLanguage.English;
+
+    public string SelectedLanguageFlag => UI.Controls.LanguageSelectionPopup.FlagFor(SelectedLanguage);
+    public string SelectedLanguageName => UI.Controls.LanguageSelectionPopup.NameFor(SelectedLanguage);
     private bool _isInitializing;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSaveMessage))]
@@ -54,7 +70,7 @@ public partial class EditProfileViewModel : ObservableObject
     public bool IsNotBusy => !IsBusy;
 
     public IReadOnlyList<string> GenderOptions { get; } =
-        ["Male", "Female", "Other", "Prefer not to say"];
+        ["Male", "Female", "Prefer not to say"];
 
     public IReadOnlyList<string> GoalOptions { get; } =
         ["Strength", "Hypertrophy", "Fat Loss", "Balanced"];
@@ -70,8 +86,6 @@ public partial class EditProfileViewModel : ObservableObject
                 HeightInput = Math.Round(UnitConversion.CmToInches(h), 1).ToString("F1", ci);
             if (double.TryParse(WeightInput, System.Globalization.NumberStyles.Any, ci, out var w))
                 WeightInput = Math.Round(UnitConversion.KgToLb(w), 1).ToString("F1", ci);
-            HeightLabel = "Height (in)";
-            WeightLabel = "Weight (lb)";
         }
         else
         {
@@ -79,9 +93,18 @@ public partial class EditProfileViewModel : ObservableObject
                 HeightInput = Math.Round(UnitConversion.InchesToCm(h), 1).ToString("F1", ci);
             if (double.TryParse(WeightInput, System.Globalization.NumberStyles.Any, ci, out var w))
                 WeightInput = Math.Round(UnitConversion.LbToKg(w), 1).ToString("F1", ci);
-            HeightLabel = "Height (cm)";
-            WeightLabel = "Weight (kg)";
         }
+        RefreshUnitLabels();
+    }
+
+    private void RefreshUnitLabels()
+    {
+        HeightLabel = IsImperialUnit
+            ? LocalizationManager.Instance["Profile_HeightLabel_In"]
+            : LocalizationManager.Instance["Profile_HeightLabel_Cm"];
+        WeightLabel = IsImperialUnit
+            ? LocalizationManager.Instance["Profile_WeightLabel_Lb"]
+            : LocalizationManager.Instance["Profile_WeightLabel_Kg"];
     }
 
     partial void OnIsDarkModeChanged(bool value)
@@ -124,7 +147,6 @@ public partial class EditProfileViewModel : ObservableObject
             {
                 Gender.Male   => "Male",
                 Gender.Female => "Female",
-                Gender.Other  => "Other",
                 _             => "Prefer not to say"
             };
 
@@ -135,6 +157,8 @@ public partial class EditProfileViewModel : ObservableObject
                 FitnessGoal.FatLoss     => "Fat Loss",
                 _                       => "Balanced"
             };
+
+            SelectedLanguage = user.Language;
         }
         finally
         {
@@ -264,7 +288,7 @@ public partial class EditProfileViewModel : ObservableObject
             if (!double.TryParse(HeightInput, System.Globalization.NumberStyles.Any, ci, out var height) || height <= 0 ||
                 !double.TryParse(WeightInput, System.Globalization.NumberStyles.Any, ci, out var weight) || weight <= 0)
             {
-                SaveMessage = "Please enter valid height and weight.";
+                SaveMessage = LocalizationManager.Instance["Profile_InvalidHeightWeight"];
                 return;
             }
 
@@ -275,7 +299,6 @@ public partial class EditProfileViewModel : ObservableObject
             {
                 "Male"   => Gender.Male,
                 "Female" => Gender.Female,
-                "Other"  => Gender.Other,
                 _        => Gender.PreferNotToSay
             };
 
@@ -297,9 +320,11 @@ public partial class EditProfileViewModel : ObservableObject
             user.Gender      = gender;
             user.FitnessGoal = goal;
             user.PreferredUnit = IsImperialUnit ? WeightUnit.Lb : WeightUnit.Kg;
+            user.Language    = SelectedLanguage;
 
             await _userService.UpdateUserAsync(user);
-            SaveMessage = "Profile saved!";
+            LocalizationManager.Instance.SetLanguage(SelectedLanguage);
+            SaveMessage = LocalizationManager.Instance["Profile_Saved"];
             SaveCompleted?.Invoke(this, EventArgs.Empty);
         }
         finally

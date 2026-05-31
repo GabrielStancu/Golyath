@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.History"
              xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
              xmlns:controls="clr-namespace:Golyath.UI.Controls"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.History.HistoryPage"
              x:DataType="vm:HistoryViewModel"
              Shell.NavBarIsVisible="False"
@@ -18,7 +19,7 @@
                    FontSize="11"
                    CharacterSpacing="1.5"
                    TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
-            <Label Text="History"
+            <Label Text="{Binding [History_Title], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="28"
                    FontAttributes="Bold"
                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
@@ -60,7 +61,7 @@
                                            FontSize="28"
                                            FontAttributes="Bold"
                                            TextColor="{StaticResource Accent}" />
-                                    <Label Text="Sessions this month"
+                                    <Label Text="{Binding [History_SessionsThisMonth], Source={x:Static loc:LocalizationManager.Instance}}"
                                            FontSize="11"
                                            TextColor="{StaticResource TextMutedDark}" />
                                 </VerticalStackLayout>
@@ -75,7 +76,7 @@
                                            FontSize="28"
                                            FontAttributes="Bold"
                                            TextColor="{StaticResource TextPrimaryDark}" />
-                                    <Label Text="Total volume"
+                                    <Label Text="{Binding [History_TotalVolume], Source={x:Static loc:LocalizationManager.Instance}}"
                                            FontSize="11"
                                            TextColor="{StaticResource TextMutedDark}" />
                                 </VerticalStackLayout>
@@ -90,13 +91,13 @@
                             <VerticalStackLayout Spacing="8">
                                 <Grid ColumnDefinitions="*,Auto">
                                     <Label Grid.Column="0"
-                                           Text="WEEKLY VOLUME (KG)"
+                                           Text="{Binding [History_WeeklyVolumeKg], Source={x:Static loc:LocalizationManager.Instance}}"
                                            FontSize="9"
                                            CharacterSpacing="1"
                                            TextColor="{StaticResource TextMutedDark}"
                                            VerticalOptions="Center" />
                                     <Label Grid.Column="1"
-                                           Text="4-WEEK TREND"
+                                           Text="{Binding [History_4WeekTrend], Source={x:Static loc:LocalizationManager.Instance}}"
                                            FontSize="9"
                                            CharacterSpacing="0.8"
                                            TextColor="{StaticResource Accent}"
@@ -113,7 +114,7 @@
                         <!-- Section header: RECENT SESSIONS + FILTER -->
                         <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
                             <Label Grid.Column="0"
-                                   Text="RECENT SESSIONS"
+                                   Text="{Binding [History_RecentSessions], Source={x:Static loc:LocalizationManager.Instance}}"
                                    Style="{StaticResource SectionHeader}"
                                    VerticalOptions="Center" />
                             <Border Grid.Column="1"
@@ -141,12 +142,12 @@
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
                                          Spacing="8" Margin="0,48">
-                        <Label Text="No workouts found"
+                        <Label Text="{Binding [History_NoWorkouts], Source={x:Static loc:LocalizationManager.Instance}}"
                                FontSize="16"
                                FontAttributes="Bold"
                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                HorizontalOptions="Center" />
-                        <Label Text="Complete a workout to see your history here"
+                        <Label Text="{Binding [History_NoWorkoutsHint], Source={x:Static loc:LocalizationManager.Instance}}"
                                FontSize="13"
                                TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
                                HorizontalOptions="Center"

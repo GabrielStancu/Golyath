@@ -21,6 +21,8 @@ public class User : BaseEntity
 
     public WeightUnit PreferredUnit { get; set; } = WeightUnit.Kg;
 
+    public AppLanguage Language { get; set; } = AppLanguage.English;
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

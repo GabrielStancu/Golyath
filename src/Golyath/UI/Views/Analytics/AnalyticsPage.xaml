@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Analytics"
              xmlns:controls="clr-namespace:Golyath.UI.Controls"
              xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Analytics.AnalyticsPage"
              x:DataType="vm:AnalyticsViewModel"
              Shell.NavBarIsVisible="False"
@@ -22,7 +23,7 @@
                        FontAttributes="Bold"
                        CharacterSpacing="1.5"
                        TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
-                <Label Text="Progress"
+                <Label Text="{Binding [Analytics_Title], Source={x:Static loc:LocalizationManager.Instance}}"
                        FontSize="28"
                        FontAttributes="Bold"
                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
@@ -97,7 +98,7 @@
             <!-- ── 1RM Trend ───────────────────────────────────────────── -->
             <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="1RM TREND" Style="{StaticResource SectionHeader}" />
+                    <Label Text="{Binding [Analytics_1RMTrend], Source={x:Static loc:LocalizationManager.Instance}}" Style="{StaticResource SectionHeader}" />
 
                     <!-- Exercise picker -->
                     <Border StrokeShape="RoundRectangle 8"
@@ -128,7 +129,7 @@
                                                HeightRequest="160"
                                                HorizontalOptions="Fill" />
 
-                    <Label Text="No data for the selected exercise / period."
+                    <Label Text="{Binding [Analytics_NoData], Source={x:Static loc:LocalizationManager.Instance}}"
                            IsVisible="{Binding HasStrengthData, Converter={StaticResource InvertBoolConverter}}"
                            HorizontalOptions="Center"
                            FontSize="13"
@@ -139,7 +140,7 @@
             <!-- ── Muscle Balance ──────────────────────────────────────── -->
             <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="MUSCLE BALANCE" Style="{StaticResource SectionHeader}" />
+                    <Label Text="{Binding [Analytics_MuscleBalance], Source={x:Static loc:LocalizationManager.Instance}}" Style="{StaticResource SectionHeader}" />
 
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
 
@@ -184,7 +185,7 @@
                 <!-- Recovery -->
                 <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="12">
                     <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
-                        <Label Text="RECOVERY" Style="{StaticResource SectionHeader}"
+                        <Label Text="{Binding [Analytics_Recovery], Source={x:Static loc:LocalizationManager.Instance}}" Style="{StaticResource SectionHeader}"
                                HorizontalOptions="Center" />
                         <Grid>
                             <controls:RadialGauge Value="{Binding RecoveryGaugeValue}"
@@ -214,7 +215,7 @@
                 <!-- Intensity -->
                 <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="12">
                     <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
-                        <Label Text="INTENSITY" Style="{StaticResource SectionHeader}"
+                        <Label Text="{Binding [Analytics_Intensity], Source={x:Static loc:LocalizationManager.Instance}}" Style="{StaticResource SectionHeader}"
                                HorizontalOptions="Center" />
                         <Grid>
                             <controls:RadialGauge Value="{Binding IntensityGaugeValue}"
@@ -244,7 +245,7 @@
             </Grid>
 
             <!-- ── All Insights ────────────────────────────────────────── -->
-            <Label Text="INSIGHTS"
+            <Label Text="{Binding [Analytics_Insights], Source={x:Static loc:LocalizationManager.Instance}}"
                    Style="{StaticResource SectionHeader}"
                    IsVisible="{Binding HasInsights}" />
 
@@ -293,7 +294,7 @@
             </VerticalStackLayout>
 
             <!-- Empty state -->
-            <Label Text="No insights yet — keep training!"
+            <Label Text="{Binding [Analytics_NoInsights], Source={x:Static loc:LocalizationManager.Instance}}"
                    IsVisible="{Binding HasInsights, Converter={StaticResource InvertBoolConverter}}"
                    HorizontalOptions="Center"
                    FontSize="14"

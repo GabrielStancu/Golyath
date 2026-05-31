@@ -21,7 +21,7 @@ public sealed class UserService : IUserService
 
     public Task<User?> GetCurrentUserAsync() => _userRepository.GetCurrentUserAsync();
 
-    public async Task<User> CreateUserAsync(string nickname, DateTime birthday, double heightCm, double weightKg, Gender gender, FitnessGoal fitnessGoal, WeightUnit preferredUnit)
+    public async Task<User> CreateUserAsync(string nickname, DateTime birthday, double heightCm, double weightKg, Gender gender, FitnessGoal fitnessGoal, WeightUnit preferredUnit, AppLanguage language = AppLanguage.English)
     {
         var user = new User
         {
@@ -32,6 +32,7 @@ public sealed class UserService : IUserService
             Gender = gender,
             FitnessGoal = fitnessGoal,
             PreferredUnit = preferredUnit,
+            Language = language,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

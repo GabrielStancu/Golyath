@@ -65,6 +65,7 @@ public sealed class DatabaseService : IAsyncDisposable
         new Migration001_InitialSchema(),
         new Migration002_ExerciseMetadata(),
         new Migration003_Routines(),
-        new Migration004_RoutineRestSeconds()
+        new Migration004_RoutineRestSeconds(),
+        new Migration005_UserLanguage(),
     ];
 }

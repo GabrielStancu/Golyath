@@ -12,4 +12,5 @@ public sealed class OnboardingDataService
     public Gender Gender { get; set; } = Gender.PreferNotToSay;
     public FitnessGoal FitnessGoal { get; set; } = FitnessGoal.Balanced;
     public WeightUnit PreferredUnit { get; set; } = WeightUnit.Kg;
+    public AppLanguage Language { get; set; } = AppLanguage.English;
 }

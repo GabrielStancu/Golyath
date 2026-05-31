@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Golyath.Application.DTOs;
+using Golyath.Application.Localization;
 using Golyath.Application.Services;
 using Golyath.UI.ViewModels.Workout;
 using Golyath.UI.Views.Workout;
@@ -61,7 +62,11 @@ public partial class DashboardViewModel : ObservableObject, IRecipient<WorkoutCh
         {
             var user = await _userService.GetCurrentUserAsync();
             var hour = DateTime.Now.Hour;
-            GreetingLine = hour < 12 ? "GOOD MORNING" : hour < 17 ? "GOOD AFTERNOON" : "GOOD EVENING";
+            GreetingLine = hour < 12
+                ? LocalizationManager.Instance["Dashboard_GoodMorning"]
+                : hour < 17
+                    ? LocalizationManager.Instance["Dashboard_GoodAfternoon"]
+                    : LocalizationManager.Instance["Dashboard_GoodEvening"];
             UserName = user?.Nickname is { Length: > 0 } nick ? nick.ToUpperInvariant() : "ATHLETE";
             UserInitial = UserName.Length > 0 ? UserName[..1] : "A";
 
@@ -88,8 +93,8 @@ public partial class DashboardViewModel : ObservableObject, IRecipient<WorkoutCh
             }
             else
             {
-                HeroTitle = "Free Workout";
-                HeroSubtitle = "Add exercises on the fly";
+                HeroTitle = LocalizationManager.Instance["Dashboard_FreeWorkout"];
+                HeroSubtitle = LocalizationManager.Instance["Dashboard_FreeWorkoutHint"];
                 _heroRoutineId = null;
             }
 

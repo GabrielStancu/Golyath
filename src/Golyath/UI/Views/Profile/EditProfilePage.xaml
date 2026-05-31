@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Profile.EditProfilePage"
-             Title="My Profile"
+             Title="{Binding [Profile_Title], Source={x:Static loc:LocalizationManager.Instance}}"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
     <ScrollView>
         <VerticalStackLayout Padding="28,16,28,48" Spacing="0">
 
             <!-- Nickname -->
-            <Label Text="NICKNAME" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Profile_Nickname], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
@@ -21,7 +22,7 @@
             </Border>
 
             <!-- Birthday -->
-            <Label Text="BIRTHDAY" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Profile_Birthday], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
@@ -35,7 +36,7 @@
             </Border>
 
             <!-- Units -->
-            <Label Text="UNITS" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Profile_Units], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,8" />
             <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,20">
                 <Button Grid.Column="0" Text="kg / cm"
@@ -93,7 +94,7 @@
             </Border>
 
             <!-- Gender -->
-            <Label Text="GENDER" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Profile_Gender], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
@@ -118,7 +119,7 @@
             </Border>
 
             <!-- Fitness Goal -->
-            <Label Text="FITNESS GOAL" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Profile_FitnessGoal], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
@@ -146,8 +147,37 @@
             <BoxView HeightRequest="1" Margin="0,0,0,28"
                      BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}" />
 
+            <!-- Language -->
+            <Label Text="{Binding [Profile_Language], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,12" Margin="0,0,0,28">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLanguageTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                    <Label Grid.Column="0"
+                           Text="{Binding SelectedLanguageFlag}"
+                           FontSize="22"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="{Binding SelectedLanguageName}"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="2"
+                           Text="&#xE5CF;"
+                           FontFamily="MaterialIcons"
+                           FontSize="18"
+                           TextColor="{AppThemeBinding Light=#888888, Dark=#666666}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
             <!-- DATA & BACKUP -->
-            <Label Text="DATA &amp; BACKUP" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Profile_DataBackup], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,10" />
 
             <!-- Export Card -->
@@ -163,13 +193,13 @@
                                TextColor="White"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Export Data" FontSize="16" FontAttributes="Bold"
+                            <Label Text="{Binding [Profile_ExportData], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="16" FontAttributes="Bold"
                                    TextColor="White" />
-                            <Label Text="Save a backup of all your workouts and data"
+                            <Label Text="{Binding [Profile_ExportData_Hint], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="13" TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
-                    <Button Text="Export"
+                    <Button Text="{Binding [Profile_Export], Source={x:Static loc:LocalizationManager.Instance}}"
                             Command="{Binding ExportDataCommand}"
                             BackgroundColor="{StaticResource Accent}"
                             TextColor="{StaticResource AccentText}"
@@ -192,13 +222,13 @@
                                TextColor="White"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Import Data" FontSize="16" FontAttributes="Bold"
+                            <Label Text="{Binding [Profile_ImportData], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="16" FontAttributes="Bold"
                                    TextColor="White" />
-                            <Label Text="Restore from a previous backup file"
+                            <Label Text="{Binding [Profile_ImportData_Hint], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="13" TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
-                    <Button Text="Import"
+                    <Button Text="{Binding [Profile_Import], Source={x:Static loc:LocalizationManager.Instance}}"
                             Command="{Binding ImportDataCommand}"
                             BackgroundColor="{StaticResource Accent}"
                             TextColor="{StaticResource AccentText}"
@@ -223,10 +253,10 @@
             <!-- Dark mode toggle -->
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,32">
                 <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="2">
-                    <Label Text="Dark Mode"
+                    <Label Text="{Binding [Profile_DarkMode], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="16" FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
-                    <Label Text="Easier on the eyes in low light"
+                    <Label Text="{Binding [Profile_DarkMode_Hint], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="13"
                            TextColor="{AppThemeBinding Light=#777777, Dark=#999999}" />
                 </VerticalStackLayout>
@@ -245,7 +275,7 @@
                    Margin="0,0,0,12" />
 
             <!-- Save button -->
-            <Button Text="Save Changes"
+            <Button Text="{Binding [Profile_SaveChanges], Source={x:Static loc:LocalizationManager.Instance}}"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsNotBusy}"
                     BackgroundColor="{StaticResource Accent}"

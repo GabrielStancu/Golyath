@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Onboarding.WelcomePage"
              BackgroundColor="{StaticResource AppDarkBg}"
              NavigationPage.HasNavigationBar="False">
@@ -26,7 +27,7 @@
                    HorizontalOptions="Center"
                    CharacterSpacing="6" />
 
-            <Label Text="Your Personal Training Intelligence"
+            <Label Text="{Binding [Welcome_Subtitle], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="16"
                    TextColor="#AAAAAA"
                    HorizontalOptions="Center"
@@ -39,7 +40,7 @@
                              Padding="32,0,32,64"
                              Spacing="12">
 
-            <Button Text="START TRAINING"
+            <Button Text="{Binding [Welcome_StartTraining], Source={x:Static loc:LocalizationManager.Instance}}"
                     Command="{Binding NewProfileCommand}"
                     BackgroundColor="{StaticResource Accent}"
                     TextColor="{StaticResource AccentText}"
@@ -49,7 +50,7 @@
                     FontSize="16"
                     CharacterSpacing="1" />
 
-            <Button Text="Restore from Backup"
+            <Button Text="{Binding [Welcome_RestoreBackup], Source={x:Static loc:LocalizationManager.Instance}}"
                     Command="{Binding RestoreBackupCommand}"
                     BackgroundColor="Transparent"
                     TextColor="#AAAAAA"

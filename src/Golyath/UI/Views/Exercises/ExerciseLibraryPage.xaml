@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Exercises"
              xmlns:entities="clr-namespace:Golyath.Core.Entities;assembly=Golyath"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Exercises.ExerciseLibraryPage"
              x:Name="ThisPage"
              x:DataType="vm:ExerciseLibraryViewModel"
@@ -19,11 +20,11 @@
                 Padding="16,16,16,12">
             <VerticalStackLayout Spacing="10">
                 <VerticalStackLayout Spacing="2">
-                    <Label Text="Exercise Library"
+                    <Label Text="{Binding [Exercises_Title], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="22"
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                    <Label Text="Browse and manage exercises"
+                    <Label Text="{Binding [Exercises_Subtitle], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="13"
                            TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                 </VerticalStackLayout>
@@ -34,7 +35,7 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}"
                         Padding="4,0">
                     <SearchBar Text="{Binding SearchQuery}"
-                               Placeholder="Search exercises…"
+                               Placeholder="{Binding [Exercises_SearchPlaceholder], Source={x:Static loc:LocalizationManager.Instance}}"
                                PlaceholderColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                BackgroundColor="Transparent"
@@ -119,11 +120,11 @@
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
                                          Spacing="8" Margin="0,60">
-                        <Label Text="No exercises found"
+                        <Label Text="{Binding [Exercises_NoExercises], Source={x:Static loc:LocalizationManager.Instance}}"
                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                FontSize="16"
                                HorizontalOptions="Center" />
-                        <Label Text="Try adjusting your search or filters"
+                        <Label Text="{Binding [Exercises_NoExercisesHint], Source={x:Static loc:LocalizationManager.Instance}}"
                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                FontSize="13"
                                HorizontalOptions="Center" />
@@ -184,7 +185,7 @@
                                                 StrokeShape="RoundRectangle 4"
                                                 Padding="6,2"
                                                 IsVisible="{Binding IsCustom}">
-                                            <Label Text="Custom"
+                                            <Label Text="{Binding [Exercises_Custom], Source={x:Static loc:LocalizationManager.Instance}}"
                                                    TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                                    FontSize="11" />
                                         </Border>

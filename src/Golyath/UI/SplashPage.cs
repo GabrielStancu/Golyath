@@ -1,3 +1,4 @@
+using Golyath.Application.Localization;
 using Golyath.Application.Services;
 using Golyath.Core.Abstractions;
 using Golyath.UI.Views.Onboarding;
@@ -29,6 +30,13 @@ internal sealed class SplashPage : ContentPage
         await seeder.SeedAsync();
 
         var userService = _services.GetRequiredService<IUserService>();
+
+        // Apply the saved language before any page is constructed so all
+        // x:Static and indexer bindings resolve in the correct culture.
+        var savedUser = await userService.GetCurrentUserAsync();
+        if (savedUser is not null)
+            LocalizationManager.Instance.SetLanguage(savedUser.Language);
+
         var hasUser = await userService.HasCompletedOnboardingAsync();
 
         Microsoft.Maui.Controls.Application.Current!.MainPage = hasUser

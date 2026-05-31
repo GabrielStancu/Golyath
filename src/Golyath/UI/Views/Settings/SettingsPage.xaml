@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Settings"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Settings.SettingsPage"
              x:DataType="vm:SettingsViewModel"
-             Title="Settings"
+             Title="{Binding [Settings_Title], Source={x:Static loc:LocalizationManager.Instance}}"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
 
     <ScrollView>
@@ -15,7 +16,7 @@
             <!-- ══════════════════════════════════════════════════════════ -->
 
             <!-- ── Section Header ──────────────────────────────────────── -->
-            <Label Text="PREFERENCES"
+            <Label Text="{Binding [Settings_Preferences], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="13"
                    FontAttributes="Bold"
                    TextColor="#888888"
@@ -35,11 +36,11 @@
                                FontSize="22"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Weight Unit"
+                            <Label Text="{Binding [Settings_WeightUnit], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="16"
                                    FontAttributes="Bold"
                                    TextColor="White" />
-                            <Label Text="Choose your preferred unit for logging weights"
+                            <Label Text="{Binding [Settings_WeightUnit_Hint], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="13"
                                    TextColor="#888888" />
                         </VerticalStackLayout>
@@ -103,11 +104,11 @@
                                FontSize="22"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Default Rest Timer"
+                            <Label Text="{Binding [Settings_RestTimer], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="16"
                                    FontAttributes="Bold"
                                    TextColor="White" />
-                            <Label Text="Auto-starts after each logged set"
+                            <Label Text="{Binding [Settings_RestTimer_Hint], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="13"
                                    TextColor="#888888" />
                         </VerticalStackLayout>
@@ -143,7 +144,7 @@
             <!-- ══════════════════════════════════════════════════════════ -->
 
             <!-- ── Section Header ──────────────────────────────────────── -->
-            <Label Text="DATA &amp; BACKUP"
+            <Label Text="{Binding [Settings_DataBackup], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="13"
                    FontAttributes="Bold"
                    TextColor="#888888"
@@ -164,17 +165,17 @@
                                FontSize="22"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Export Data"
+                            <Label Text="{Binding [Settings_ExportData], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="16"
                                    FontAttributes="Bold"
                                    TextColor="White" />
-                            <Label Text="Save a backup of all your workouts and data"
+                            <Label Text="{Binding [Settings_ExportData_Hint], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="13"
                                    TextColor="#888888" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
 
-                    <Button Text="Export"
+                    <Button Text="{Binding [Settings_Export], Source={x:Static loc:LocalizationManager.Instance}}"
                             Command="{Binding ExportDataCommand}"
                             BackgroundColor="{StaticResource Accent}"
                             TextColor="Black"
@@ -202,17 +203,17 @@
                                FontSize="22"
                                VerticalOptions="Center" />
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Import Data"
+                            <Label Text="{Binding [Settings_ImportData], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="16"
                                    FontAttributes="Bold"
                                    TextColor="White" />
-                            <Label Text="Restore from a previous backup file"
+                            <Label Text="{Binding [Settings_ImportData_Hint], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="13"
                                    TextColor="#888888" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
 
-                    <Button Text="Import"
+                    <Button Text="{Binding [Settings_Import], Source={x:Static loc:LocalizationManager.Instance}}"
                             Command="{Binding ImportDataCommand}"
                             BackgroundColor="{StaticResource Accent}"
                             TextColor="Black"

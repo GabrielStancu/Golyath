@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.Dashboard"
              xmlns:controls="clr-namespace:Golyath.UI.Controls"
              xmlns:dto="clr-namespace:Golyath.Application.DTOs;assembly=Golyath"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Dashboard.DashboardPage"
              x:DataType="vm:DashboardViewModel"
              Shell.NavBarIsVisible="False"
@@ -91,7 +92,7 @@
                         <VerticalStackLayout Spacing="6"
                                              Padding="20,24,20,20"
                                              VerticalOptions="Center">
-                            <Label Text="TODAY'S SESSION"
+                            <Label Text="{Binding [Dashboard_TodaySession], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="11"
                                    CharacterSpacing="1.2"
                                    FontAttributes="Bold"
@@ -104,7 +105,7 @@
                                    FontSize="13"
                                    TextColor="#999999" />
                             <!-- Start Session button -->
-                            <Button Text="START SESSION"
+                            <Button Text="{Binding [Dashboard_StartSession], Source={x:Static loc:LocalizationManager.Instance}}"
                                     Command="{Binding StartWorkoutCommand}"
                                     BackgroundColor="#FFD700"
                                     TextColor="#111111"
@@ -136,14 +137,14 @@
                                        FontAttributes="Bold"
                                        VerticalOptions="End"
                                        TextColor="{StaticResource Accent}" />
-                                <Label Text="SESSIONS"
+                                <Label Text="{Binding [Dashboard_Sessions], Source={x:Static loc:LocalizationManager.Instance}}"
                                        FontSize="9"
                                        CharacterSpacing="0.8"
                                        VerticalOptions="End"
                                        Margin="0,0,0,4"
                                        TextColor="{StaticResource TextMutedDark}" />
                             </HorizontalStackLayout>
-                            <Label Text="THIS WEEK"
+                            <Label Text="{Binding [Dashboard_ThisWeek], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="9"
                                    CharacterSpacing="0.8"
                                    HorizontalOptions="Center"
@@ -170,7 +171,7 @@
                                        Margin="0,0,0,4"
                                        TextColor="{StaticResource TextMutedDark}" />
                             </HorizontalStackLayout>
-                            <Label Text="THIS WEEK"
+                            <Label Text="{Binding [Dashboard_ThisWeek], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="9"
                                    CharacterSpacing="0.8"
                                    HorizontalOptions="Center"
@@ -195,7 +196,7 @@
                                        FontSize="20"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
-                            <Label Text="STREAK"
+                            <Label Text="{Binding [Dashboard_Streak], Source={x:Static loc:LocalizationManager.Instance}}"
                                    FontSize="9"
                                    CharacterSpacing="0.8"
                                    HorizontalOptions="Center"
@@ -207,11 +208,11 @@
                 <!-- ── My Routines Section ─────────────────────────────── -->
                 <Grid ColumnDefinitions="*, Auto, Auto" Margin="0,8,0,0">
                     <Label Grid.Column="0"
-                           Text="MY ROUTINES"
+                           Text="{Binding [Dashboard_MyRoutines], Source={x:Static loc:LocalizationManager.Instance}}"
                            Style="{StaticResource SectionHeader}"
                            VerticalOptions="Center" />
                     <Label Grid.Column="1"
-                           Text="See all ›"
+                           Text="{Binding [Dashboard_SeeAll], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="12"
                            TextColor="{StaticResource Accent}"
                            VerticalOptions="Center"
@@ -231,7 +232,7 @@
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NewRoutineCommand}" />
                         </Border.GestureRecognizers>
-                        <Label Text="+ NEW"
+                        <Label Text="{Binding [Dashboard_New], Source={x:Static loc:LocalizationManager.Instance}}"
                                FontSize="11"
                                FontAttributes="Bold"
                                CharacterSpacing="0.8"
@@ -244,11 +245,11 @@
                                      Spacing="4"
                                      HorizontalOptions="Center"
                                      Margin="0,8,0,0">
-                    <Label Text="No routines yet"
+                    <Label Text="{Binding [Dashboard_NoRoutines], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="14"
                            HorizontalOptions="Center"
                            TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                    <Label Text="Tap '+ NEW' to create your first routine."
+                    <Label Text="{Binding [Dashboard_NoRoutinesHint], Source={x:Static loc:LocalizationManager.Instance}}"
                            FontSize="12"
                            HorizontalOptions="Center"
                            TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />

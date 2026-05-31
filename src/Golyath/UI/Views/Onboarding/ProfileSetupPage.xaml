@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Onboarding.ProfileSetupPage"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource AppLightBg}, Dark={StaticResource AppDarkBg}}">
@@ -17,23 +18,23 @@
             </HorizontalStackLayout>
 
             <!-- Header -->
-            <Label Text="Tell us about you"
+            <Label Text="{Binding [ProfileSetup_Title], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="28" FontAttributes="Bold"
                    TextColor="{AppThemeBinding Light=#111111, Dark=White}"
                    Margin="0,0,0,4" />
-            <Label Text="Personalise your training experience"
+            <Label Text="{Binding [ProfileSetup_Subtitle], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="15"
                    TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
                    Margin="0,0,0,28" />
 
             <!-- Nickname -->
-            <Label Text="NICKNAME" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Field_Nickname], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
                     BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
                     Padding="14,4" Margin="0,0,0,20">
-                <Entry Placeholder="e.g. Alex"
+                <Entry Placeholder="{Binding [Field_NicknamePlaceholder], Source={x:Static loc:LocalizationManager.Instance}}"
                        Text="{Binding Nickname}"
                        FontSize="16"
                        ReturnType="Next"
@@ -42,7 +43,7 @@
             </Border>
 
             <!-- Birthday -->
-            <Label Text="BIRTHDAY" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Field_Birthday], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
@@ -57,7 +58,7 @@
             </Border>
 
             <!-- Units toggle -->
-            <Label Text="UNITS" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Field_Units], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,8" />
             <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,20">
                 <Button Grid.Column="0" Text="kg / cm"
@@ -123,7 +124,7 @@
             </Border>
 
             <!-- Gender -->
-            <Label Text="GENDER" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+            <Label Text="{Binding [Field_Gender], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
                    TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
             <Border StrokeShape="RoundRectangle 10"
                     Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
@@ -147,6 +148,35 @@
                 </Grid>
             </Border>
 
+            <!-- Language -->
+            <Label Text="{Binding [Field_Language], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="11" FontAttributes="Bold" CharacterSpacing="1"
+                   TextColor="{AppThemeBinding Light=#888888, Dark=#777777}" Margin="0,0,0,6" />
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="{AppThemeBinding Light={StaticResource AppLightBorder}, Dark={StaticResource AppDarkBorder}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource AppLightSurface}, Dark={StaticResource AppDarkSurface}}"
+                    Padding="14,12" Margin="0,0,0,28">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLanguageTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                    <Label Grid.Column="0"
+                           Text="{Binding SelectedLanguageFlag}"
+                           FontSize="22"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="{Binding SelectedLanguageName}"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=White}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="2"
+                           Text="&#xE5CF;"
+                           FontFamily="MaterialIcons"
+                           FontSize="18"
+                           TextColor="{AppThemeBinding Light=#888888, Dark=#666666}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
             <!-- Validation message -->
             <Label Text="{Binding ValidationMessage}"
                    TextColor="#E05555"
@@ -155,7 +185,7 @@
                    Margin="0,0,0,12" />
 
             <!-- Continue button -->
-            <Button Text="Continue"
+            <Button Text="{Binding [ProfileSetup_Continue], Source={x:Static loc:LocalizationManager.Instance}}"
                     Command="{Binding ContinueCommand}"
                     BackgroundColor="{StaticResource Accent}"
                     TextColor="{StaticResource AccentText}"

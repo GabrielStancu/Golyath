@@ -41,4 +41,12 @@ public partial class ProfileSetupPage : ContentPage
         if (result is string selected)
             _viewModel.SelectedGenderDisplay = selected;
     }
+
+    private async void OnLanguageTapped(object? sender, TappedEventArgs e)
+    {
+        var popup = new LanguageSelectionPopup(_viewModel.SelectedLanguage);
+        var result = await popup.ShowAsync(this);
+        if (result is Golyath.Core.Enums.AppLanguage lang)
+            _viewModel.SelectedLanguage = lang;
+    }
 }

@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Golyath.Application.Localization;
 using Golyath.Application.Services;
 using Golyath.Core.Enums;
 using Golyath.Core.Utilities;
@@ -33,10 +34,10 @@ public partial class ProfileSetupViewModel : ObservableObject
     private string _weightInput = "70";
 
     [ObservableProperty]
-    private string _heightLabel = "Height (cm)";
+    private string _heightLabel = LocalizationManager.Instance["Profile_Height_Cm"];
 
     [ObservableProperty]
-    private string _weightLabel = "Weight (kg)";
+    private string _weightLabel = LocalizationManager.Instance["Profile_Weight_Kg"];
 
     [ObservableProperty]
     private bool _isImperialUnit;
@@ -50,11 +51,17 @@ public partial class ProfileSetupViewModel : ObservableObject
         OnPropertyChanged(nameof(HasValidationMessage));
 
     public IReadOnlyList<string> GenderOptions { get; } =
-        ["Male", "Female", "Other", "Prefer not to say"];
+        ["Male", "Female", "Prefer not to say"];
 
     [ObservableProperty]
     private string _selectedGenderDisplay = "Prefer not to say";
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedLanguageFlag))]
+    [NotifyPropertyChangedFor(nameof(SelectedLanguageName))]
+    private AppLanguage _selectedLanguage = AppLanguage.English;
 
+    public string SelectedLanguageFlag => UI.Controls.LanguageSelectionPopup.FlagFor(SelectedLanguage);
+    public string SelectedLanguageName => UI.Controls.LanguageSelectionPopup.NameFor(SelectedLanguage);
     // Computed booleans used by XAML DataTriggers for unit button styling
     public bool IsMetricSelected => !IsImperialUnit;
 
@@ -74,8 +81,6 @@ public partial class ProfileSetupViewModel : ObservableObject
                 WeightInput = Math.Round(UnitConversion.KgToLb(w), 1)
                     .ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
 
-            HeightLabel = "Height (in)";
-            WeightLabel = "Weight (lb)";
         }
         else
         {
@@ -88,10 +93,18 @@ public partial class ProfileSetupViewModel : ObservableObject
                 System.Globalization.CultureInfo.InvariantCulture, out var w))
                 WeightInput = Math.Round(UnitConversion.LbToKg(w), 1)
                     .ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
-
-            HeightLabel = "Height (cm)";
-            WeightLabel = "Weight (kg)";
         }
+        RefreshUnitLabels();
+    }
+
+    private void RefreshUnitLabels()
+    {
+        HeightLabel = IsImperialUnit
+            ? LocalizationManager.Instance["Profile_Height_In"]
+            : LocalizationManager.Instance["Profile_Height_Cm"];
+        WeightLabel = IsImperialUnit
+            ? LocalizationManager.Instance["Profile_Weight_Lb"]
+            : LocalizationManager.Instance["Profile_Weight_Kg"];
     }
 
     [RelayCommand]
@@ -110,13 +123,13 @@ public partial class ProfileSetupViewModel : ObservableObject
         var ci = System.Globalization.CultureInfo.InvariantCulture;
         if (!double.TryParse(HeightInput, System.Globalization.NumberStyles.Any, ci, out var height) || height <= 0)
         {
-            ValidationMessage = "Please enter a valid height.";
+            ValidationMessage = LocalizationManager.Instance["Profile_InvalidHeightWeight"];
             return;
         }
 
         if (!double.TryParse(WeightInput, System.Globalization.NumberStyles.Any, ci, out var weight) || weight <= 0)
         {
-            ValidationMessage = "Please enter a valid weight.";
+            ValidationMessage = LocalizationManager.Instance["Profile_InvalidHeightWeight"];
             return;
         }
 
@@ -133,9 +146,9 @@ public partial class ProfileSetupViewModel : ObservableObject
         {
             "Male" => Gender.Male,
             "Female" => Gender.Female,
-            "Other" => Gender.Other,
             _ => Gender.PreferNotToSay
         };
+        _onboardingData.Language = SelectedLanguage;
 
         ContinueRequested?.Invoke(this, EventArgs.Empty);
     }

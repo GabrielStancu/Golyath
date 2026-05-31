@@ -68,7 +68,8 @@ public partial class GoalSetupViewModel : ObservableObject
                 _onboardingData.WeightKg,
                 _onboardingData.Gender,
                 _onboardingData.FitnessGoal,
-                _onboardingData.PreferredUnit);
+                _onboardingData.PreferredUnit,
+                _onboardingData.Language);
 
             CompletedRequested?.Invoke(this, EventArgs.Empty);
         }

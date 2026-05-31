@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:Golyath.Application.Localization"
              x:Class="Golyath.UI.Views.Onboarding.OnboardingCompletePage"
              BackgroundColor="{StaticResource AppDarkBg}"
              NavigationPage.HasNavigationBar="False">
@@ -19,13 +20,13 @@
                    HorizontalOptions="Center" />
 
             <Label x:Name="WelcomeLabel"
-                   Text="You're all set!"
+                   Text="{Binding [Complete_Title], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="32" FontAttributes="Bold"
                    TextColor="{StaticResource Accent}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center" />
 
-            <Label Text="Your profile is ready. Time to start tracking your progress and crushing your goals."
+            <Label Text="{Binding [Complete_Subtitle], Source={x:Static loc:LocalizationManager.Instance}}"
                    FontSize="16"
                    TextColor="#AAAAAA"
                    HorizontalOptions="Center"
@@ -36,7 +37,7 @@
 
         <VerticalStackLayout Grid.Row="1" Padding="32,0,32,64" Spacing="0">
             <Button x:Name="StartButton"
-                    Text="Start Training →"
+                    Text="{Binding [Complete_Button], Source={x:Static loc:LocalizationManager.Instance}}"
                     BackgroundColor="{StaticResource Accent}"
                     TextColor="{StaticResource AccentText}"
                     FontAttributes="Bold"
