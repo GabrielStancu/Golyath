@@ -55,7 +55,7 @@ public sealed partial class LocalizationManager : ObservableObject
     private static readonly Dictionary<string, string> _en = new()
     {
         // Welcome
-        ["Welcome_Subtitle"]            = "Your Personal Training Intelligence",
+        ["Welcome_Subtitle"]            = "Your Personal Training Companion",
         ["Welcome_StartTraining"]       = "START TRAINING",
         ["Welcome_RestoreBackup"]       = "Restore from Backup",
 
@@ -206,7 +206,7 @@ public sealed partial class LocalizationManager : ObservableObject
     private static readonly Dictionary<string, string> _ro = new()
     {
         // Welcome
-        ["Welcome_Subtitle"]            = "Inteligența ta personală de antrenament",
+        ["Welcome_Subtitle"]            = "Companionul tău personal de antrenament",
         ["Welcome_StartTraining"]       = "ÎNCEPE ANTRENAMENTUL",
         ["Welcome_RestoreBackup"]       = "Restaurează din Backup",
 

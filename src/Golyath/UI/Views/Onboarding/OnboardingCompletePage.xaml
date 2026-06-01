@@ -14,7 +14,7 @@
                              Spacing="16"
                              Padding="32,0">
 
-            <Label Text="&#xEA4A;"
+            <Label Text="&#xEB9B;"
                    FontFamily="MaterialIcons"
                    FontSize="72"
                    HorizontalOptions="Center" />

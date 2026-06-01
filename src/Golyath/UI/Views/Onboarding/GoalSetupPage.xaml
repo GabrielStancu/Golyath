@@ -54,7 +54,7 @@
                                               CommandParameter="{x:Static enums:FitnessGoal.Strength}" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="&#xEA4A;" FontFamily="MaterialIcons" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="&#xF1CD;" FontFamily="MaterialIcons" FontSize="28" HorizontalOptions="Center" />
                         <Label Text="{Binding [Goal_Strength], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="15" FontAttributes="Bold"
                                HorizontalOptions="Center"
                                TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
@@ -84,7 +84,7 @@
                                               CommandParameter="{x:Static enums:FitnessGoal.Hypertrophy}" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="&#xEA4A;" FontFamily="MaterialIcons" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="&#xEB43;" FontFamily="MaterialIcons" FontSize="28" HorizontalOptions="Center" />
                         <Label Text="{Binding [Goal_Hypertrophy], Source={x:Static loc:LocalizationManager.Instance}}" FontSize="15" FontAttributes="Bold"
                                HorizontalOptions="Center"
                                TextColor="{AppThemeBinding Light=#111111, Dark=White}" />
