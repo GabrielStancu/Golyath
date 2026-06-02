@@ -86,7 +86,7 @@ public sealed partial class LocalizationManager : ObservableObject
         // Onboarding Complete
         ["Complete_Title"]              = "You're all set!",
         ["Complete_Subtitle"]           = "Your profile is ready. Time to start tracking your progress and crushing your goals.",
-        ["Complete_Button"]             = "Start Training →",
+        ["Complete_Button"]             = "Start Training",
 
         // Dashboard
         ["Dashboard_TodaySession"]      = "TODAY'S SESSION",
@@ -237,7 +237,7 @@ public sealed partial class LocalizationManager : ObservableObject
         // Onboarding Complete
         ["Complete_Title"]              = "Ești gata!",
         ["Complete_Subtitle"]           = "Profilul tău este gata. E timpul să îți urmărești progresul și să îți îndeplinești obiectivele.",
-        ["Complete_Button"]             = "Începe Antrenamentul →",
+        ["Complete_Button"]             = "Începe Antrenamentul",
 
         // Dashboard
         ["Dashboard_TodaySession"]      = "SESIUNEA DE AZI",
