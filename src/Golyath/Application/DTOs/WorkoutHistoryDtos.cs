@@ -36,7 +36,8 @@ public record WorkoutHistoryDetailDto(
     int DurationSeconds,
     string? Notes,
     IReadOnlyList<WorkoutExerciseSummaryDto> Exercises,
-    IReadOnlyList<string> TagNames)
+    IReadOnlyList<string> TagNames,
+    int PersonalRecordCount = 0)
 {
     public string DurationFormatted =>
         DurationSeconds >= 3600
@@ -44,6 +45,9 @@ public record WorkoutHistoryDetailDto(
             : $"{DurationSeconds / 60}m";
 
     public string DateFormatted => CompletedAt.ToLocalTime().ToString("dddd, MMMM d, yyyy");
+
+    public bool HasPersonalRecords => PersonalRecordCount > 0;
+    public string PrBadgeText => $"PR ×{PersonalRecordCount}";
 }
 
 /// <summary>One exercise entry within a workout detail.</summary>

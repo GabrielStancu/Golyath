@@ -1,4 +1,4 @@
-﻿using Golyath.Infrastructure.Extensions;
+using Golyath.Infrastructure.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Platform;
 using Microsoft.Maui.Handlers;
@@ -27,6 +27,25 @@ public static class MauiProgram
 #if ANDROID
                 // Remove underline + set caret color for Entry controls
                 EntryHandler.Mapper.AppendToMapping("EntryCustomization", (handler, view) =>
+                {
+                    handler.PlatformView.BackgroundTintList =
+                        Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+
+                    var isDark = App.Current?.RequestedTheme == AppTheme.Dark;
+                    var caretColor = isDark
+                        ? Android.Graphics.Color.Rgb(255, 215, 0) // Gold (#FFD700)
+                        : Android.Graphics.Color.Black;
+                    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Q)
+                    {
+                        var cursorDrawable = handler.PlatformView.TextCursorDrawable;
+                        cursorDrawable?.SetTint(caretColor);
+                        handler.PlatformView.TextCursorDrawable = cursorDrawable;
+                    }
+                    handler.PlatformView.SetHighlightColor(caretColor);
+                });
+
+                // Remove underline + set caret color for Editor controls
+                EditorHandler.Mapper.AppendToMapping("EditorCustomization", (handler, view) =>
                 {
                     handler.PlatformView.BackgroundTintList =
                         Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);

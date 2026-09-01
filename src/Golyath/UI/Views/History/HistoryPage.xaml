@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Golyath.UI.ViewModels.History"
@@ -63,7 +63,7 @@
                                            TextColor="{StaticResource Accent}" />
                                     <Label Text="{Binding [History_SessionsThisMonth], Source={x:Static loc:LocalizationManager.Instance}}"
                                            FontSize="11"
-                                           TextColor="{StaticResource TextMutedDark}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
                                 </VerticalStackLayout>
                             </Border>
                             <Border Grid.Column="1"
@@ -75,10 +75,10 @@
                                     <Label Text="{Binding MonthVolumeText}"
                                            FontSize="28"
                                            FontAttributes="Bold"
-                                           TextColor="{StaticResource TextPrimaryDark}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                                     <Label Text="{Binding [History_TotalVolume], Source={x:Static loc:LocalizationManager.Instance}}"
                                            FontSize="11"
-                                           TextColor="{StaticResource TextMutedDark}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
                                 </VerticalStackLayout>
                             </Border>
                         </Grid>
@@ -94,7 +94,7 @@
                                            Text="{Binding [History_WeeklyVolumeKg], Source={x:Static loc:LocalizationManager.Instance}}"
                                            FontSize="9"
                                            CharacterSpacing="1"
-                                           TextColor="{StaticResource TextMutedDark}"
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}"
                                            VerticalOptions="Center" />
                                     <Label Grid.Column="1"
                                            Text="{Binding [History_4WeekTrend], Source={x:Static loc:LocalizationManager.Instance}}"
@@ -138,7 +138,7 @@
                     </VerticalStackLayout>
                 </CollectionView.Header>
 
-                <!-- â”€â”€ Empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <!-- ── Empty state ────────────────────────────────────── -->
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center"
                                          Spacing="8" Margin="0,48">
@@ -156,7 +156,7 @@
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
 
-                <!-- â”€â”€ Session rows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+                <!-- ── Session rows ────────────────────────────────────── -->
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:WorkoutHistorySummaryDto">
                         <SwipeView Margin="16,0,16,10" Threshold="80">
@@ -189,12 +189,12 @@
                                                FontSize="26"
                                                FontAttributes="Bold"
                                                HorizontalOptions="Center"
-                                               TextColor="{StaticResource TextPrimaryDark}" />
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                                         <Label Text="{Binding MonthText}"
                                                FontSize="9"
                                                CharacterSpacing="1"
                                                HorizontalOptions="Center"
-                                               TextColor="{StaticResource TextMutedDark}" />
+                                               TextColor="{AppThemeBinding Light={StaticResource TextMutedLight}, Dark={StaticResource TextMutedDark}}" />
                                     </VerticalStackLayout>
 
                                     <!-- Gold vertical divider -->
@@ -214,7 +214,7 @@
                                                FontSize="15"
                                                FontAttributes="Bold"
                                                LineBreakMode="TailTruncation"
-                                               TextColor="{StaticResource TextPrimaryDark}" />
+                                               TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                                         <!-- PR badge -->
                                         <Border Grid.Row="0" Grid.Column="1"
                                                 IsVisible="{Binding HasPersonalRecords}"
@@ -233,7 +233,7 @@
                                         <Label Grid.Row="1" Grid.ColumnSpan="2"
                                                Text="{Binding SubtitleText}"
                                                FontSize="12"
-                                               TextColor="{StaticResource TextSecondaryDark}" />
+                                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                                     </Grid>
 
                                 </Grid>

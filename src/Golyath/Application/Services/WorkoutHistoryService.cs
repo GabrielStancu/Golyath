@@ -147,6 +147,10 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
                 Sets: setDtos));
         }
 
+        // Grab PR count from the full history computation
+        var allHistory = await GetHistoryAsync();
+        var prCount = allHistory.FirstOrDefault(h => h.Id == workoutId)?.PersonalRecordCount ?? 0;
+
         return new WorkoutHistoryDetailDto(
             Id: workout.Id,
             DisplayName: workout.Name ?? $"Workout — {workout.StartedAt.ToLocalTime():MMM d}",
@@ -154,7 +158,8 @@ public sealed class WorkoutHistoryService : IWorkoutHistoryService
             DurationSeconds: workout.DurationSeconds,
             Notes: workout.Notes,
             Exercises: exerciseSummaries,
-            TagNames: tags.Select(t => t.Name).ToList());
+            TagNames: tags.Select(t => t.Name).ToList(),
+            PersonalRecordCount: prCount);
     }
 
     public Task<IReadOnlyList<Tag>> GetAllTagsAsync() =>
